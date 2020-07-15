@@ -36,3 +36,7 @@
 x64/
 anno/GeneratedFiles
 *.vcxproj.user
+
+# qt creator files
+build-anno*/
+*.pro.user

@@ -1,0 +1,136 @@
+{
+    "definitions": {
+        "files_root_dir": ".",
+        "image_script": [
+            "p.SetPen(255, 0, 0, -1)",
+            "p.DrawRect(0, 0, 3, 3)"
+        ],
+        "marker_types": {
+            "ellipse": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "Ellipse",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawEllipse(-1, -1, 2, 2)",
+                    "p.DrawLine(-1, 0, 1, 0)",
+                    "p.DrawLine(0, -0.1, 0, 0.1)"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "gripping_pos": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "Gripping position",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawLine(-1, 0, 1, 0)",
+                    "",
+                    "p.DrawLine(0, .5, 0, 1)",
+                    "p.DrawLine(0, .5, .05, .6)",
+                    "p.DrawLine(0, .5, -.05, .6)",
+                    "",
+                    "p.DrawLine(0, -.5, 0, -1)",
+                    "p.DrawLine(0, -.5, .05, -.6)",
+                    "p.DrawLine(0, -.5, -.05, -.6)",
+                    "",
+                    "p.SetBaseTransform(false, true)",
+                    "p.DrawLine(0, -5, 0, 5)"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "point_as_box": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "Rectangle",
+                "rendering_script": [
+                    "p.RenderBase()",
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-100, -50, 200, 100)"
+                ],
+                "stamp": true,
+                "value_type": "oriented_point"
+            },
+            "point_as_circle": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "Opening",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, false)",
+                    "p.SetDefaultPen()",
+                    "p.DrawEllipse(-40, -40, 80, 80)"
+                ],
+                "stamp": true,
+                "value_type": "point"
+            }
+        },
+        "user_data": {
+            "hint0": 0.1121,
+            "hint1": 0.1122,
+            "hint3": [
+                0,
+                1,
+                2
+            ]
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "point_as_circle",
+                    "value": "0 0"
+                }
+            ],
+            "name": "orange.png"
+        }
+    ]
+}

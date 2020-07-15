@@ -1,0 +1,91 @@
+{
+    "definitions": {
+        "files_loader": {
+            "params": {
+                "config": "parameters.txt",
+                "url": "http://127.0.0.1:8008/ids_experimenta/prepare_anno_image/"
+            },
+            "type": "rest_converter"
+        },
+        "files_root_dir": "data",
+        "marker_types": {
+            "oriented_rect_stamp": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Stamped Oriented Rects",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(0, 0, 1.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, 0, 0, 1)"
+                ],
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 100,
+                    "width": 200
+                },
+                "value_type": "oriented_rect"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "324.515 220.979 200 100 0"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "700.304 235.96 200 100 0"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "581.699 586.779 200 100 0"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "785.199 973.804 200 100 0"
+                }
+            ],
+            "name": "test-1.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "877.586 574.294 200 100 0"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "519.276 177.282 200 100 0"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "313.279 868.932 200 100 0"
+                }
+            ],
+            "name": "test-2.jpg"
+        }
+    ]
+}

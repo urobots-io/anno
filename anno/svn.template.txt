@@ -1,0 +1,15 @@
+// application version template
+
+namespace version {
+
+const char *revision      = "$WCREV$";
+const char *modified      = "$WCMODS?Modified:Not modified$";
+const char *date          = "$WCDATE$";
+const char *date_UTC       = "$WCDATEUTC$";
+const char *time_now       = __DATE__ " " __TIME__;
+const char *rev_range      = "$WCRANGE$";
+const char *mixed         = $WCMIXED?"Mixed revision WC":"Not mixed"$;
+const char *URL          = "$WCURL$";
+const char *is_in_SVN       = $WCINSVN?"versioned":"not versioned"$;
+
+}

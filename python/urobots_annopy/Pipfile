@@ -1,0 +1,16 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+tox = "*"
+
+[packages]
+numpy = "*"
+opencv-contrib-python = "*"
+urobots-utils = {editable = true,svn = "https://subversion.assembla.com/svn/brmain/utils_py/trunk/"}
+
+[requires]
+python_version = "3.6"

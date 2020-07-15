@@ -1,0 +1,150 @@
+{
+    "definitions": {
+        "files_root_dir": "images/teddy",
+        "marker_types": {
+            "shared_rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Shared rect, one instance",
+                "filename_filter": [
+                    "(1|3).jpg"
+                ],
+                "rendering_script": [
+                    "p.RenderBase()",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawText(10, 20, \"Single Shared\", 11)"
+                ],
+                "shared": true,
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 50,
+                    "width": 250
+                },
+                "value_type": "rect"
+            },
+            "shared_rect_2": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Shared rect, 4 instances",
+                "filename_filter": [
+                    "(1|2).jpg",
+                    "(1|2).jpg",
+                    "(2|3).jpg",
+                    ".*"
+                ],
+                "line_width": -5,
+                "rendering_script": [
+                    "p.RenderBase()",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawText(10, 20, \"Multi Shared, Index=\" + shared_index, 10)"
+                ],
+                "shared_count": 4,
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 100,
+                    "width": 100
+                },
+                "value_type": "rect"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "type": "shared_rect_2",
+                    "value": "123.487 626.981 286.697 727.128"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect_2",
+                    "value": "297.481 626.981 459.932 730.927"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "679.514 632.153 862.625 728.647"
+                },
+                {
+                    "category": 1,
+                    "type": "shared_rect",
+                    "value": "32.9246 37.99 266.943 107.132"
+                }
+            ],
+            "name": "1.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "shared_rect_2",
+                    "value": "123.487 626.981 286.697 727.128"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect_2",
+                    "value": "297.481 626.981 459.932 730.927"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_2",
+                    "value": "472.848 626.834 659.759 727.887"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "679.514 632.153 862.625 728.647"
+                }
+            ],
+            "name": "2.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "shared_index": 2,
+                    "type": "shared_rect_2",
+                    "value": "472.848 626.834 659.759 727.887"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "679.514 632.153 862.625 728.647"
+                },
+                {
+                    "category": 0,
+                    "type": "shared_rect",
+                    "value": "32.9246 37.99 266.943 107.132"
+                }
+            ],
+            "name": "3.jpg"
+        }
+    ]
+}

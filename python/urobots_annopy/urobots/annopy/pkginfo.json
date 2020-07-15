@@ -1,0 +1,5 @@
+{
+  "__version__":  "1.0.0",
+  "root_namespace": "urobots.annopy",
+  "description": "Python library for Anno"
+}

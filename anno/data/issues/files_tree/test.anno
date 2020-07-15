@@ -1,0 +1,173 @@
+{
+    "definitions": {
+        "files_root_dir": ".",
+        "marker_types": {
+            "circle": {
+                "categories": [
+                    {
+                        "color": "#0000ff",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#808080",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "My Circles",
+                "rendering_script": [
+                    "p.RenderBase()",
+                    "p.SetBaseTransform(true, false)",
+                    "p.Rotate(45) ",
+                    "p.DrawLine(-1, 0, 1, 0)",
+                    "p.Rotate(90) ",
+                    "p.DrawLine(-1, 0, 1, 0)"
+                ],
+                "stamp_parameters": {
+                    "radius": 70
+                },
+                "value_type": "circle"
+            },
+            "oriented_rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "My Oriented Rects",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(0, 0, 1.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, 0, 0, 1)"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "oriented_rect_stamp": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "Stamped Oriented Rects",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(0, 0, 1.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, 0, 0, 1)"
+                ],
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 100,
+                    "width": 200
+                },
+                "value_type": "oriented_rect"
+            },
+            "point": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "My Points",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawRect(-20, -20, 40, 40)"
+                ],
+                "stamp": true,
+                "value_type": "point"
+            },
+            "polygon": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    },
+                    {
+                        "color": "#0000ff",
+                        "id": 2,
+                        "name": "Very Good"
+                    },
+                    {
+                        "color": "#ff3700",
+                        "id": 3,
+                        "name": "Very Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "My Poligons",
+                "value_type": "polygon"
+            },
+            "rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "line_width": -3,
+                "name": "My rects",
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 100,
+                    "width": 200
+                },
+                "value_type": "rect"
+            }
+        },
+        "user_data": {
+            "hint0": 0.1121,
+            "hint1": 0.1122,
+            "hint3": [
+                0,
+                1,
+                2
+            ]
+        }
+    },
+    "files": [    ]
+}

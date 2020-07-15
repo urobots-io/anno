@@ -1,0 +1,170 @@
+{
+    "definitions": {
+        "files_root_dir": "images/teddy",
+        "marker_types": {
+            "bounding_box": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1,-1,2,2)",
+                    "p.DrawLine(0,1,0,0.9)"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "coordinate_system": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "custom_properties": {
+                    "some_boolean": {
+                        "default": false,
+                        "type": "bool"
+                    },
+                    "some_integer": {
+                        "default": 100,
+                        "type": "int"
+                    },
+                    "some_selector": {
+                        "cases": [
+                            "one",
+                            "two",
+                            "three",
+                            "four"
+                        ],
+                        "default": null,
+                        "type": "selector"
+                    },
+                    "some_string": {
+                        "default": null,
+                        "type": "string"
+                    }
+                },
+                "description": "Coordinate system",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetPen(255,0,0, -3)",
+                    "p.DrawLine(-50, 0, 50, 0)",
+                    "p.DrawLine(45, 5, 50, 0)",
+                    "p.DrawLine(45, -5, 50, 0)",
+                    "p.DrawLine(0, 0, 50, 0)",
+                    "p.DrawText(50, -10, \"x\", 20)",
+                    "p.SetPen(0,255,0, -3)",
+                    "p.DrawLine(0, -50, 0, 50)",
+                    "p.DrawLine(5, 45, 0, 50)",
+                    "p.DrawLine(-5, 45, 0, 50)",
+                    "p.DrawText(10, 50, \"y\", 20)",
+                    "// render custom variable value",
+                    "p.SetPen(255,255,0, -3)",
+                    "p.DrawText(40, 30, p.Custom(\"some_string\"), 20)",
+                    "p.DrawText(40, 45, \"selected value:\" + p.Custom(\"some_selector\"), 12)",
+                    "p.DrawText(40, -30, marker_type, 20)",
+                    "p.DrawText(40, -5, \"bool:\" + p.Custom(\"some_boolean\"), 18)"
+                ],
+                "stamp": true,
+                "value_type": "oriented_point"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "custom_properties": {
+                        "some_boolean": false,
+                        "some_integer": 100,
+                        "some_selector": "three",
+                        "some_string": "I am a string"
+                    },
+                    "type": "coordinate_system",
+                    "value": "633.221 243.314 -0.366519"
+                },
+                {
+                    "category": 0,
+                    "custom_properties": {
+                        "some_boolean": true,
+                        "some_selector": "two",
+                        "some_string": "HELLO THERE"
+                    },
+                    "type": "coordinate_system",
+                    "value": "274.057 502.536 1.08084"
+                },
+                {
+                    "category": 0,
+                    "type": "bounding_box",
+                    "value": "275.619 502.536 240.789 480.217 1.09956"
+                },
+                {
+                    "category": 0,
+                    "type": "bounding_box",
+                    "value": "627.755 242.533 223.915 375.326 -0.366519"
+                }
+            ],
+            "name": "0.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "bounding_box",
+                    "value": "630.127 252.253 245.259 356.51 -0.314159"
+                },
+                {
+                    "category": 0,
+                    "custom_properties": {
+                        "some_boolean": true,
+                        "some_integer": 99,
+                        "some_selector": "two",
+                        "some_string": "this is a custom string"
+                    },
+                    "text": "sdfsdfdf",
+                    "type": "coordinate_system",
+                    "value": "637.725 263.65 -0.298496"
+                }
+            ],
+            "name": "1.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "bounding_box",
+                    "value": "257.76 510.624 200.876 391.351 1.02974"
+                },
+                {
+                    "category": 0,
+                    "type": "coordinate_system",
+                    "value": "309.6 487.296 1.02974"
+                }
+            ],
+            "name": "2.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "bounding_box",
+                    "value": "667.296 336.096 180.748 387.457 -2.44346"
+                },
+                {
+                    "category": 0,
+                    "type": "coordinate_system",
+                    "value": "638.784 387.072 -2.51327"
+                }
+            ],
+            "name": "3.jpg"
+        }
+    ]
+}

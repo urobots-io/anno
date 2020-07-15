@@ -1,0 +1,34 @@
+#ifdef APSTUDIO_INVOKED
+#error this file is not editable by Microsoft Visual C++
+#endif //APSTUDIO_INVOKED
+
+IDI_ICON1		ICON		DISCARDABLE	"Resources/anno.ico"
+
+#include <windows.h>
+#include "product_info.h"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION ANNO_PRODUCT_VERSION
+PRODUCTVERSION ANNO_PRODUCT_VERSION
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",        ANNO_PRODUCT_COMPANY_NAME
+            VALUE "FileDescription",    "anno"  
+            VALUE "FileVersion",        ANNO_PRODUCT_VERSION_STRING
+            VALUE "InternalName",       "anno"
+            VALUE "LegalCopyright",     ANNO_PRODUCT_LEGAL_COPYRIGHT
+            VALUE "OriginalFilename",   "anno.exe"
+            VALUE "ProductName",        ANNO_PRODUCT_NAME
+            VALUE "ProductVersion",     ANNO_PRODUCT_VERSION_STRING
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

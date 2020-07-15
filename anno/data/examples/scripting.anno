@@ -1,0 +1,216 @@
+{
+    "definitions": {
+        "files_root_dir": "images/scripting",
+        "image_script": [
+            "p.SetPen(255, 0, 0, -1)",
+            "p.DrawEllipse(10, 10, 200, 200)"
+        ],
+        "marker_types": {
+            "ellipse": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Ellipse",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawEllipse(-1, -1, 2, 2)",
+                    "p.DrawLine(-1, 0, 1, 0)",
+                    "p.DrawLine(0, -0.1, 0, 0.1)",
+                    "",
+                    "p.SetDefaultPen(-3)",
+                    "p.DrawArc(-0.5, -0.5, 1, 1, 0, 120)",
+                    "p.SetDefaultPen(-1)",
+                    "p.DrawArc(-0.5, -0.5, 1, 1, 180, 250)",
+                    "",
+                    "p.SetBaseTransform(false, true)",
+                    "",
+                    "if (category==0) {",
+                    "  p.DrawText(5, -5, \"Good\", 10)",
+                    "}",
+                    "else {",
+                    "  p.DrawText(5, -5, \"Bad\", 10)",
+                    "}"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "gripping_pos": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Gripping position",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawLine(-1, 0, 1, 0)",
+                    "",
+                    "p.DrawLine(0, .5, 0, 1)",
+                    "p.DrawLine(0, .5, .05, .6)",
+                    "p.DrawLine(0, .5, -.05, .6)",
+                    "",
+                    "p.DrawLine(0, -.5, 0, -1)",
+                    "p.DrawLine(0, -.5, .05, -.6)",
+                    "p.DrawLine(0, -.5, -.05, -.6)",
+                    "",
+                    "p.SetBaseTransform(false, true)",
+                    "p.DrawLine(0, -5, 0, 5)"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "point_as_box": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Rectangle",
+                "rendering_script": [
+                    "p.RenderBase()",
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-100, -50, 200, 100)"
+                ],
+                "stamp": true,
+                "value_type": "oriented_point"
+            },
+            "point_as_circle": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Opening",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, false)",
+                    "p.SetDefaultPen()",
+                    "p.DrawEllipse(-40, -40, 80, 80)"
+                ],
+                "stamp": true,
+                "value_type": "point"
+            }
+        },
+        "user_data": {
+            "hint0": 0.1121,
+            "hint1": 0.1122,
+            "hint3": [
+                0,
+                1,
+                2
+            ]
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "ellipse",
+                    "value": "813.11 596.799 210.621 92.7141 -0.00274485"
+                },
+                {
+                    "category": 1,
+                    "type": "ellipse",
+                    "value": "1049.01 615.478 293.407 134.974 0.986953"
+                },
+                {
+                    "category": 0,
+                    "type": "ellipse",
+                    "value": "899.085 761.433 129.908 78.7436 1.61728"
+                },
+                {
+                    "category": 0,
+                    "type": "point_as_circle",
+                    "value": "382.317 112.043"
+                },
+                {
+                    "category": 0,
+                    "type": "point_as_circle",
+                    "value": "332.035 279.671"
+                },
+                {
+                    "category": 0,
+                    "type": "point_as_circle",
+                    "value": "95.3311 154.397"
+                },
+                {
+                    "category": 1,
+                    "type": "point_as_circle",
+                    "value": "259.756 152.957"
+                },
+                {
+                    "category": 1,
+                    "type": "point_as_circle",
+                    "value": "111.538 271.426"
+                },
+                {
+                    "category": 0,
+                    "type": "point_as_box",
+                    "value": "969.136 148.622 -0.34555"
+                },
+                {
+                    "category": 1,
+                    "type": "point_as_box",
+                    "value": "653.121 174.688 -6.58001e-07"
+                },
+                {
+                    "category": 0,
+                    "type": "point_as_box",
+                    "value": "884.522 306.501 0.297365"
+                },
+                {
+                    "category": 0,
+                    "type": "gripping_pos",
+                    "value": "189.031 540.739 259.694 62.4353 -0.00245586"
+                },
+                {
+                    "category": 1,
+                    "type": "gripping_pos",
+                    "value": "449.29 589.435 159.619 62.038 -0.610865"
+                },
+                {
+                    "category": 0,
+                    "type": "gripping_pos",
+                    "value": "372.513 779.497 221.256 70.8611 0.610865"
+                },
+                {
+                    "category": 1,
+                    "type": "gripping_pos",
+                    "value": "167.204 771.846 167.053 65.0358 -1.5708"
+                }
+            ],
+            "name": "1.png"
+        }
+    ]
+}

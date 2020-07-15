@@ -1,0 +1,153 @@
+{
+    "definitions": {
+        "files_root_dir": "images/multi_shared",
+        "marker_types": {
+            "shared_rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Normal"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Inverted"
+                    }
+                ],
+                "description": "Shared rect, 4 instances",
+                "line_width": -5,
+                "shared_count": 4,
+                "shared_properties": {
+                    "height": "2",
+                    "width": "1"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 80,
+                    "width": 40
+                },
+                "value_type": "oriented_rect"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "shared_rect",
+                    "value": "49.7143 50.2857 57.6005 97.8286 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect",
+                    "value": "154.171 150.171 57.6005 97.8286 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 2,
+                    "type": "shared_rect",
+                    "value": "151.657 45.7143 57.6005 97.8286 -1.57035"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 3,
+                    "type": "shared_rect",
+                    "value": "48.3429 153.6 57.6005 97.8286 -1.57908"
+                }
+            ],
+            "name": "01.png"
+        },
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "type": "shared_rect",
+                    "value": "49.7143 50.2857 57.6005 97.8286 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect",
+                    "value": "154.171 150.171 57.6005 97.8286 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect",
+                    "value": "151.657 45.7143 57.6005 97.8286 -1.57035"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect",
+                    "value": "48.3429 153.6 57.6005 97.8286 -1.57908"
+                }
+            ],
+            "name": "02.png"
+        },
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect",
+                    "value": "154.171 150.171 57.6005 97.8286 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 3,
+                    "type": "shared_rect",
+                    "value": "48.3429 153.6 57.6005 97.8286 -1.57908"
+                }
+            ],
+            "name": "03.png"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "shared_rect",
+                    "value": "49.7143 50.2857 57.6005 97.8286 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect",
+                    "value": "154.171 150.171 57.6005 97.8286 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect",
+                    "value": "151.657 45.7143 57.6005 97.8286 -1.57035"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect",
+                    "value": "48.3429 153.6 57.6005 97.8286 -1.57908"
+                }
+            ],
+            "name": "04.png"
+        },
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "type": "shared_rect",
+                    "value": "49.7143 50.2857 57.6005 97.8286 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect",
+                    "value": "154.171 150.171 57.6005 97.8286 0"
+                }
+            ],
+            "name": "05.png"
+        }
+    ]
+}

@@ -1,0 +1,512 @@
+{
+    "definitions": {
+        "files_root_dir": "images/teddy",
+        "marker_types": {
+            "circle": {
+                "categories": [
+                    {
+                        "color": "#ff00ff",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "shared_properties": {
+                    "radius": "shared_radius"
+                },
+                "value_type": "circle"
+            },
+            "coordinate_system": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Coordinate system",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetPen(255,0,0, -3)",
+                    "p.DrawLine(-50, 0, 50, 0)",
+                    "p.DrawLine(45, 5, 50, 0)",
+                    "p.DrawLine(45, -5, 50, 0)",
+                    "p.DrawLine(0, 0, 50, 0)",
+                    "p.DrawText(50, -10, \"x\", 20)",
+                    "p.SetPen(0,255,0, -3)",
+                    "p.DrawLine(0, -50, 0, 50)",
+                    "p.DrawLine(5, 45, 0, 50)",
+                    "p.DrawLine(-5, 45, 0, 50)",
+                    "p.DrawText(10, 50, \"y\", 20)"
+                ],
+                "shared_properties": {
+                    "angle": "shared0"
+                },
+                "value_type": "oriented_point"
+            },
+            "coordinate_system_stamp": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "STAMP Coordinate system",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetPen(255,0,0, -3)",
+                    "p.DrawLine(-50, 0, 50, 0)",
+                    "p.DrawLine(45, 5, 50, 0)",
+                    "p.DrawLine(45, -5, 50, 0)",
+                    "p.DrawLine(0, 0, 50, 0)",
+                    "p.DrawText(50, -10, \"x\", 20)",
+                    "p.SetPen(0,255,0, -3)",
+                    "p.DrawLine(0, -50, 0, 50)",
+                    "p.DrawLine(5, 45, 0, 50)",
+                    "p.DrawLine(-5, 45, 0, 50)",
+                    "p.DrawText(10, 50, \"y\", 20)"
+                ],
+                "shared_properties": {
+                    "angle": "shared0"
+                },
+                "stamp": true,
+                "value_type": "oriented_point"
+            },
+            "oriented_rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1,-1,2,2)",
+                    "p.DrawLine(0,1,0,0.9)"
+                ],
+                "shared_properties": {
+                    "angle": "shared0",
+                    "width": "shared1"
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "oriented_rect"
+            },
+            "oriented_rect_full_size": {
+                "categories": [
+                    {
+                        "color": "#ff00ff",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1,-1,2,2)",
+                    "p.DrawLine(0,1,0,0.9)",
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetPen(0, 255, 255, -3)",
+                    "p.DrawText(10, 20, \"FULL SIZE\",20)",
+                    "",
+                    "let x = p.PropertyDefinition(\"width\")",
+                    "p.DrawText(10, 50, \"A: \" + x.a, 20)",
+                    "p.DrawText(10, 80, \"B: \" + x.b, 20)"
+                ],
+                "shared_properties": {
+                    "height": "200121_height",
+                    "width": "200121_width"
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "oriented_rect"
+            },
+            "oriented_rect_half_size": {
+                "categories": [
+                    {
+                        "color": "#ff00ff",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1,-1,2,2)",
+                    "p.DrawLine(0,1,0,0.9)",
+                    "p.SetBaseTransform(false, true)",
+                    "p.SetPen(0, 235, 235, -3)",
+                    "p.DrawText(10, 20, \"half size\",20)",
+                    "",
+                    "let x = p.PropertyDefinition(\"width\")",
+                    "p.DrawText(10, 40, \"a: \" + x.a, 15)",
+                    "p.DrawText(10, 60, \"b: \" + x.b, 15)"
+                ],
+                "shared_properties": {
+                    "height": {
+                        "a": 0.5,
+                        "name": "200121_height"
+                    },
+                    "width": {
+                        "a": 0.5,
+                        "name": "200121_width"
+                    }
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "oriented_rect"
+            },
+            "oriented_rect_stamp": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "STAMP Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1,-1,2,2)",
+                    "p.DrawLine(0,1,0,0.9)"
+                ],
+                "shared_properties": {
+                    "angle": "shared0",
+                    "width": "shared1"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "oriented_rect"
+            },
+            "rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Axis Aligned Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(0,0,1,1)",
+                    "p.DrawLine(0.45,0.5,0.55,0.5)",
+                    "p.DrawLine(0.5,0.45,0.5,0.55)",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawText(10, 20, \"x1\", 10)"
+                ],
+                "shared_properties": {
+                    "height": "shared_aabb1",
+                    "width": "shared_aabb0"
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "rect"
+            },
+            "rect_plus_10": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Axis Aligned Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(0,0,1,1)",
+                    "p.DrawLine(0.45,0.5,0.55,0.5)",
+                    "p.DrawLine(0.5,0.45,0.5,0.55)",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawText(10, 20, \"x1+10\", 10)"
+                ],
+                "shared_properties": {
+                    "height": {
+                        "a": 1,
+                        "b": 10,
+                        "name": "shared_aabb1"
+                    },
+                    "width": {
+                        "a": 1,
+                        "b": 10,
+                        "name": "shared_aabb0"
+                    }
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "rect"
+            },
+            "rect_x2": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Axis Aligned Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(0,0,1,1)",
+                    "p.DrawLine(0.45,0.5,0.55,0.5)",
+                    "p.DrawLine(0.5,0.45,0.5,0.55)",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawText(20, 40, \"x2\", 20)"
+                ],
+                "shared_properties": {
+                    "height": {
+                        "a": 2,
+                        "name": "shared_aabb1"
+                    },
+                    "width": {
+                        "a": 2,
+                        "name": "shared_aabb0"
+                    }
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "rect"
+            },
+            "rect_x3": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    }
+                ],
+                "description": "Axis Aligned Bounding box",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(0,0,1,1)",
+                    "p.DrawLine(0.45,0.5,0.55,0.5)",
+                    "p.DrawLine(0.5,0.45,0.5,0.55)",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawText(30, 60, \"x3\", 30)"
+                ],
+                "shared_properties": {
+                    "height": {
+                        "a": 3,
+                        "name": "shared_aabb1"
+                    },
+                    "width": {
+                        "a": 3,
+                        "name": "shared_aabb0"
+                    }
+                },
+                "stamp_parameters": {
+                    "height": null,
+                    "width": null
+                },
+                "value_type": "rect"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "oriented_rect_full_size",
+                    "value": "626.974 250.341 222.802 360.565 -0.32335"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_full_size",
+                    "value": "260.784 506.44 222.802 360.565 0.912972"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_half_size",
+                    "value": "824.514 564.218 111.401 180.283 -0.244346"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_half_size",
+                    "value": "336.521 168.358 111.401 180.283 0.72499"
+                },
+                {
+                    "category": 0,
+                    "type": "rect",
+                    "value": "21.3447 15.3968 114.475 107.422"
+                },
+                {
+                    "category": 0,
+                    "type": "rect_plus_10",
+                    "value": "22.9836 251.885 126.114 353.91"
+                }
+            ],
+            "name": "0.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "789.886 627.372 146.942 93.1009 -0.486899"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "605.658 623.223 146.942 183.206 -0.486899"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_stamp",
+                    "value": "733.456 520.321 146.942 120.918 -0.486899"
+                },
+                {
+                    "category": 0,
+                    "type": "coordinate_system_stamp",
+                    "value": "889.469 64.7289 -0.486899"
+                },
+                {
+                    "category": 0,
+                    "type": "coordinate_system_stamp",
+                    "value": "786.566 77.1768 -0.486899"
+                },
+                {
+                    "category": 0,
+                    "type": "coordinate_system_stamp",
+                    "value": "867.063 188.378 -0.486899"
+                },
+                {
+                    "category": 0,
+                    "type": "rect",
+                    "value": "32.1329 36.9731 125.263 128.998"
+                },
+                {
+                    "category": 0,
+                    "type": "rect",
+                    "value": "142.504 37.803 235.634 129.828"
+                },
+                {
+                    "category": 0,
+                    "type": "rect",
+                    "value": "253.705 38.6328 346.835 130.658"
+                },
+                {
+                    "category": 0,
+                    "type": "rect_x2",
+                    "value": "35.359 167.72 221.619 351.77"
+                },
+                {
+                    "category": 0,
+                    "type": "rect_x3",
+                    "value": "72.6093 399.71 351.999 675.785"
+                },
+                {
+                    "category": 0,
+                    "type": "rect_plus_10",
+                    "value": "289.368 153.132 392.498 255.157"
+                },
+                {
+                    "category": 0,
+                    "type": "rect_plus_10",
+                    "value": "290.198 265.163 393.328 367.188"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect_full_size",
+                    "value": "628.064 245.638 222.802 360.565 -0.296706"
+                }
+            ],
+            "name": "1.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "oriented_rect_full_size",
+                    "value": "277.034 500.404 222.802 360.565 0.977384"
+                }
+            ],
+            "name": "2.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "oriented_rect_full_size",
+                    "value": "659.598 349.37 222.802 360.565 -2.49582"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "125.707 228.479  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "428.654 222.232  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "128.83 364.336  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "174.116 486.92  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "621.509 689.145  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "146.008 102.772  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "264.688 164.454  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "538.745 109.799  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "704.273 69.1975  60.1665"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "288.892 351.844  60.1665"
+                }
+            ],
+            "name": "3.jpg"
+        }
+    ]
+}

@@ -1,0 +1,319 @@
+{
+    "definitions": {
+        "files_root_dir": "images/random",
+        "marker_types": {
+            "circle": {
+                "categories": [
+                    {
+                        "color": "#0000ff",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#808080",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "My Circles",
+                "rendering_script": [
+                    "p.RenderBase()",
+                    "p.SetBaseTransform(true, false)",
+                    "p.Rotate(45) ",
+                    "p.DrawLine(-1, 0, 1, 0)",
+                    "p.Rotate(90) ",
+                    "p.DrawLine(-1, 0, 1, 0)"
+                ],
+                "stamp_parameters": {
+                    "radius": 70
+                },
+                "value_type": "circle"
+            },
+            "oriented_point": {
+                "axis_length": [
+                    30,
+                    20
+                ],
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "My Oriented Point",
+                "value_type": "oriented_point"
+            },
+            "oriented_rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "My Oriented Rects",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(0, 0, 1.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, 0, 0, 1)"
+                ],
+                "value_type": "oriented_rect"
+            },
+            "oriented_rect_stamp": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Stamped Oriented Rects",
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(0, 0, 1.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, 0, 0, 1)"
+                ],
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 100,
+                    "width": 200
+                },
+                "value_type": "oriented_rect"
+            },
+            "point": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "My Points",
+                "rendering_script": [
+                    "p.SetBaseTransform(false, false)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-20, -20, 40, 40)"
+                ],
+                "stamp": true,
+                "value_type": "point"
+            },
+            "polygon": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    },
+                    {
+                        "color": "#0000ff",
+                        "id": 2,
+                        "name": "Very Good"
+                    },
+                    {
+                        "color": "#ff3700",
+                        "id": 3,
+                        "name": "Very Bad"
+                    }
+                ],
+                "description": "My Poligons",
+                "value_type": "polygon"
+            },
+            "polyline": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    },
+                    {
+                        "color": "#0000ff",
+                        "id": 2,
+                        "name": "Very Good"
+                    },
+                    {
+                        "color": "#ff3700",
+                        "id": 3,
+                        "name": "Very Bad"
+                    }
+                ],
+                "description": "My Polylines",
+                "value_type": "polyline"
+            },
+            "rect": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "My rects",
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 100,
+                    "width": 200
+                },
+                "value_type": "rect"
+            }
+        },
+        "user_data": {
+            "hint0": 0.1121,
+            "hint1": 0.1122,
+            "hint3": [
+                0,
+                1,
+                2
+            ]
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "text": "My text",
+                    "type": "rect",
+                    "value": "5.85366 9.5122 626.341 242.195"
+                },
+                {
+                    "category": 1,
+                    "children": [
+                        {
+                            "value": "796.098 413.415 741.044 411.374 727.031 419.336 722.254 434.623 749.643 435.897 756.331 441.311 777.988 441.63 785.632 437.808 795.823 421.247"
+                        },
+                        {
+                            "value": "1017.07 325.61 989.188 353.345 989.268 357.805 1014.15 359.268 1012.68 378.293 1184.04 365.523 1142.52 326.498 1090.21 320.963 1033.75 320.686"
+                        }
+                    ],
+                    "type": "polygon",
+                    "value": "955.61 373.902 999.512 324.146 1025.85 312.439 1080.24 312.49 1146.01 320.935 1180.49 336.975 1211.58 360.183 1244.95 362.671 1256.48 380.639 1261.31 412.819 1263.19 438.296 1254.34 453.313 1232.93 463.6 1237.98 442.855 1233.69 417.378 1222.96 402.897 1198.83 403.701 1180.05 418.719 1171.2 440.709 1163.41 477.805 928.809 505.506 933.774 484.405 927.568 444.684 909.57 422.342 885.986 414.894 851.23 418.618 823.902 438.293 808.407 469.51 805.304 516.677 751.309 517.298 718.779 511.868 668.781 492.439 662.733 450.887 668.725 459.699 692.195 463.171 715.959 410.35 675.775 404.358 690.932 392.021 744.159 378.626 828.404 368.051 901.722 373.339"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "187.317 1003.17  51.9666"
+                },
+                {
+                    "category": 0,
+                    "type": "circle",
+                    "value": "529.756 992.927  48.3148"
+                },
+                {
+                    "category": 1,
+                    "type": "circle",
+                    "value": "969.79 771.595  60.0174"
+                },
+                {
+                    "category": 1,
+                    "type": "circle",
+                    "value": "1218.49 749.834  61.7415"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect",
+                    "value": "332.861 425.768 557.276 273.216 -0.0445403"
+                },
+                {
+                    "category": 1,
+                    "type": "oriented_rect",
+                    "value": "1598.05 414.878 611.454 264.845 -0.0355795"
+                },
+                {
+                    "category": 0,
+                    "type": "polyline",
+                    "value": "643.975 967.826 664.845 923.106 821.366 893.292 921.242 850.062 1115.03 851.553 1255.16 885.839 1283.48 943.975"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_point",
+                    "value": "1179.1 269.73 1.44247"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_point",
+                    "value": "869.189 285.586 0.0906599"
+                }
+            ],
+            "name": "cars.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "point",
+                    "value": "98.305 493.22"
+                },
+                {
+                    "category": 0,
+                    "type": "point",
+                    "value": "254.568 459.491"
+                },
+                {
+                    "category": 1,
+                    "type": "point",
+                    "value": "167.797 528.814"
+                },
+                {
+                    "category": 1,
+                    "type": "point",
+                    "value": "154.494 477.185"
+                },
+                {
+                    "category": 0,
+                    "type": "polygon",
+                    "value": "749.152 1011.86 879.661 1089.83 911.864 1152.54 874.576 1310.17 757.627 1384.75 605.085 1352.54 540.678 1184.75 676.271 1016.95"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_rect",
+                    "value": "1254.53 714.539 245.863 280.536 0"
+                }
+            ],
+            "name": "cookies.jpg"
+        }
+    ]
+}

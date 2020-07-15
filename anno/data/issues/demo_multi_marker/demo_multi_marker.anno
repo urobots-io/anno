@@ -1,0 +1,936 @@
+{
+    "definitions": {
+        "files_loader": {
+        },
+        "files_root_dir": "images",
+        "marker_types": {
+            "Ax2": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "AA"
+                    }
+                ],
+                "description": "AA battery",
+                "filename_filter": [
+                    "batteries"
+                ],
+                "line_width": -2,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0.3, 0.9, 0.3, 1.1)",
+                    "p.DrawLine(-0.3, 0.9, -0.3, 1.1)"
+                ],
+                "shared_properties": {
+                    "height": "ax2_height",
+                    "width": "ax2_width"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 120,
+                    "width": 40
+                },
+                "value_type": "oriented_rect"
+            },
+            "Ax3": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "AAA"
+                    }
+                ],
+                "description": "AAA battery",
+                "filename_filter": [
+                    "batteries"
+                ],
+                "line_width": -2,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0.4, 0.9, 0.4, 1.1)",
+                    "p.DrawLine(0, 0.9, 0, 1.1)",
+                    "p.DrawLine(-0.4, 0.9, -0.4, 1.1)"
+                ],
+                "shared_properties": {
+                    "height": "ax3_width",
+                    "width": "ax3_height"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 110,
+                    "width": 30
+                },
+                "value_type": "oriented_rect"
+            },
+            "motor_cover_front_position": {
+                "categories": [
+                    {
+                        "color": "#00ff00",
+                        "id": 0,
+                        "name": "cover OK"
+                    }
+                ],
+                "filename_filter": [
+                    "motor_covers"
+                ],
+                "line_width": -2,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawCircle(0, 0, 0.5 * Math.min(p.Property(\"width\"), p.Property(\"height\")) - 5)"
+                ],
+                "shared_properties": {
+                    "height": "motor_height",
+                    "width": "motor_width"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 120,
+                    "width": 120
+                },
+                "value_type": "oriented_rect"
+            },
+            "motor_cover_rear_position": {
+                "categories": [
+                    {
+                        "color": "#00ff00",
+                        "id": 0,
+                        "name": "cover OK"
+                    }
+                ],
+                "filename_filter": [
+                    "motor_covers"
+                ],
+                "line_width": -2,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetBaseTransform(false, false)",
+                    "p.DrawCircle(0, 0, 0.5 * Math.min(p.Property(\"width\"), p.Property(\"height\")) - 3.7)"
+                ],
+                "shared_properties": {
+                    "height": {
+                        "a": 0.75,
+                        "name": "motor_height"
+                    },
+                    "width": {
+                        "a": 0.75,
+                        "name": "motor_width"
+                    }
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 120,
+                    "width": 120
+                },
+                "value_type": "oriented_rect"
+            },
+            "plane_window": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Empty"
+                    }
+                ],
+                "description": "Plane window",
+                "filename_filter": [
+                    "plane_windows"
+                ],
+                "line_width": -2,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(0, 0, 1.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, 0, 0, 1)"
+                ],
+                "shared_properties": {
+                    "angle": "p3",
+                    "height": "p2",
+                    "width": "p1"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 80,
+                    "width": 40
+                },
+                "value_type": "oriented_rect"
+            },
+            "polygon": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "description": "Objects",
+                "filename_filter": [
+                    "planes"
+                ],
+                "value_type": "polygon"
+            },
+            "shared_rect_1": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Empty"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Loaded"
+                    }
+                ],
+                "description": "Camera box small",
+                "filename_filter": [
+                    "20191111"
+                ],
+                "line_width": -5,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(-0.2, 0, 0.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, -0.2, 0, 0.2)"
+                ],
+                "shared_count": 10,
+                "shared_properties": {
+                    "height": "r12",
+                    "width": "r13"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 280,
+                    "width": 240
+                },
+                "value_type": "oriented_rect"
+            },
+            "shared_rect_2": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Empty"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Loaded"
+                    }
+                ],
+                "description": "Camera box large",
+                "filename_filter": [
+                    "20191111"
+                ],
+                "line_width": -5,
+                "rendering_script": [
+                    "p.SetBaseTransform(true, true)",
+                    "p.SetDefaultPen()",
+                    "p.DrawRect(-1, -1, 2, 2)",
+                    "p.SetPen(255, 0, 0, -3)",
+                    "p.DrawLine(-0.2, 0, 0.2, 0)",
+                    "p.SetPen(0, 255, 0, -3)",
+                    "p.DrawLine(0, -0.2, 0, 0.2)"
+                ],
+                "shared_count": 4,
+                "shared_properties": {
+                    "height": "r22",
+                    "width": "r23"
+                },
+                "stamp": true,
+                "stamp_parameters": {
+                    "height": 280,
+                    "width": 240
+                },
+                "value_type": "oriented_rect"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "type": "polygon",
+                    "value": "1324.94 506.825 1366.03 539.7 1450.96 594.492 1482.46 624.628 1482.46 643.805 1387.95 687.639 1267.41 702.706 1092.07 680.79 930.435 679.42 731.814 701.336 766.059 716.404 818.112 731.472 829.07 762.977 827.7 790.373 796.195 805.441 722.226 787.634 704.418 769.826 689.351 769.826 675.653 743.8 638.668 713.665 416.761 739.691 452.376 764.347 486.621 768.457 509.907 798.592 494.839 828.728 472.923 842.426 405.803 823.248 377.037 790.373 371.558 765.717 355.12 747.91 57.8739 775.306 29.1082 756.128 486.621 695.857 561.96 684.899 549.631 678.05 590.725 660.243 624.97 662.982 731.814 641.065 704.418 625.998 587.986 604.081 449.636 530.112 248.276 558.878 222.25 547.919 415.391 499.976 397.584 486.278 411.282 465.731 327.724 299.986 378.407 294.507 505.798 435.596 541.413 408.2 575.657 408.2 551.001 472.58 559.22 476.69 861.945 491.757 945.503 483.539 945.503 465.731 970.159 439.705 950.982 431.486 972.899 420.528 1012.62 306.835 1061.94 305.465 1071.52 394.502 1144.12 413.679 1161.93 428.747 1164.67 453.403 1148.23 472.58 1118.1 472.58 1081.11 462.992 1086.59 482.169"
+                },
+                {
+                    "category": 0,
+                    "type": "polygon",
+                    "value": "792.915 283.815 808.315 298.115 811.615 309.115 791.815 323.415 758.815 320.115 743.415 304.715 754.415 297.015 742.315 288.215 655.415 301.415 681.815 311.315 675.215 332.215 638.915 333.315 607.015 320.115 621.315 316.815 611.415 304.715 506.915 319.015 494.815 312.415 761.015 273.915 737.915 275.015 687.315 267.315 626.815 246.415 545.415 256.315 524.515 253.015 607.015 233.215 599.315 227.715 605.915 214.515 566.315 134.215 587.215 130.915 659.815 201.315 666.415 193.615 686.215 193.615 673.015 213.415 689.515 214.515 874.315 203.515 906.215 151.815 934.815 146.315 926.015 184.815 944.715 184.815 994.215 180.415 1017.32 191.415 1063.52 231.015 1042.62 257.415 982.115 269.515 923.815 269.515 865.515 287.115"
+                }
+            ],
+            "name": "polygons/planes.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "type": "shared_rect_1",
+                    "value": "420.999 463.848 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect_1",
+                    "value": "663.71 460.252 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_1",
+                    "value": "412.01 753.303 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_1",
+                    "value": "658.316 755.101 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 4,
+                    "type": "shared_rect_1",
+                    "value": "401.222 1040.96 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 5,
+                    "type": "shared_rect_1",
+                    "value": "638.54 1044.56 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 6,
+                    "type": "shared_rect_1",
+                    "value": "874.059 1046.35 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 7,
+                    "type": "shared_rect_1",
+                    "value": "1109.58 1051.75 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 8,
+                    "type": "shared_rect_1",
+                    "value": "1343.3 1057.14 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 9,
+                    "type": "shared_rect_1",
+                    "value": "1582.42 1058.94 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "type": "shared_rect_2",
+                    "value": "883.049 530.369 190.573 409.912 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect_2",
+                    "value": "1325.32 528.571 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_2",
+                    "value": "1557.25 532.167 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "1098.79 530.369 190.573 409.912 0"
+                }
+            ],
+            "name": "shared_markers/20191111_094434.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "shared_rect_1",
+                    "value": "420.999 463.848 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect_1",
+                    "value": "663.71 460.252 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_1",
+                    "value": "412.01 753.303 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_1",
+                    "value": "658.316 755.101 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 4,
+                    "type": "shared_rect_1",
+                    "value": "401.222 1040.96 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 5,
+                    "type": "shared_rect_1",
+                    "value": "638.54 1044.56 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 6,
+                    "type": "shared_rect_1",
+                    "value": "874.059 1046.35 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 7,
+                    "type": "shared_rect_1",
+                    "value": "1109.58 1051.75 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 8,
+                    "type": "shared_rect_1",
+                    "value": "1343.3 1057.14 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 9,
+                    "type": "shared_rect_1",
+                    "value": "1582.42 1058.94 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "type": "shared_rect_2",
+                    "value": "883.049 530.369 190.573 409.912 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect_2",
+                    "value": "1325.32 528.571 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_2",
+                    "value": "1557.25 532.167 190.573 409.912 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "1098.79 530.369 190.573 409.912 0"
+                }
+            ],
+            "name": "shared_markers/20191111_094500.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "shared_rect_2",
+                    "value": "883.049 530.369 190.573 409.912 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect_2",
+                    "value": "1325.32 528.571 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_2",
+                    "value": "1557.25 532.167 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "1098.79 530.369 190.573 409.912 0"
+                },
+                {
+                    "category": 0,
+                    "type": "shared_rect_1",
+                    "value": "420.999 463.848 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect_1",
+                    "value": "663.71 460.252 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_1",
+                    "value": "412.01 753.303 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_1",
+                    "value": "658.316 755.101 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 4,
+                    "type": "shared_rect_1",
+                    "value": "401.222 1040.96 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 5,
+                    "type": "shared_rect_1",
+                    "value": "638.54 1044.56 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 6,
+                    "type": "shared_rect_1",
+                    "value": "874.059 1046.35 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 7,
+                    "type": "shared_rect_1",
+                    "value": "1109.58 1051.75 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 8,
+                    "type": "shared_rect_1",
+                    "value": "1343.3 1057.14 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 9,
+                    "type": "shared_rect_1",
+                    "value": "1582.42 1058.94 212.148 258.892 0"
+                }
+            ],
+            "name": "shared_markers/20191111_094525.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 1,
+                    "type": "shared_rect_1",
+                    "value": "420.999 463.848 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 1,
+                    "type": "shared_rect_1",
+                    "value": "663.71 460.252 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_1",
+                    "value": "412.01 753.303 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_1",
+                    "value": "658.316 755.101 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 4,
+                    "type": "shared_rect_1",
+                    "value": "401.222 1040.96 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 5,
+                    "type": "shared_rect_1",
+                    "value": "638.54 1044.56 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 6,
+                    "type": "shared_rect_1",
+                    "value": "874.059 1046.35 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 7,
+                    "type": "shared_rect_1",
+                    "value": "1109.58 1051.75 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 8,
+                    "type": "shared_rect_1",
+                    "value": "1343.3 1057.14 212.148 258.892 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 9,
+                    "type": "shared_rect_1",
+                    "value": "1582.42 1058.94 212.148 258.892 0"
+                },
+                {
+                    "category": 0,
+                    "type": "shared_rect_2",
+                    "value": "883.049 530.369 190.573 409.912 0"
+                },
+                {
+                    "category": 0,
+                    "shared_index": 1,
+                    "type": "shared_rect_2",
+                    "value": "1325.32 528.571 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 2,
+                    "type": "shared_rect_2",
+                    "value": "1557.25 532.167 190.573 409.912 0"
+                },
+                {
+                    "category": 1,
+                    "shared_index": 3,
+                    "type": "shared_rect_2",
+                    "value": "1098.79 530.369 190.573 409.912 0"
+                }
+            ],
+            "name": "shared_markers/20191111_094544.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "664.911 454.913 28.2985 109.224 -0.977384"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "756.729 552.185 28.2985 109.224 0.61741"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "693.093 576.731 28.2985 109.224 -2.3911"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "802.184 329.458 28.2985 109.224 2.44782"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "908.547 383.094 28.2985 109.224 -0.133081"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "991.275 404.004 28.2985 109.224 -1.33954"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "1082.18 422.185 28.2985 109.224 2.41292"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "1031.27 516.731 28.2985 109.224 -0.571595"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "633.093 333.094 28.2985 109.224 1.64784"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "235.82 445.822 28.2985 109.224 0.0567232"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "293.093 724.004 28.2985 109.224 -0.798488"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "384.911 677.64 28.2985 109.224 1.43553"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "729.456 766.731 28.2985 109.224 1.33081"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "804.911 693.094 28.2985 109.224 -2.75326"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "834.911 480.367 28.2985 109.224 1.7846"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "853.093 517.64 28.2985 109.224 1.88932"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "464.002 613.094 28.2985 109.224 1.57516"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "869.21 157.08 43.4073 129.976 -0.903208"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "516.52 282.547 43.4073 129.976 0.213803"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "660.757 235.126 43.4073 129.976 0.475602"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "733.864 275.631 43.4073 129.976 0.109083"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "911.69 250.933 43.4073 129.976 1.54025"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "455.269 165.971 43.4073 129.976 1.47044"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "191.493 272.667 43.4073 129.976 0.161443"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "143.084 363.557 43.4073 129.976 0.0567232"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "290.285 524.588 43.4073 129.976 -0.309796"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "596.542 492.975 43.4073 129.976 1.71479"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "308.068 225.247 43.4073 129.976 -2.57872"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "332.766 327.991 43.4073 129.976 -2.61363"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "373.271 365.532 43.4073 129.976 -2.28202"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "397.969 402.086 43.4073 129.976 -2.15984"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "756.586 377.387 43.4073 129.976 -1.46171"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "580.735 384.303 43.4073 129.976 -1.33954"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "742.755 637.212 43.4073 129.976 -1.33954"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "562.953 704.391 43.4073 129.976 -0.554142"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "901.811 663.886 43.4073 129.976 -0.0829031"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "977.881 574.973 43.4073 129.976 2.3082"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "601.482 580.9 43.4073 129.976 1.5228"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "432.547 581.888 43.4073 129.976 1.57516"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "461.196 526.564 43.4073 129.976 2.09876"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "487.87 436.663 43.4073 129.976 -1.3919"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "684.468 709.33 43.4073 129.976 1.80205"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "243.853 660.922 28.2985 109.224 -2.00277"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax3",
+                    "value": "117.398 261.8 28.2985 109.224 -2.61363"
+                },
+                {
+                    "category": 0,
+                    "type": "Ax2",
+                    "value": "853.403 335.895 43.4073 129.976 2.67472"
+                }
+            ],
+            "name": "shared_props/batteries.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "motor_cover_front_position",
+                    "value": "559.592 486.041 120 117.551 0"
+                },
+                {
+                    "category": 0,
+                    "type": "motor_cover_front_position",
+                    "value": "1105.19 489.724 120 117.551 0"
+                },
+                {
+                    "category": 0,
+                    "type": "motor_cover_rear_position",
+                    "value": "286.531 412.571 90 88.1633 0"
+                }
+            ],
+            "name": "shared_props/motor_covers.jpg"
+        },
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1142.22 427.379 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1230.63 425.611 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1318.16 424.726 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1408.35 422.958 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1495 422.074 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1583.41 420.306 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1674.48 420.306 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1762.01 417.653 58.7699 91.6542 -0.00614249"
+                },
+                {
+                    "category": 0,
+                    "type": "plane_window",
+                    "value": "1849.54 418.537 58.7699 91.6542 -0.00614249"
+                }
+            ],
+            "name": "shared_props/plane_windows.jpg"
+        }
+    ]
+}

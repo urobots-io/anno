@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# MS VS files
+.vs/
+x64/
+anno/GeneratedFiles
+*.vcxproj.user

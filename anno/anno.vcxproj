@@ -62,8 +62,7 @@
       <AdditionalDependencies>qtmaind.lib;opencv_core$(OPENCV_VER)d.lib;opencv_imgproc$(OPENCV_VER)d.lib;opencv_imgcodecs$(OPENCV_VER)d.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5WinExtrasd.lib;Qt5Widgetsd.lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>SubWCRev .. svn.template.txt version.cpp -e
-echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
+      <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER)d.dll "$(OutDir)"
@@ -93,8 +92,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir
       <AdditionalDependencies>qtmain.lib;opencv_core$(OPENCV_VER).lib;opencv_imgproc$(OPENCV_VER).lib;opencv_imgcodecs$(OPENCV_VER).lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5WinExtras.lib;Qt5Widgets.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>SubWCRev .. svn.template.txt version.cpp -e
-echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
+      <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER).dll "$(OutDir)"

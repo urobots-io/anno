@@ -83,4 +83,5 @@ The format of the marker data depends on the type of marker value:
 * polygon: ```x0 y0 x1 y1 ... xN yN```
 * polyline: ```x0 y0 x1 y1 ... xN yN```
 * rect: ```x0 y0 x1 y1```
+
 All coordinates are in image pixels, angles are in radians.

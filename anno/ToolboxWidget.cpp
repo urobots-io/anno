@@ -63,9 +63,15 @@ void ToolboxWidget::SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeMode
 }
 
 void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous) {
-    Q_UNUSED(previous)
+    Q_UNUSED(previous);
     auto index = proxy_.mapToSource(current);
-    emit SelectionChanged(definitions_->GetDefinition(index), definitions_->GetCategory(index));
+    auto def = definitions_->GetDefinition(index);
+    auto cat = definitions_->GetCategory(index);
+#ifdef _DEBUG
+    if (def) qDebug(QString("Selected Type %0").arg(def->type_name).toLatin1());
+    if (cat) qDebug(QString("Selected Category %0").arg(cat->name).toLatin1());
+#endif
+    emit SelectionChanged(def, cat);
 }
 
 void ToolboxWidget::SetFile(std::shared_ptr<FileModel> file) {
@@ -96,8 +102,6 @@ void ToolboxWidget::OnRowsAdded(const QModelIndex &parent, int first, int last) 
     Q_UNUSED(parent);
     Q_UNUSED(first);
     Q_UNUSED(last);
-    
-    // CleanupSelection();
 
     for (int i = first; i <= last; ++i) {        
         ui.treeView->expand(proxy_.index(i, 0, parent));
@@ -129,6 +133,7 @@ void ToolboxWidget::AddMarkerType() {
         ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
         ui.treeView->scrollTo(index);
         ui.treeView->edit(index);
+        OnCurrentChanged(index, QModelIndex());
     }
 }
 
@@ -160,6 +165,7 @@ void ToolboxWidget::AddCategory() {
             ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
             ui.treeView->scrollTo(index);
             ui.treeView->edit(index);
+            OnCurrentChanged(index, QModelIndex());
         }
     }
 }

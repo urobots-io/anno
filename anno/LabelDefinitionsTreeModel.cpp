@@ -211,7 +211,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     
     auto cat = def->categories[0] = std::make_shared<LabelCategory>();
     cat->color = Qt::red;
-    cat->name = "ok";
+    cat->name = "Category 0";
     cat->value = 0;
     cat->definition = def.get();    
 

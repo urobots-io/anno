@@ -276,16 +276,6 @@
                     "category": 0,
                     "type": "oriented_point",
                     "value": "869.189 285.586 0.0906599"
-                },
-                {
-                    "category": 0,
-                    "type": "oriented_rect",
-                    "value": "1042.69 199.445 463.204 179.625 -0.488692"
-                },
-                {
-                    "category": 0,
-                    "type": "oriented_rect",
-                    "value": "312.526 710.978 543.766 227.036 0"
                 }
             ],
             "name": "cars.jpg"

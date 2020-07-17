@@ -218,3 +218,46 @@ LabelCategory *LabelDefinitionsTreeModel::GetCategory(const QModelIndex & index)
     return nullptr;
 }
 
+void LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
+    QString name;
+    for (int i = 0; name.isEmpty(); ++i) {
+        name = QString("Marker %0").arg(i);
+        for (auto d : definitions_) {
+            if (d->type_name == name) {
+                name.clear();
+                break;
+            }
+        }        
+    }
+
+    int pos = int(definitions_.size());
+    beginInsertRows(QModelIndex(), pos, pos);
+
+    auto def = std::make_shared<LabelDefinition>();
+    def->type_name = name;
+    def->value_type = value_type;
+    definitions_.push_back(def);
+    
+    auto def_node = new TreeItem();
+    def_node->parent = tree_;
+    def_node->definition = def.get();
+    def_node->parent_index = definitions_.size();
+    tree_->children.push_back(def_node);
+
+    auto cat = def->categories[0] = std::make_shared<LabelCategory>();
+    cat->color = Qt::red;
+    cat->name = "ok";
+    cat->value = 0;
+    cat->definition = def.get();
+
+    auto cat_node = new TreeItem();
+    cat_node->parent = def_node;
+    cat_node->category = cat.get();
+    cat_node->definition = def.get();
+    cat_node->parent_index = 0;
+    def_node->children.push_back(cat_node);    
+
+    connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
+
+    endInsertRows();
+}

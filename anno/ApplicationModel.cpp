@@ -85,6 +85,10 @@ void ApplicationModel::NewProject(QString images_folder) {
     pictures_path_original_ = images_folder;
 
     set_filesystem(std::make_shared<LocalFilesystem>(images_folder));
+
+    auto empty_definitions = std::vector<std::shared_ptr<LabelDefinition>>();
+    set_label_definitions(std::make_shared<LabelDefinitionsTreeModel>(this, empty_definitions));
+    connect(get_label_definitions().get(), &LabelDefinitionsTreeModel::Changed, this, &ApplicationModel::SetModified);
 }
 
 bool ApplicationModel::OpenProject(QString filename, QStringList & errors) {

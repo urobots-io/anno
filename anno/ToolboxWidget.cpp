@@ -12,6 +12,7 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
         this,
         &ToolboxWidget::OnCurrentChanged);
     connect(&proxy_, &QAbstractItemModel::rowsInserted, this, &ToolboxWidget::OnRowsAdded);
+    connect(ui.add_marker_type_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowAddMarkerMenu);
 }
 
 ToolboxWidget::~ToolboxWidget()
@@ -30,6 +31,9 @@ void ToolboxWidget::SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeMode
     ui.treeView->expandAll();
 
     CleanupSelection();
+
+    ui.treeView->setEnabled(model.get());
+    ui.add_marker_type_pushButton->setEnabled(model.get());
 }
 
 void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous) {
@@ -69,6 +73,26 @@ void ToolboxWidget::OnRowsAdded(const QModelIndex &parent, int first, int last) 
     ui.treeView->expandAll();
 }
 
+void ToolboxWidget::ShowAddMarkerMenu() {
+    QMenu context_menu(this);
+
+    for (int i = int(LabelType::circle); i < int(LabelType::max_types); ++i) {
+        auto type_name = LabelTypeToString(LabelType(i));
+        auto a = new QAction(tr(type_name.toLatin1()), &context_menu);
+        a->setObjectName(type_name);
+        connect(a, &QAction::triggered, this, &ToolboxWidget::AddMarkerType);                        
+        context_menu.addAction(a);
+    }
+
+    context_menu.exec(ui.widget->mapToGlobal(ui.add_marker_type_pushButton->geometry().bottomRight()));
+}
+
+void ToolboxWidget::AddMarkerType() {
+    auto type = LabelTypeFromString(((QAction*)sender())->objectName());
+    auto definitions = (LabelDefinitionsTreeModel*)proxy_.sourceModel();
+    definitions->CreateMarkerType(type);
+}
+
 ToolboxProxyModel::ToolboxProxyModel(QObject *parent)
 : QSortFilterProxyModel(parent)
 {
@@ -94,4 +118,3 @@ bool ToolboxProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     auto definition = definitions->GetDefinition(index);
     return !definition || definition->AllowedForFile(file_.get());
 }
-

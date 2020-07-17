@@ -2,13 +2,15 @@
 #include <QString>
 
 enum class LabelType {	
-	circle,	
+	circle = 0,	
     oriented_point,
 	oriented_rect,    
     point,
 	polygon,
     polyline,
-    rect
+    rect,
+
+    max_types
 };
 
 inline QString LabelTypeToString(LabelType label_type) {

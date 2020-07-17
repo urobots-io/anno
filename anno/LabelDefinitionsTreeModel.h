@@ -30,6 +30,8 @@ public:
     LabelDefinition *GetDefinition(const QModelIndex &);
     LabelCategory *GetCategory(const QModelIndex &);
 
+    void CreateMarkerType(LabelType value_type);
+
 signals:
     void Changed();
 

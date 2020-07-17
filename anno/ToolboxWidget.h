@@ -40,6 +40,8 @@ public slots:
     void SetFile(std::shared_ptr<FileModel>);
     void CleanupSelection();
     void EnableFileFilter(bool);
+    void ShowAddMarkerMenu();
+    void AddMarkerType();
 
 private slots:
 	void OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous);	

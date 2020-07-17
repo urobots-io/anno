@@ -15,7 +15,8 @@ class Label;
 class LabelDefinition;
 class LabelProperty;
 
-struct LabelCategory {
+class LabelCategory : public QObject {
+public:
     /// parent definition
     LabelDefinition *definition;
 

@@ -39,29 +39,8 @@ public slots:
     void DefinitionChanged();
 
 private:
+    std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> GetItem(const QModelIndex & index) const;
+
+private:
 	std::vector<std::shared_ptr<LabelDefinition>> definitions_;
-
-	struct TreeItem {	
-		TreeItem *parent = nullptr;
-
-		/// !0 if item represents a category
-		LabelCategory *category = nullptr;
-
-		/// definition OR parent definition (if item is a category)
-		/// OR nullptr if item is "select" node
-		LabelDefinition *definition = nullptr;
-		
-		/// index inside the parent list
-		int parent_index = 0;
-
-		/// child nodes
-		std::vector<TreeItem*> children;
-
-		/// recursive cleanup
-		void Clear();
-	};
-
-	/// TODO: this all is not needed in 2 level tree if ModelIndex internal pointer will code 2 indexes
-
-	TreeItem *tree_;
 };

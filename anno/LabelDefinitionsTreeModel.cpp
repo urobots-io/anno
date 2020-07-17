@@ -187,7 +187,7 @@ LabelCategory *LabelDefinitionsTreeModel::GetCategory(const QModelIndex & index)
     return GetItem(index).second.get();
 }
 
-void LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {    
+QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {    
     QStringList cased;
     for (auto word : LabelTypeToString(value_type).split("_", QString::SkipEmptyParts)) {
         cased << word.at(0).toUpper() + word.mid(1);
@@ -207,18 +207,43 @@ void LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     auto def = std::make_shared<LabelDefinition>();
     def->type_name = name;
     def->value_type = value_type;
+    connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
     auto cat = def->categories[0] = std::make_shared<LabelCategory>();
     cat->color = Qt::red;
     cat->name = "ok";
     cat->value = 0;
-    cat->definition = def.get();
-
-    connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
+    cat->definition = def.get();    
 
     int pos = int(definitions_.size()) + 1;
     beginInsertRows(QModelIndex(), pos, pos);    
     definitions_.push_back(def);    
     endInsertRows();
-    
+
+    return createIndex(pos, 0, def.get());
+}
+
+QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index) {
+    auto def = GetDefinition(index);
+    if (!def) {
+        return QModelIndex();
+    }
+
+    int value = 0;
+    for (auto c : def->categories) {
+        value = std::max(value, c.first + 1);
+    }
+
+    auto cat = std::make_shared<LabelCategory>();
+    cat->color = GetStandardColor(value);
+    cat->name = QString("Category %0").arg(value);
+    cat->value = value;
+    cat->definition = def;    
+
+    int pos = int(def->categories.size());
+    beginInsertRows(index, pos, pos);
+    def->categories[value] = cat;
+    endInsertRows();
+
+    return createIndex(pos, 0, cat.get());
 }

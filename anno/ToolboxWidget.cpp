@@ -97,7 +97,7 @@ void ToolboxWidget::OnRowsAdded(const QModelIndex &parent, int first, int last) 
     Q_UNUSED(first);
     Q_UNUSED(last);
     
-    CleanupSelection();
+    // CleanupSelection();
 
     for (int i = first; i <= last; ++i) {        
         ui.treeView->expand(proxy_.index(i, 0, parent));
@@ -121,7 +121,15 @@ void ToolboxWidget::ShowAddMarkerMenu() {
 void ToolboxWidget::AddMarkerType() {
     auto type = LabelTypeFromString(((QAction*)sender())->objectName());
     auto definitions = (LabelDefinitionsTreeModel*)proxy_.sourceModel();
-    definitions->CreateMarkerType(type);
+    auto index = definitions->CreateMarkerType(type);
+    if (index.isValid()) {
+        index = proxy_.mapFromSource(index);
+        ui.treeView->selectionModel()->clearCurrentIndex();
+        ui.treeView->selectionModel()->clearSelection();        
+        ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
+        ui.treeView->scrollTo(index);
+        ui.treeView->edit(index);
+    }
 }
 
 void ToolboxWidget::OnCustomContextMenu(const QPoint &point) {
@@ -142,7 +150,18 @@ void ToolboxWidget::RenameItem() {
     }
 }
 
-void ToolboxWidget::AddCategory() {    
+void ToolboxWidget::AddCategory() {
+    if (menu_index_.isValid()) {
+        auto index = ((LabelDefinitionsTreeModel*)proxy_.sourceModel())->CreateCategory(menu_index_);
+        if (index.isValid()) {
+            index = proxy_.mapFromSource(index);
+            ui.treeView->selectionModel()->clearCurrentIndex();
+            ui.treeView->selectionModel()->clearSelection();
+            ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
+            ui.treeView->scrollTo(index);
+            ui.treeView->edit(index);
+        }
+    }
 }
 
 void ToolboxWidget::DeleteMarker() {

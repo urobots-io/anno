@@ -42,14 +42,28 @@ public slots:
     void EnableFileFilter(bool);
     void ShowAddMarkerMenu();
     void AddMarkerType();
+    void OnCustomContextMenu(const QPoint &point);
 
 private slots:
 	void OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous);	
     void OnItemDoubleClick(const QModelIndex & mindex);    
     void OnRowsAdded(const QModelIndex &parent, int first, int last);
+    void RenameItem();
+    void AddCategory();
+    void DeleteMarker();
+    void DeleteMarkerFromImages();
+    void DeleteCategory();
+    void DeleteCategoryFromImages();
+
+private:
+    template<class T>
+    void AddAction(QMenu *menu, QString icon, QString text, T callback);
 
 private:
 	Ui::ToolboxWidget ui;
     ToolboxProxyModel proxy_;
-    std::shared_ptr<LabelDefinitionsTreeModel> definitions_;    
+    std::shared_ptr<LabelDefinitionsTreeModel> definitions_;  
+    QMenu *marker_menu_ = nullptr;
+    QMenu *category_menu_ = nullptr;
+    QModelIndex menu_index_;
 };

@@ -218,10 +218,15 @@ LabelCategory *LabelDefinitionsTreeModel::GetCategory(const QModelIndex & index)
     return nullptr;
 }
 
-void LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
+void LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {    
+    QStringList cased;
+    for (auto word : LabelTypeToString(value_type).split("_", QString::SkipEmptyParts)) {
+        cased << word.at(0).toUpper() + word.mid(1);
+    }
+    QString label_type_name = cased.join(" ");
     QString name;
     for (int i = 0; name.isEmpty(); ++i) {
-        name = QString("Marker %0").arg(i);
+        name = QString("%0 %1").arg(label_type_name).arg(i);
         for (auto d : definitions_) {
             if (d->type_name == name) {
                 name.clear();

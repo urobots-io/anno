@@ -67,10 +67,15 @@ void ToolboxWidget::OnItemDoubleClick(const QModelIndex & mindex) {
 }
 
 void ToolboxWidget::OnRowsAdded(const QModelIndex &parent, int first, int last) {
-    Q_UNUSED(parent)
-    Q_UNUSED(first)
-    Q_UNUSED(last)
-    ui.treeView->expandAll();
+    Q_UNUSED(parent);
+    Q_UNUSED(first);
+    Q_UNUSED(last);
+    
+    CleanupSelection();
+
+    for (int i = first; i <= last; ++i) {        
+        ui.treeView->expand(proxy_.index(i, 0, parent));
+    }
 }
 
 void ToolboxWidget::ShowAddMarkerMenu() {

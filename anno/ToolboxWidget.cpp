@@ -20,16 +20,16 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     marker_menu_ = new QMenu(topLevelWidget());
     AddAction(marker_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
     AddAction(marker_menu_, "add.ico", tr("Add Category"), &ToolboxWidget::AddCategory);
-    marker_menu_->addSeparator();
+    /*marker_menu_->addSeparator();
     AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
-    AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);
+    AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);*/
 
 
     category_menu_ = new QMenu(topLevelWidget());
     AddAction(category_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
-    category_menu_->addSeparator();
+    /*category_menu_->addSeparator();
     AddAction(category_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteCategory);
-    AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);
+    AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);*/
 }
 
 ToolboxWidget::~ToolboxWidget()

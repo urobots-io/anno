@@ -298,10 +298,10 @@ bool TryLoadFile(QString filename, std::shared_ptr<FilesystemInterface> filesyst
     if (!file_data.size())
         return false;
 
-    cv::Mat rawData(1, int(file_data.size()), CV_8UC1, (void*)&file_data[0]);
+    cv::Mat rawData(1, int(file_data.size()), CV_8UC1, (void*)file_data.data());
     result = cv::imdecode(rawData, cv::IMREAD_UNCHANGED);
-
-    if (result.type() != expected_format) {
+    auto read_format = result.type();
+    if (read_format != expected_format) {
         result = cv::Mat();
         return false;
     }

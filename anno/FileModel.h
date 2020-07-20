@@ -21,7 +21,7 @@ public:
     std::vector<std::shared_ptr<Label>> labels_;
 
     // Undoable actions
-    void DeleteAllLabels();
+    void DeleteAllLabels();    
     void PushCommand(QUndoCommand * command);
 
     std::shared_ptr<Label> CreateLabel(std::shared_ptr<Label>);
@@ -32,6 +32,8 @@ public:
 
     void NotifyUpdate(bool clear_selection, std::shared_ptr<Label> label_to_select = {});
     void NotifyUpdate(std::shared_ptr<Label> label_to_select);
+
+    void Delete(LabelDefinition*, LabelCategory*);
 
     bool HaveLabels() const { return !labels_.empty(); }
 

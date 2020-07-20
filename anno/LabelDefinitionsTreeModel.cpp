@@ -33,7 +33,7 @@ std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> Labe
     if (index.isValid()) {
         if (index.parent().isValid()) {
             if (auto def = static_cast<LabelDefinition*>(index.parent().internalPointer())) {
-                return { nullptr, def->categories[index.row()] };
+                return { nullptr, def->categories_list[index.row()] };
             }
         }
         else {
@@ -127,7 +127,7 @@ QModelIndex LabelDefinitionsTreeModel::index(int row, int column, const QModelIn
     }
     else {
         if (auto def = dynamic_cast<LabelDefinition*>((QObject*)parent.internalPointer())) {
-            return createIndex(row, column, def->categories[row].get());
+            return createIndex(row, column, def->categories_list[row].get());
         }
     }
     return QModelIndex();
@@ -138,19 +138,13 @@ QModelIndex LabelDefinitionsTreeModel::parent(const QModelIndex & index) const {
         return QModelIndex();
 
     auto internal_pointer = (QObject*)index.internalPointer();
-    if (!internal_pointer) {
-        return QModelIndex();
-    }
+    if (internal_pointer) {
+        if (auto def = dynamic_cast<LabelDefinition*>(internal_pointer)) {
+            return QModelIndex();
+        }
 
-    if (auto def = dynamic_cast<LabelDefinition*>(internal_pointer)) {
-        return QModelIndex();
-    }
-
-    if (auto category = dynamic_cast<LabelCategory*>(internal_pointer)) {
-        for (int i = 0; i < definitions_.size(); ++i) {
-            if (definitions_[i].get() == category->definition) {
-                return createIndex(i + 1, 0, category->definition);
-            }
+        if (auto category = dynamic_cast<LabelCategory*>(internal_pointer)) {
+            return GetIndex(category->definition);
         }
     }
     return QModelIndex();
@@ -164,7 +158,7 @@ int LabelDefinitionsTreeModel::rowCount(const QModelIndex & parent) const {
         return int(definitions_.size()) + 1;
     }
     else if (auto def = dynamic_cast<LabelDefinition*>((QObject*)parent.internalPointer())) {
-        return int(def->categories.size());
+        return int(def->categories_list.size());
     }    
 
     return 0;
@@ -209,7 +203,8 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     def->value_type = value_type;
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
-    auto cat = def->categories[0] = std::make_shared<LabelCategory>();
+    auto cat = std::make_shared<LabelCategory>();
+    def->categories_list.push_back(cat);
     cat->color = Qt::red;
     cat->name = "Category 0";
     cat->value = 0;
@@ -230,8 +225,8 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     }
 
     int value = 0;
-    for (auto c : def->categories) {
-        value = std::max(value, c.first + 1);
+    for (auto c : def->categories_list) {
+        value = std::max(value, c->value + 1);
     }
 
     auto cat = std::make_shared<LabelCategory>();
@@ -240,10 +235,50 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     cat->value = value;
     cat->definition = def;    
 
-    int pos = int(def->categories.size());
+    int pos = int(def->categories_list.size());
     beginInsertRows(index, pos, pos);
-    def->categories[value] = cat;
+    def->categories_list.push_back(cat);
     endInsertRows();
 
     return createIndex(pos, 0, cat.get());
+}
+
+QModelIndex LabelDefinitionsTreeModel::GetIndex(LabelDefinition *marker) const {    
+    for (size_t i = 0; i < definitions_.size(); ++i) {
+        if (definitions_[i].get() == marker) {
+            return createIndex(int(i + 1), 0, marker);
+        }        
+    }
+    return QModelIndex();
+}
+
+void LabelDefinitionsTreeModel::Delete(LabelDefinition* marker) {
+    auto index = GetIndex(marker);
+    if (index.isValid()) {
+        beginRemoveRows(QModelIndex(), index.row(), index.row());
+        definitions_.erase(definitions_.begin() + index.row() - 1);
+        endRemoveRows();
+    }
+}
+
+void LabelDefinitionsTreeModel::Delete(LabelCategory* category) {
+    auto marker = category->definition;
+    auto parent = GetIndex(marker);
+    if (!parent.isValid()) {
+        return;
+    }
+
+    auto& cats = marker->categories_list;
+    int index = -1;
+    for (auto i = cats.begin(); index < 0 && i != cats.end(); ++i) {
+        if (i->get() == category) {
+            index = i - cats.begin();
+            break;
+        }
+    }
+    if (index >= 0) {
+        beginRemoveRows(parent, index, index);
+        cats.erase(cats.begin() + index);
+        endRemoveRows();
+    }
 }

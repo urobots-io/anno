@@ -44,8 +44,8 @@ public:
     /// value type
     LabelType value_type;
 
-    /// list of categories
-	std::map<int, std::shared_ptr<LabelCategory>> categories;
+    /// categories
+	std::vector<std::shared_ptr<LabelCategory>> categories_list;
 
     /// > 0 - width in picture pixels
     /// < 0 - width in screen pixels
@@ -91,6 +91,8 @@ public:
     std::set<int> GetMissingIndexes(const std::set<int>& existing_indexes) const;
 
     bool AllowedForFile(FileModel*, int shared_index = -1) const;
+
+    std::shared_ptr<LabelCategory> GetCategory(int value) const;
 
 signals:
     void Changed();

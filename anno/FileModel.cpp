@@ -24,6 +24,25 @@ void FileModel::DeleteAllLabels() {
     }
 }
 
+void FileModel::Delete(LabelDefinition *marker, LabelCategory* category) {
+    bool file_updated = false;
+    for (auto i = labels_.begin(); i != labels_.end();) {
+        auto label_category = (*i)->GetCategory();
+        auto label_marker = label_category->definition;
+        if (label_category == category || label_marker == marker) {
+            file_updated = true;
+            i = labels_.erase(i);
+        }
+        else {
+            ++i;
+        }
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
+    }
+}
 
 void FileModel::PushCommand(QUndoCommand * command) {
     undo_stack_.push(command);    

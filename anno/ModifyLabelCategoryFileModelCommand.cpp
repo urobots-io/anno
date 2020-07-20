@@ -18,7 +18,7 @@ void ModifyLabelCategoryFileModelCommand::redo() {
 }
 
 void ModifyLabelCategoryFileModelCommand::ExchangeData() {
-    auto current_category = label_->GetCategory()->value;
-    label_->SetCategory(label_->GetCategory()->definition->categories[category_].get());
+    auto current_category = label_->GetCategory()->value;    
+    label_->SetCategory(label_->GetCategory()->definition->GetCategory(category_).get());
     category_ = current_category;
 }

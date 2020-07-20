@@ -10,7 +10,15 @@ LabelDefinition::LabelDefinition(QObject *parent)
 }
 
 LabelDefinition::~LabelDefinition() {
-    categories.clear();
+}
+
+std::shared_ptr<LabelCategory> LabelDefinition::GetCategory(int value) const {
+    for (auto c : categories_list) {
+        if (c->value == value) {
+            return c;
+        }
+    }
+    return {};
 }
 
 void LabelDefinition::set_rendering_script(const QString script) {

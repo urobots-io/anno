@@ -46,6 +46,12 @@ public:
     /// Return object which converts images after loading.
     std::shared_ptr<ImageConverter> GetImageConverter();
 
+    /// Delete label definition or its instances from all files
+    void Delete(LabelDefinition*, bool delete_only_instances);
+
+    /// Delete label category or its instances from all files
+    void Delete(LabelCategory*, bool delete_only_instances);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);

@@ -890,7 +890,7 @@ void DesktopWidget::SetCategoryValueForSelectedLabel(int category_value) {
         return;
 
     auto def = selected_label_->GetCategory()->definition;
-    if (def->categories.count(category_value)) {
+    if (def->GetCategory(category_value)) {
         file_->ModifyLabelCategory(selected_label_, category_value);
     }
 
@@ -955,9 +955,8 @@ void DesktopWidget::ChangeCurrentCategory(int category_value) {
     if (cursor_mode_ == CursorMode::creation_start && stamp_label_.get() && category_for_creation_) {
         // Change category for creation, it will also update stamp category
         auto def = category_for_creation_->definition;
-        auto lci = def->categories.find(category_value);
-        if (lci != def->categories.end()) {
-            set_category_for_creation(lci->second.get());
+        if (auto lci = def->GetCategory(category_value)) {
+            set_category_for_creation(lci.get());
         }
     }
     else {

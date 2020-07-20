@@ -33,6 +33,9 @@ public:
     QModelIndex CreateMarkerType(LabelType value_type);
     QModelIndex CreateCategory(const QModelIndex &);
 
+    void Delete(LabelDefinition*);
+    void Delete(LabelCategory*);
+
 signals:
     void Changed();
 
@@ -41,6 +44,7 @@ public slots:
 
 private:
     std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> GetItem(const QModelIndex & index) const;
+    QModelIndex GetIndex(LabelDefinition*) const;    
 
 private:
 	std::vector<std::shared_ptr<LabelDefinition>> definitions_;

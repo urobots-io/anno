@@ -165,9 +165,15 @@ void MainWindow::OnDeleteRequest(LabelDefinition* definition, LabelCategory* cat
     message = message.arg(definition ? definition->type_name : category->name);
     message += tr("\nWarning: this operation cannot be undone, it clears the undo stack.");
 
-    if (!messagebox::Question(message, caption)) {
-        return;
+    if (messagebox::Question(message, caption)) {
+        if (definition) {
+            model_.Delete(definition, delete_only_instances);
+        }
+        else if (category) {
+            model_.Delete(category, delete_only_instances);
+        }
     }
+
 }
 
 void MainWindow::OnDesktopCreationModeChanged(bool value) {

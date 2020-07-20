@@ -248,7 +248,8 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
             if (!jcolor.isNull())
                 category->color.setNamedColor(jcolor.toString());
 
-            def->categories[category->value] = category;
+            //xxx def->categories[category->value] = category;
+            def->categories_list.push_back(category);
         }
 
         if (categories.size()) {
@@ -271,7 +272,7 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
                 shared_label->SetSharedLabelIndex(i);
 
                 // use first category
-                shared_label->SetCategory(def->categories[0].get());
+                shared_label->SetCategory(def->categories_list[0].get());
 
                 // connect to the database
                 shared_label->ConnectSharedProperties(true, false);
@@ -311,7 +312,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
                 return false;
             }
 
-            if (!(*new_definition)->categories.count(old_category->value)) {
+            if (!(*new_definition)->GetCategory(old_category->value)) {
                 error = tr("Missing category \"%0\" of definition: \"%1\"")
                     .arg(old_category->value)
                     .arg(old_definition->type_name);
@@ -358,11 +359,11 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
                         return false;
                     }
                     (*new_definition)->shared_labels[index] = proxy->GetProxyClient();
-                    assignments[proxy->GetProxyClient().get()] = (*new_definition)->categories[0];
+                    assignments[proxy->GetProxyClient().get()] = (*new_definition)->categories_list[0];
                 }
             }
 
-            assignments[label.get()] = (*new_definition)->categories[old_category->value];
+            assignments[label.get()] = (*new_definition)->GetCategory(old_category->value);
         }
     }
 
@@ -440,13 +441,13 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
                 continue;
             }
 
-            if (!definition->categories.size()) {
+            if (!definition->categories_list.size()) {
                 errors << tr("Definition \"%0\" has no categories").arg(definition->type_name);
                 file_content_ok = false;
                 continue;
             }
 
-            if (!definition->categories.count(category)) {
+            if (!definition->GetCategory(category)) {
                 errors << tr("Definition \"%0\" has no category \"%1\"")
                     .arg(definition->type_name)
                     .arg(category);
@@ -488,7 +489,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             }
         
             label->SetText(marker[K_MARKER_TEXT].toString(""));
-            label->SetCategory(definition->categories[category].get());
+            label->SetCategory(definition->GetCategory(category).get());
             label->ConnectSharedProperties(true, false);
 
             if (marker.contains(K_MARKER_CUSTOM_PROPERTIES)) {
@@ -540,11 +541,11 @@ QJsonObject ApplicationModel::GenerateHeader() {
 
 			QJsonArray categories;
 
-			for (auto c : def->categories) {
+			for (auto c : def->categories_list) {
 				QJsonObject json;
-				json.insert(K_CATEGORY_NAME, c.second->name);
-				json.insert(K_CATEGORY_ID, c.second->value);
-				json.insert(K_CATEGORY_COLOR, c.second->color.name());
+				json.insert(K_CATEGORY_NAME, c->name);
+				json.insert(K_CATEGORY_ID, c->value);
+				json.insert(K_CATEGORY_COLOR, c->color.name());
 
 				categories.push_back(json);
 			}
@@ -866,4 +867,28 @@ std::shared_ptr<ImageConverter> ApplicationModel::GetImageConverter() {
         }
     }
     return {};
+}
+
+void ApplicationModel::Delete(LabelDefinition* marker, bool delete_only_instances) {
+    for (auto file : file_models_) {
+        file.second->Delete(marker, nullptr);
+    }
+
+    if (delete_only_instances) {
+        return;
+    }
+
+    label_definitions_->Delete(marker);
+}
+
+void ApplicationModel::Delete(LabelCategory* category, bool delete_only_instances) {
+    for (auto file : file_models_) {
+        file.second->Delete(nullptr, category);
+    }
+
+    if (delete_only_instances) {
+        return;
+    }
+
+    label_definitions_->Delete(category);
 }

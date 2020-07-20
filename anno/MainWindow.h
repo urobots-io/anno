@@ -40,6 +40,7 @@ public slots:
     void OnUndo();
     void OnRedo();
     void OnToolboxSelection(LabelDefinition*, LabelCategory*);
+    void OnDeleteRequest(LabelDefinition*, LabelCategory*, bool);
     void OnDesktopCreationModeChanged(bool);
     void OnDesktopWorldScaleChanged(double);
     void OnToolboxDoubleClick(LabelCategory*);

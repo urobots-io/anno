@@ -21,14 +21,14 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     AddAction(marker_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
     AddAction(marker_menu_, "add.ico", tr("Add Category"), &ToolboxWidget::AddCategory);
     marker_menu_->addSeparator();
-    /*AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
-    AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);*/
+    AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
+    AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);
 
     category_menu_ = new QMenu(topLevelWidget());
     AddAction(category_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
-    /*category_menu_->addSeparator();
+    category_menu_->addSeparator();
     AddAction(category_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteCategory);
-    AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);*/
+    AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);
 }
 
 ToolboxWidget::~ToolboxWidget()
@@ -174,15 +174,34 @@ void ToolboxWidget::AddCategory() {
 }
 
 void ToolboxWidget::DeleteMarker() {
-
+    if (definitions_) {
+        if (auto marker = definitions_->GetDefinition(menu_index_)) {
+            DeleteRequested(marker, nullptr, false);
+        }
+    }
 }
 
 void ToolboxWidget::DeleteMarkerFromImages() {
+    if (definitions_) {
+        if (auto marker = definitions_->GetDefinition(menu_index_)) {
+            DeleteRequested(marker, nullptr, true);
+        }
+    }
 }
 
 void ToolboxWidget::DeleteCategory() {
+    if (definitions_) {
+        if (auto category = definitions_->GetCategory(menu_index_)) {
+            DeleteRequested(nullptr, category, false);
+        }
+    }
 }
 
 void ToolboxWidget::DeleteCategoryFromImages() {
+    if (definitions_) {
+        if (auto category = definitions_->GetCategory(menu_index_)) {
+            DeleteRequested(nullptr, category, false);
+        }
+    }
 }
 

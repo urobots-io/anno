@@ -19,6 +19,7 @@
 #include <QStringBuilder>
 
 using namespace std;
+using namespace urobots::qt_helpers;
 
 #define NEW_PROJECT_IMAGE_FOLDER "NEW_PROJECT_IMAGE_FOLDER"
 #define SAVE_PROJECT_FOLDER "SAVE_PROJECT_FOLDER"
@@ -87,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui.files_tree, &SourcePicturesWidget::FileModelSelected, ui.toolbox, &ToolboxWidget::SetFile);
     connect(ui.toolbox, &ToolboxWidget::SelectionChanged, this, &MainWindow::OnToolboxSelection);
     connect(ui.toolbox, &ToolboxWidget::DoubleClick, this, &MainWindow::OnToolboxDoubleClick);
+    connect(ui.toolbox, &ToolboxWidget::DeleteRequested, this, &MainWindow::OnDeleteRequest);
     connect(ui.enable_toolbox_filter_action, &QAction::toggled, ui.toolbox, &ToolboxWidget::EnableFileFilter);
 
 	// selected label
@@ -134,6 +136,38 @@ void MainWindow::OnToolboxSelection(LabelDefinition* definition, LabelCategory* 
         ui.desktop->set_is_creation_mode(false);
     }
     ui.definition_editor->SelectDefinition(definition);
+}
+
+void MainWindow::OnDeleteRequest(LabelDefinition* definition, LabelCategory* category, bool delete_only_instances) {
+    QString message, caption;
+    if (definition) {
+        caption = tr("Delete marker type");
+        if (delete_only_instances) {
+            message = tr("Delete all instances of the marker type '%0'?");
+        }
+        else {
+            message = tr("Delete the marker type '%0'?");
+        }
+    }
+    else if (category) {
+        caption = tr("Delete category");
+        if (delete_only_instances) {
+            message = tr("Delete all instances of the category '%0'?");
+        }
+        else {
+            message = tr("Delete the category '%0'?");
+        }
+    }
+    else {
+        return;
+    }
+
+    message = message.arg(definition ? definition->type_name : category->name);
+    message += tr("\nWarning: this operation cannot be undone, it clears the undo stack.");
+
+    if (!messagebox::Question(message, caption)) {
+        return;
+    }
 }
 
 void MainWindow::OnDesktopCreationModeChanged(bool value) {

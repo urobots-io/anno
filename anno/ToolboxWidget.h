@@ -15,7 +15,8 @@ public:
 
 signals:
     void SelectionChanged(LabelDefinition*, LabelCategory*);
-    void DoubleClick(LabelCategory*);
+    void DoubleClick(LabelCategory*);    
+    void DeleteRequested(LabelDefinition*, LabelCategory*, bool delete_only_instances);
 
 public slots:
     void SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeModel>);

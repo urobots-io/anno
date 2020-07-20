@@ -20,10 +20,9 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     marker_menu_ = new QMenu(topLevelWidget());
     AddAction(marker_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
     AddAction(marker_menu_, "add.ico", tr("Add Category"), &ToolboxWidget::AddCategory);
-    /*marker_menu_->addSeparator();
-    AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
+    marker_menu_->addSeparator();
+    /*AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
     AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);*/
-
 
     category_menu_ = new QMenu(topLevelWidget());
     AddAction(category_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
@@ -122,18 +121,24 @@ void ToolboxWidget::ShowAddMarkerMenu() {
     context_menu.exec(ui.widget->mapToGlobal(ui.add_marker_type_pushButton->geometry().bottomRight()));
 }
 
-void ToolboxWidget::AddMarkerType() {
-    auto type = LabelTypeFromString(((QAction*)sender())->objectName());
-    auto definitions = (LabelDefinitionsTreeModel*)proxy_.sourceModel();
-    auto index = definitions->CreateMarkerType(type);
-    if (index.isValid()) {
-        index = proxy_.mapFromSource(index);
-        ui.treeView->selectionModel()->clearCurrentIndex();
-        ui.treeView->selectionModel()->clearSelection();        
-        ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
+void ToolboxWidget::MakeCurrent(QModelIndex index, bool start_editing) {
+    ui.treeView->selectionModel()->clearCurrentIndex();
+    ui.treeView->selectionModel()->clearSelection();
+    ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
+    if (start_editing) {
         ui.treeView->scrollTo(index);
         ui.treeView->edit(index);
-        OnCurrentChanged(index, QModelIndex());
+    }
+    OnCurrentChanged(index, QModelIndex());
+}
+
+void ToolboxWidget::AddMarkerType() {
+    auto type = LabelTypeFromString(((QAction*)sender())->objectName());
+    if (definitions_) {
+        auto index = definitions_->CreateMarkerType(type);
+        if (index.isValid()) {
+            MakeCurrent(proxy_.mapFromSource(index), true);            
+        }
     }
 }
 
@@ -156,21 +161,20 @@ void ToolboxWidget::RenameItem() {
 }
 
 void ToolboxWidget::AddCategory() {
-    if (menu_index_.isValid()) {
-        auto index = ((LabelDefinitionsTreeModel*)proxy_.sourceModel())->CreateCategory(menu_index_);
+    if (!menu_index_.isValid()) {
+        return;
+    }
+
+    if (definitions_) {
+        auto index = definitions_->CreateCategory(menu_index_);
         if (index.isValid()) {
-            index = proxy_.mapFromSource(index);
-            ui.treeView->selectionModel()->clearCurrentIndex();
-            ui.treeView->selectionModel()->clearSelection();
-            ui.treeView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
-            ui.treeView->scrollTo(index);
-            ui.treeView->edit(index);
-            OnCurrentChanged(index, QModelIndex());
+            MakeCurrent(proxy_.mapFromSource(index), true);
         }
     }
 }
 
 void ToolboxWidget::DeleteMarker() {
+
 }
 
 void ToolboxWidget::DeleteMarkerFromImages() {
@@ -180,31 +184,5 @@ void ToolboxWidget::DeleteCategory() {
 }
 
 void ToolboxWidget::DeleteCategoryFromImages() {
-}
-
-ToolboxProxyModel::ToolboxProxyModel(QObject *parent)
-: QSortFilterProxyModel(parent)
-{
-}
-
-void ToolboxProxyModel::SetFilterFileModel(std::shared_ptr<FileModel> file) {
-    file_ = file;
-    invalidateFilter();
-}
-
-void ToolboxProxyModel::EnableFileFilter(bool value) {
-    filter_enabled_ = value;
-    invalidateFilter();
-}
-
-bool ToolboxProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-    if (!filter_enabled_ || !file_) {
-        return true;
-    }
-
-    auto definitions = (LabelDefinitionsTreeModel*)sourceModel();
-    QModelIndex index = definitions->index(sourceRow, 0, sourceParent);
-    auto definition = definitions->GetDefinition(index);
-    return !definition || definition->AllowedForFile(file_.get());
 }
 

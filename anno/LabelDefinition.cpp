@@ -13,7 +13,7 @@ LabelDefinition::~LabelDefinition() {
 }
 
 std::shared_ptr<LabelCategory> LabelDefinition::GetCategory(int value) const {
-    for (auto c : categories_list) {
+    for (auto c : categories) {
         if (c->value == value) {
             return c;
         }

@@ -45,7 +45,7 @@ public:
     LabelType value_type;
 
     /// categories
-	std::vector<std::shared_ptr<LabelCategory>> categories_list;
+	std::vector<std::shared_ptr<LabelCategory>> categories;
 
     /// > 0 - width in picture pixels
     /// < 0 - width in screen pixels

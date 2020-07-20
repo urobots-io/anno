@@ -33,7 +33,7 @@ std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> Labe
     if (index.isValid()) {
         if (index.parent().isValid()) {
             if (auto def = static_cast<LabelDefinition*>(index.parent().internalPointer())) {
-                return { nullptr, def->categories_list[index.row()] };
+                return { nullptr, def->categories[index.row()] };
             }
         }
         else {
@@ -127,7 +127,7 @@ QModelIndex LabelDefinitionsTreeModel::index(int row, int column, const QModelIn
     }
     else {
         if (auto def = dynamic_cast<LabelDefinition*>((QObject*)parent.internalPointer())) {
-            return createIndex(row, column, def->categories_list[row].get());
+            return createIndex(row, column, def->categories[row].get());
         }
     }
     return QModelIndex();
@@ -158,7 +158,7 @@ int LabelDefinitionsTreeModel::rowCount(const QModelIndex & parent) const {
         return int(definitions_.size()) + 1;
     }
     else if (auto def = dynamic_cast<LabelDefinition*>((QObject*)parent.internalPointer())) {
-        return int(def->categories_list.size());
+        return int(def->categories.size());
     }    
 
     return 0;
@@ -204,7 +204,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
     auto cat = std::make_shared<LabelCategory>();
-    def->categories_list.push_back(cat);
+    def->categories.push_back(cat);
     cat->color = Qt::red;
     cat->name = "Category 0";
     cat->value = 0;
@@ -225,7 +225,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     }
 
     int value = 0;
-    for (auto c : def->categories_list) {
+    for (auto c : def->categories) {
         value = std::max(value, c->value + 1);
     }
 
@@ -235,9 +235,9 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     cat->value = value;
     cat->definition = def;    
 
-    int pos = int(def->categories_list.size());
+    int pos = int(def->categories.size());
     beginInsertRows(index, pos, pos);
-    def->categories_list.push_back(cat);
+    def->categories.push_back(cat);
     endInsertRows();
 
     return createIndex(pos, 0, cat.get());
@@ -268,7 +268,7 @@ void LabelDefinitionsTreeModel::Delete(LabelCategory* category) {
         return;
     }
 
-    auto& cats = marker->categories_list;
+    auto& cats = marker->categories;
     int index = -1;
     for (auto i = cats.begin(); index < 0 && i != cats.end(); ++i) {
         if (i->get() == category) {

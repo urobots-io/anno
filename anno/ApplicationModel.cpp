@@ -249,7 +249,7 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
                 category->color.setNamedColor(jcolor.toString());
 
             //xxx def->categories[category->value] = category;
-            def->categories_list.push_back(category);
+            def->categories.push_back(category);
         }
 
         if (categories.size()) {
@@ -272,7 +272,7 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
                 shared_label->SetSharedLabelIndex(i);
 
                 // use first category
-                shared_label->SetCategory(def->categories_list[0].get());
+                shared_label->SetCategory(def->categories[0].get());
 
                 // connect to the database
                 shared_label->ConnectSharedProperties(true, false);
@@ -359,7 +359,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
                         return false;
                     }
                     (*new_definition)->shared_labels[index] = proxy->GetProxyClient();
-                    assignments[proxy->GetProxyClient().get()] = (*new_definition)->categories_list[0];
+                    assignments[proxy->GetProxyClient().get()] = (*new_definition)->categories[0];
                 }
             }
 
@@ -441,7 +441,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
                 continue;
             }
 
-            if (!definition->categories_list.size()) {
+            if (!definition->categories.size()) {
                 errors << tr("Definition \"%0\" has no categories").arg(definition->type_name);
                 file_content_ok = false;
                 continue;
@@ -541,7 +541,7 @@ QJsonObject ApplicationModel::GenerateHeader() {
 
 			QJsonArray categories;
 
-			for (auto c : def->categories_list) {
+			for (auto c : def->categories) {
 				QJsonObject json;
 				json.insert(K_CATEGORY_NAME, c->name);
 				json.insert(K_CATEGORY_ID, c->value);

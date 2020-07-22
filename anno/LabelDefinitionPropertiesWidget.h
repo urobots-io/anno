@@ -17,6 +17,11 @@ public slots:
 private slots:
     void OnDescriptionTextChanged();
     void OnRenderingScriptTextChanged();
+    void OnChangeCategoryValue();
+    void OnChangeCategoryColor();
+
+private:
+    void UpdateCategoryData();
 
 private:
     Ui::LabelDefinitionPropertiesWidget ui;

@@ -304,15 +304,31 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
             model_->UpdateSharedProperties();
         }
 
-        ScriptPainter xp(this);  // explicitely define parent to avoid transfer of pointer ownership
-                            // another way to prevent PO transfer is to call QQmlEngine::setObjectOwnership        
-                            // QQmlEngine::setObjectOwnership(&test, QQmlEngine::CppOwnership);
+        /** Explicitely define parent to avoid transfer of pointer ownership
+        another way to prevent PO transfer is to call QQmlEngine::setObjectOwnership        
+        QQmlEngine::setObjectOwnership(&test, QQmlEngine::CppOwnership);
+        */
+        ScriptPainter xp(this);  
+        
         xp.pi.painter = &painter;
         xp.pi.world_scale = world_scale_;
         xp.original_transform = painter.transform();
 
         QJSValue objectValue = js_engine_.newQObject(&xp);
+        
+        // register the whole object to support old scripts
         js_engine_.globalObject().setProperty("p", objectValue);
+
+        // register script functions
+        auto &meta = ScriptPainter::staticMetaObject;
+        for (int i = 0; i < meta.methodCount(); ++i) {
+            auto m = meta.method(i);
+            if (m.methodType() == m.Slot) {
+                auto name = QString::fromLatin1(m.name());
+                js_engine_.globalObject().setProperty(name, objectValue.property(name));
+            }
+        }
+
         auto image_size = image_.GetPixmap().size();
         js_engine_.globalObject().setProperty("cols", image_size.width());
         js_engine_.globalObject().setProperty("rows", image_size.height());

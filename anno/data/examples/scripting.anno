@@ -2,8 +2,8 @@
     "definitions": {
         "files_root_dir": "images/scripting",
         "image_script": [
-            "p.SetPen(255, 0, 0, -1)",
-            "p.DrawEllipse(10, 10, 200, 200)"
+            "SetPen(255, 0, 0, -1)",
+            "DrawEllipse(10, 10, 200, 200)"
         ],
         "marker_types": {
             "ellipse": {
@@ -21,24 +21,24 @@
                 ],
                 "description": "Ellipse",
                 "rendering_script": [
-                    "p.SetBaseTransform(true, true)",
-                    "p.SetDefaultPen()",
-                    "p.DrawEllipse(-1, -1, 2, 2)",
-                    "p.DrawLine(-1, 0, 1, 0)",
-                    "p.DrawLine(0, -0.1, 0, 0.1)",
+                    "SetBaseTransform(true, true)",
+                    "SetDefaultPen()",
+                    "DrawEllipse(-1, -1, 2, 2)",
+                    "DrawLine(-1, 0, 1, 0)",
+                    "DrawLine(0, -0.1, 0, 0.1)",
                     "",
-                    "p.SetDefaultPen(-3)",
-                    "p.DrawArc(-0.5, -0.5, 1, 1, 0, 120)",
-                    "p.SetDefaultPen(-1)",
-                    "p.DrawArc(-0.5, -0.5, 1, 1, 180, 250)",
+                    "SetDefaultPen(-3)",
+                    "DrawArc(-0.5, -0.5, 1, 1, 0, 120)",
+                    "SetDefaultPen(-1)",
+                    "DrawArc(-0.5, -0.5, 1, 1, 180, 250)",
                     "",
-                    "p.SetBaseTransform(false, true)",
+                    "SetBaseTransform(false, true)",
                     "",
                     "if (category==0) {",
-                    "  p.DrawText(5, -5, \"Good\", 10)",
+                    "  DrawText(5, -5, \"Good\", 10)",
                     "}",
                     "else {",
-                    "  p.DrawText(5, -5, \"Bad\", 10)",
+                    "  DrawText(5, -5, \"Bad\", 10)",
                     "}"
                 ],
                 "value_type": "oriented_rect"
@@ -58,20 +58,20 @@
                 ],
                 "description": "Gripping position",
                 "rendering_script": [
-                    "p.SetBaseTransform(true, true)",
-                    "p.SetDefaultPen()",
-                    "p.DrawLine(-1, 0, 1, 0)",
+                    "SetBaseTransform(true, true)",
+                    "SetDefaultPen()",
+                    "DrawLine(-1, 0, 1, 0)",
                     "",
-                    "p.DrawLine(0, .5, 0, 1)",
-                    "p.DrawLine(0, .5, .05, .6)",
-                    "p.DrawLine(0, .5, -.05, .6)",
+                    "DrawLine(0, .5, 0, 1)",
+                    "DrawLine(0, .5, .05, .6)",
+                    "DrawLine(0, .5, -.05, .6)",
                     "",
-                    "p.DrawLine(0, -.5, 0, -1)",
-                    "p.DrawLine(0, -.5, .05, -.6)",
-                    "p.DrawLine(0, -.5, -.05, -.6)",
+                    "DrawLine(0, -.5, 0, -1)",
+                    "DrawLine(0, -.5, .05, -.6)",
+                    "DrawLine(0, -.5, -.05, -.6)",
                     "",
-                    "p.SetBaseTransform(false, true)",
-                    "p.DrawLine(0, -5, 0, 5)"
+                    "SetBaseTransform(false, true)",
+                    "DrawLine(0, -5, 0, 5)"
                 ],
                 "value_type": "oriented_rect"
             },
@@ -90,10 +90,10 @@
                 ],
                 "description": "Rectangle",
                 "rendering_script": [
-                    "p.RenderBase()",
-                    "p.SetBaseTransform(false, true)",
-                    "p.SetDefaultPen()",
-                    "p.DrawRect(-100, -50, 200, 100)"
+                    "RenderBase()",
+                    "SetBaseTransform(false, true)",
+                    "SetDefaultPen()",
+                    "DrawRect(-100, -50, 200, 100)"
                 ],
                 "stamp": true,
                 "value_type": "oriented_point"
@@ -113,9 +113,9 @@
                 ],
                 "description": "Opening",
                 "rendering_script": [
-                    "p.SetBaseTransform(false, false)",
-                    "p.SetDefaultPen()",
-                    "p.DrawEllipse(-40, -40, 80, 80)"
+                    "SetBaseTransform(false, false)",
+                    "SetDefaultPen()",
+                    "DrawEllipse(-40, -40, 80, 80)"
                 ],
                 "stamp": true,
                 "value_type": "point"

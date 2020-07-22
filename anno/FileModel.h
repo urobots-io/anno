@@ -33,7 +33,7 @@ public:
     void NotifyUpdate(bool clear_selection, std::shared_ptr<Label> label_to_select = {});
     void NotifyUpdate(std::shared_ptr<Label> label_to_select);
 
-    void Delete(LabelDefinition*, LabelCategory*);
+    void Delete(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>);
 
     bool HaveLabels() const { return !labels_.empty(); }
 

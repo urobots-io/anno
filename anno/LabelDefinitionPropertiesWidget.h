@@ -12,7 +12,7 @@ public:
     ~LabelDefinitionPropertiesWidget();
 
 public slots:
-    void SelectDefinition(LabelDefinition*);
+    void Select(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>);
 
 private slots:
     void OnDescriptionTextChanged();
@@ -20,5 +20,6 @@ private slots:
 
 private:
     Ui::LabelDefinitionPropertiesWidget ui;
-    LabelDefinition *definition_ = nullptr;
+    std::shared_ptr<LabelDefinition> definition_;
+    std::shared_ptr<LabelCategory> category_;
 };

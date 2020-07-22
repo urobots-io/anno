@@ -14,9 +14,9 @@ public:
 	~ToolboxWidget();
 
 signals:
-    void SelectionChanged(LabelDefinition*, LabelCategory*);
-    void DoubleClick(LabelCategory*);    
-    void DeleteRequested(LabelDefinition*, LabelCategory*, bool delete_only_instances);
+    void SelectionChanged(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>);
+    void DoubleClick(std::shared_ptr<LabelCategory>);
+    void DeleteRequested(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>, bool delete_only_instances);
 
 public slots:
     void SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeModel>);

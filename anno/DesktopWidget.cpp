@@ -208,7 +208,7 @@ QTransform DesktopWidget::GetWorldTransform() const {
     return translate * scale;
 }
 
-void DesktopWidget::set_category_for_creation(LabelCategory* value) {
+void DesktopWidget::set_category_for_creation(std::shared_ptr<LabelCategory> value) {
     if (category_for_creation_ == value)
         return;
 
@@ -265,7 +265,7 @@ void DesktopWidget::CreateStampLabel() {
         if (missing_shared_indexes.size()) {
             // create stamp for first missing index
             if (auto label = LabelFactory::CreateLabel(def->value_type)) {
-                label->SetCategory(category_for_creation_);
+                label->SetCategory(category_for_creation_.get());
                 label->InitStamp();
                 label->SetSharedLabelIndex(-1);
                 stamp_label_ = label;
@@ -274,7 +274,7 @@ void DesktopWidget::CreateStampLabel() {
     }
     else {
         if (auto label = LabelFactory::CreateLabel(def->value_type)) {
-            label->SetCategory(category_for_creation_);
+            label->SetCategory(category_for_creation_.get());
             label->InitStamp();
             stamp_label_ = label;
         }
@@ -618,7 +618,7 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
                 auto def = category_for_creation_->definition;
                 if (!def->is_shared() && def->AllowedForFile(file_.get())) {
                     if (auto label = LabelFactory::CreateLabel(def->value_type, &wi)) {
-                        label->SetCategory(category_for_creation_);
+                        label->SetCategory(category_for_creation_.get());
                         label->SetComputeVisualisationData(true);
                         is_creation_to_be_completed_ = false;
                         set_selected_label(file_->CreateLabel(label));
@@ -956,7 +956,7 @@ void DesktopWidget::ChangeCurrentCategory(int category_value) {
         // Change category for creation, it will also update stamp category
         auto def = category_for_creation_->definition;
         if (auto lci = def->GetCategory(category_value)) {
-            set_category_for_creation(lci.get());
+            set_category_for_creation(lci);
         }
     }
     else {

@@ -28,8 +28,8 @@ void LabelDefinitionPropertiesWidget::OnRenderingScriptTextChanged() {
     }
 }
 
-void LabelDefinitionPropertiesWidget::SelectDefinition(LabelDefinition* def) {
-    if (definition_ == def) 
+void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> def, std::shared_ptr<LabelCategory> category) {
+    if (definition_ == def && category_ == category) 
         return;
 
     definition_ = def;

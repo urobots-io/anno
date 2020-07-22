@@ -27,14 +27,14 @@ public:
 
 	QModelIndex GetSelectModeIndex();
 
-    LabelDefinition *GetDefinition(const QModelIndex &);
-    LabelCategory *GetCategory(const QModelIndex &);
+    std::shared_ptr<LabelDefinition> GetDefinition(const QModelIndex &);
+    std::shared_ptr<LabelCategory> GetCategory(const QModelIndex &);
 
     QModelIndex CreateMarkerType(LabelType value_type);
     QModelIndex CreateCategory(const QModelIndex &);
 
-    void Delete(LabelDefinition*);
-    void Delete(LabelCategory*);
+    void Delete(std::shared_ptr<LabelDefinition>);
+    void Delete(std::shared_ptr<LabelCategory>);
 
 signals:
     void Changed();

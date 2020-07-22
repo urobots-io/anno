@@ -127,7 +127,7 @@ void MainWindow::ShowAboutDialog() {
     about.exec();
 }
 
-void MainWindow::OnToolboxSelection(LabelDefinition* definition, LabelCategory* category) {    
+void MainWindow::OnToolboxSelection(std::shared_ptr<LabelDefinition> definition, std::shared_ptr<LabelCategory> category) {    
     if (category) {
         ui.desktop->set_category_for_creation(category);
         ui.desktop->set_is_creation_mode(true);
@@ -135,10 +135,10 @@ void MainWindow::OnToolboxSelection(LabelDefinition* definition, LabelCategory* 
     else {
         ui.desktop->set_is_creation_mode(false);
     }
-    ui.definition_editor->SelectDefinition(definition);
+    ui.definition_editor->Select(definition, category);
 }
 
-void MainWindow::OnDeleteRequest(LabelDefinition* definition, LabelCategory* category, bool delete_only_instances) {
+void MainWindow::OnDeleteRequest(std::shared_ptr<LabelDefinition> definition, std::shared_ptr<LabelCategory> category, bool delete_only_instances) {
     QString message, caption;
     if (definition) {
         caption = tr("Delete marker type");
@@ -478,10 +478,10 @@ void MainWindow::OnDesktopWorldScaleChanged(double value) {
     ui.scale_horizontalSlider->blockSignals(false);
 }
 
-void MainWindow::OnToolboxDoubleClick(LabelCategory* category) {
+void MainWindow::OnToolboxDoubleClick(std::shared_ptr<LabelCategory> category) {
     if (category && category->definition->is_shared()) {
         if (auto file = ui.desktop->GetFile()) {
-            file->CreateDefaultSharedLabel(category);
+            file->CreateDefaultSharedLabel(category.get());
         }
     }
 }

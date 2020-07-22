@@ -46,6 +46,14 @@ std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> Labe
     return {};
 }
 
+std::shared_ptr<LabelDefinition> LabelDefinitionsTreeModel::GetDefinition(const QModelIndex & index) {
+    return GetItem(index).first;
+}
+
+std::shared_ptr<LabelCategory> LabelDefinitionsTreeModel::GetCategory(const QModelIndex & index) {
+    return GetItem(index).second;
+}
+
 QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) const {
     if (!index.isValid())
         return QVariant();
@@ -173,14 +181,6 @@ QModelIndex LabelDefinitionsTreeModel::GetSelectModeIndex() {
     return createIndex(0, 0);
 }
 
-LabelDefinition *LabelDefinitionsTreeModel::GetDefinition(const QModelIndex & index) {
-    return GetItem(index).first.get();    
-}
-
-LabelCategory *LabelDefinitionsTreeModel::GetCategory(const QModelIndex & index) {
-    return GetItem(index).second.get();
-}
-
 QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {    
     QStringList cased;
     for (auto word : LabelTypeToString(value_type).split("_", QString::SkipEmptyParts)) {
@@ -233,7 +233,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     cat->color = GetStandardColor(value);
     cat->name = QString("Category %0").arg(value);
     cat->value = value;
-    cat->definition = def;    
+    cat->definition = def.get();    
 
     int pos = int(def->categories.size());
     beginInsertRows(index, pos, pos);
@@ -252,8 +252,8 @@ QModelIndex LabelDefinitionsTreeModel::GetIndex(LabelDefinition *marker) const {
     return QModelIndex();
 }
 
-void LabelDefinitionsTreeModel::Delete(LabelDefinition* marker) {
-    auto index = GetIndex(marker);
+void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelDefinition> marker) {
+    auto index = GetIndex(marker.get());
     if (index.isValid()) {
         beginRemoveRows(QModelIndex(), index.row(), index.row());
         definitions_.erase(definitions_.begin() + index.row() - 1);
@@ -261,7 +261,7 @@ void LabelDefinitionsTreeModel::Delete(LabelDefinition* marker) {
     }
 }
 
-void LabelDefinitionsTreeModel::Delete(LabelCategory* category) {
+void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelCategory> category) {
     auto marker = category->definition;
     auto parent = GetIndex(marker);
     if (!parent.isValid()) {
@@ -271,7 +271,7 @@ void LabelDefinitionsTreeModel::Delete(LabelCategory* category) {
     auto& cats = marker->categories;
     int index = -1;
     for (auto i = cats.begin(); index < 0 && i != cats.end(); ++i) {
-        if (i->get() == category) {
+        if (*i == category) {
             index = i - cats.begin();
             break;
         }

@@ -869,7 +869,7 @@ std::shared_ptr<ImageConverter> ApplicationModel::GetImageConverter() {
     return {};
 }
 
-void ApplicationModel::Delete(LabelDefinition* marker, bool delete_only_instances) {
+void ApplicationModel::Delete(std::shared_ptr<LabelDefinition> marker, bool delete_only_instances) {
     for (auto file : file_models_) {
         file.second->Delete(marker, nullptr);
     }
@@ -881,7 +881,7 @@ void ApplicationModel::Delete(LabelDefinition* marker, bool delete_only_instance
     label_definitions_->Delete(marker);
 }
 
-void ApplicationModel::Delete(LabelCategory* category, bool delete_only_instances) {
+void ApplicationModel::Delete(std::shared_ptr<LabelCategory> category, bool delete_only_instances) {
     for (auto file : file_models_) {
         file.second->Delete(nullptr, category);
     }

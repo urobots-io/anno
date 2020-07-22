@@ -28,7 +28,7 @@ public:
     /// Image scale power
     Q_PROPERTY(int world_scale_power READ get_world_scale_power WRITE set_world_scale_power NOTIFY world_scale_power_changed)
 	/// Category which will be used to create labels in the creation mode
-    Q_PROPERTY(LabelCategory *category_for_creation READ get_category_for_creation WRITE set_category_for_creation NOTIFY category_for_creation_changed)
+    Q_PROPERTY(std::shared_ptr<LabelCategory> category_for_creation READ get_category_for_creation WRITE set_category_for_creation NOTIFY category_for_creation_changed)
 	/// Creation mode status
     Q_PROPERTY(bool is_creation_mode READ get_is_creation_mode WRITE set_is_creation_mode NOTIFY is_creation_mode_changed)
 	/// Fit image to the widow 
@@ -99,7 +99,7 @@ public slots:
 
     void OnLabelDefinitionsChanged(std::shared_ptr<LabelDefinitionsTreeModel>);
 
-    DECLARE_Q_PROPERTY_WRITE(LabelCategory*, category_for_creation)
+    DECLARE_Q_PROPERTY_WRITE(std::shared_ptr<LabelCategory>, category_for_creation)
     DECLARE_Q_PROPERTY_WRITE(bool, is_creation_mode)
     IMPLEMENT_Q_PROPERTY_WRITE(bool, fit_to_view_on_load)
 
@@ -115,7 +115,7 @@ signals:
 	void mouse_pos_changed(QPointF);
     void world_scale_changed(double);
     void world_scale_power_changed(int);
-	void category_for_creation_changed(LabelCategory *);
+	void category_for_creation_changed(std::shared_ptr<LabelCategory>);
 	void is_creation_mode_changed(bool);
 	void fit_to_view_on_load_changed(bool);
     void is_loading_image_changed(bool);
@@ -194,7 +194,7 @@ private:
 
 	/// type of label which shall be created in creation mode    
     // TODO(ap): fix bug - open file with creation mode enabled
-	LabelCategory *category_for_creation_ = nullptr;
+	std::shared_ptr<LabelCategory> category_for_creation_;
 
 	/// is creation mode
 	bool is_creation_mode_ = false;

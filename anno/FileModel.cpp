@@ -24,12 +24,12 @@ void FileModel::DeleteAllLabels() {
     }
 }
 
-void FileModel::Delete(LabelDefinition *marker, LabelCategory* category) {
+void FileModel::Delete(std::shared_ptr<LabelDefinition> marker, std::shared_ptr<LabelCategory> category) {
     bool file_updated = false;
     for (auto i = labels_.begin(); i != labels_.end();) {
         auto label_category = (*i)->GetCategory();
         auto label_marker = label_category->definition;
-        if (label_category == category || label_marker == marker) {
+        if ((category && label_category == category.get()) || (marker && label_marker == marker.get())) {
             file_updated = true;
             i = labels_.erase(i);
         }

@@ -39,11 +39,11 @@ public slots:
     void CanRedoChanged(bool);    
     void OnUndo();
     void OnRedo();
-    void OnToolboxSelection(LabelDefinition*, LabelCategory*);
-    void OnDeleteRequest(LabelDefinition*, LabelCategory*, bool);
+    void OnToolboxSelection(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>);
+    void OnDeleteRequest(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>, bool);
     void OnDesktopCreationModeChanged(bool);
     void OnDesktopWorldScaleChanged(double);
-    void OnToolboxDoubleClick(LabelCategory*);
+    void OnToolboxDoubleClick(std::shared_ptr<LabelCategory>);
 	void OnProjectSettings();
     void UpdateApplicationTitle();
     void UpdateProjectControls();

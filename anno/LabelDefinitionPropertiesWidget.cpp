@@ -1,4 +1,5 @@
 #include "LabelDefinitionPropertiesWidget.h"
+#include "Highlighter.h"
 #include "messagebox.h"
 #include <QInputDialog>
 #include <QColorDialog>
@@ -9,6 +10,8 @@ LabelDefinitionPropertiesWidget::LabelDefinitionPropertiesWidget(QWidget *parent
 : QWidget(parent)
 {
     ui.setupUi(this);
+
+    new Highlighter(ui.rendering_script_textEdit->document(), palette(), Highlighter::JScript);
     
     connect(ui.description_lineEdit, &QLineEdit::textChanged, this, &LabelDefinitionPropertiesWidget::OnDescriptionTextChanged);
     connect(ui.rendering_script_textEdit, &QTextEdit::textChanged, this, &LabelDefinitionPropertiesWidget::OnRenderingScriptTextChanged);

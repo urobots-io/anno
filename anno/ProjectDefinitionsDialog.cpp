@@ -15,7 +15,7 @@ ProjectDefinitionsDialog::ProjectDefinitionsDialog(ApplicationModel *model, QWid
 {
     ui.setupUi(this);
 
-    new Highlighter(ui.textEdit->document(), palette());
+    new Highlighter(ui.textEdit->document(), palette(), Highlighter::JSon);
     
     auto def = model_->GenerateHeader();
     ui.textEdit->setText(QJsonDocument(def).toJson());

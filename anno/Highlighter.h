@@ -13,7 +13,12 @@ class Highlighter : public QSyntaxHighlighter
     Q_OBJECT
 
 public:
-    Highlighter(QTextDocument *parent, const QPalette & palette);
+    enum Type {
+        JSon,
+        JScript
+    };
+
+    Highlighter(QTextDocument *parent, const QPalette & palette, Type type);
 
 protected:
     void highlightBlock(const QString &text) override;

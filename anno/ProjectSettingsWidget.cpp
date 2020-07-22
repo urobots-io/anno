@@ -1,11 +1,14 @@
 #include "ProjectSettingsWidget.h"
 #include "ApplicationModel.h"
+#include "Highlighter.h"
 #include "ProjectDefinitionsDialog.h"
 
 ProjectSettingsWidget::ProjectSettingsWidget(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+
+    new Highlighter(ui.textEdit->document(), palette(), Highlighter::JScript);
 }
 
 void ProjectSettingsWidget::Init(ApplicationModel* model) {

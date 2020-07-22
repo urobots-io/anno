@@ -1,7 +1,7 @@
 #include "Highlighter.h"
 #include <QPalette>
 
-Highlighter::Highlighter(QTextDocument *parent, const QPalette & palette)
+Highlighter::Highlighter(QTextDocument *parent, const QPalette & palette, Type type)
     : QSyntaxHighlighter(parent)
 {
     int h, s, v;
@@ -13,26 +13,29 @@ Highlighter::Highlighter(QTextDocument *parent, const QPalette & palette)
     keywordFormat.setForeground(dark ? Qt::cyan : Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
-    /*
-    keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
-                    << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
-                    << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
-                    << "\\blong\\b" << "\\bnamespace\\b" << "\\boperator\\b"
-                    << "\\bprivate\\b" << "\\bprotected\\b" << "\\bpublic\\b"
-                    << "\\bshort\\b" << "\\bsignals\\b" << "\\bsigned\\b"
-                    << "\\bslots\\b" << "\\bstatic\\b" << "\\bstruct\\b"
-                    << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
-                    << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
-                    << "\\bvoid\\b" << "\\bvolatile\\b" << "\\bbool\\b";
-    */
 
-    // foam syntaxis
-    keywordPatterns
-        << "\\bFoamFile\\b"
-        << "\\blocalRefinement\\b"
-        << "\\bobjectRefinements\\b"
-        << "\\bboundaryLayers\\b"
-        << "\\brenameBoundary\\b";
+    switch (type) {
+    case JSon:
+        break;
+    case JScript:
+        keywordPatterns
+            << "\\babstract\\b" << "\\barguments\\b" << "\\bawait\\b" << "\\bboolean\\b"
+            << "\\bbreak\\b" << "\\bbyte\\b" << "\\bcase\\b" << "\\bcatch\\b"
+            << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b" << "\\bcontinue\\b"
+            << "\\bdebugger\\b" << "\\bdefault\\b" << "\\bdelete\\b" << "\\bdo\\b"
+            << "\\bdouble\\b" << "\\belse\\b" << "\\benum\\b" << "\\beval\\b"
+            << "\\bexport\\b" << "\\bextends\\b" << "\\bfalse\\b" << "\\bfinal\\b"
+            << "\\bfinally\\b" << "\\bfloat\\b" << "\\bfor\\b" << "\\bfunction\\b"
+            << "\\bgoto\\b" << "\\bif\\b" << "\\bimplements\\b" << "\\bimport\\b"
+            << "\\bin\\b" << "\\binstanceof\\b" << "\\bint\\b" << "\\binterface\\b"
+            << "\\blet\\b" << "\\blong\\b" << "\\bnative\\b" << "\\bnew\\b"
+            << "\\bnull\\b" << "\\bpackage\\b" << "\\bprivate\\b" << "\\bprotected\\b"
+            << "\\bpublic\\b" << "\\breturn\\b" << "\\bshort\\b" << "\\bstatic\\b"
+            << "\\bsuper\\b" << "\\bswitch\\b" << "\\bsynchronized\\b" << "\\bthis\\b"
+            << "\\bthrow\\b" << "\\bthrows\\b" << "\\btransient\\b" << "\\btrue\\b"
+            << "\\btry\\b" << "\\btypeof\\b" << "\\bvar\\b" << "\\bvoid\\b"
+            << "\\bvolatile\\b" << "\\bwhile\\b" << "\\bwith\\b" << "\\byield\\b";
+    }
 
     foreach (const QString &pattern, keywordPatterns) {
         rule.pattern = QRegularExpression(pattern);
@@ -50,8 +53,7 @@ Highlighter::Highlighter(QTextDocument *parent, const QPalette & palette)
     rule.pattern = QRegularExpression("\".*\"");
     rule.format = quotationFormat;
     highlightingRules.append(rule);
-
-    functionFormat.setFontItalic(true);
+    
     functionFormat.setForeground(Qt::blue);
     rule.pattern = QRegularExpression("\\b[A-Za-z0-9_]+(?=\\()");
     rule.format = functionFormat;
@@ -63,7 +65,6 @@ Highlighter::Highlighter(QTextDocument *parent, const QPalette & palette)
     highlightingRules.append(rule);
 
     scriptFormat.setForeground(dark ? Qt::yellow : Qt::darkYellow);
-
 
     singleLineCommentFormat.setForeground(dark ? Qt::gray : Qt::darkGreen);
     rule.pattern = QRegularExpression("//[^\n]*");

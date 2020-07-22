@@ -29,7 +29,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="marker_page">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -51,7 +51,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="rendering_script_textEdit"/>
+        <widget class="QTextEdit" name="rendering_script_textEdit">
+         <property name="font">
+          <font>
+           <family>Courier New</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

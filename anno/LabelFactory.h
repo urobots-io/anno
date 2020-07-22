@@ -17,6 +17,8 @@ struct LabelFactory {
         case LabelType::oriented_rect: return std::make_shared<OrientedRectLabel>(wi);
         case LabelType::rect: return std::make_shared<RectLabel>(wi);
         case LabelType::circle: return std::make_shared<CircleLabel>(wi);
+        case LabelType::max_types:
+            break;
         }
         return nullptr;
     }

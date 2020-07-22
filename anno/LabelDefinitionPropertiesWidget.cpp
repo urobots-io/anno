@@ -1,5 +1,7 @@
 #include "LabelDefinitionPropertiesWidget.h"
 #include "messagebox.h"
+#include <QInputDialog>
+#include <QColorDialog>
 
 using namespace urobots::qt_helpers;
 

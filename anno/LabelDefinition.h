@@ -28,6 +28,8 @@ public:
 	
     /// color
 	QColor color;
+
+    static QColor GetStandardColor(int index);
 };
 
 class LabelDefinition : public QObject

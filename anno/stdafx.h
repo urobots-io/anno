@@ -14,6 +14,4 @@
 #include <opencv2/opencv.hpp>
 #endif
 
-QColor GetStandardColor(int index);
-
 #endif

@@ -25,6 +25,8 @@ void ElidedLabelWidget::setElideMode(Qt::TextElideMode value) {
 }
 
 void ElidedLabelWidget::paintEvent(QPaintEvent *event) {
+    Q_UNUSED(event);
+
     QPainter painter(this);
     QFontMetrics fontMetrics = painter.fontMetrics();
 

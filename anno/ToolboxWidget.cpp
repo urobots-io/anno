@@ -1,4 +1,5 @@
 #include "ToolboxWidget.h"
+#include <QMenu>
 
 ToolboxWidget::ToolboxWidget(QWidget *parent)
 	: QWidget(parent)
@@ -144,7 +145,7 @@ void ToolboxWidget::AddMarkerType() {
 
 void ToolboxWidget::OnCustomContextMenu(const QPoint &point) {
     menu_index_ = proxy_.mapToSource(ui.treeView->indexAt(point));
-    if (!menu_index_.isValid() || !menu_index_.parent().isValid() && menu_index_.row() == 0) {
+    if (!menu_index_.isValid() || (!menu_index_.parent().isValid() && menu_index_.row() == 0)) {
         return;
     }
 

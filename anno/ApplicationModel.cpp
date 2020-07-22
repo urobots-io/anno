@@ -241,14 +241,13 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
 
             category->value = json[K_CATEGORY_ID].toInt();
             category->name = json[K_CATEGORY_NAME].toString();
-            category->color = GetStandardColor(category->value);
+            category->color = LabelCategory::GetStandardColor(category->value);
             category->definition = def.get();
 
             auto jcolor = json[K_CATEGORY_COLOR];
             if (!jcolor.isNull())
                 category->color.setNamedColor(jcolor.toString());
 
-            //xxx def->categories[category->value] = category;
             def->categories.push_back(category);
         }
 

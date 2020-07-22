@@ -38,7 +38,7 @@ std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> Labe
         }
         else {
             auto i = index.row() - 1;
-            if (i >= 0 && i < definitions_.size()) {
+            if (i >= 0 && i < int(definitions_.size())) {
                 return { definitions_[i], nullptr };
             }
         }
@@ -230,7 +230,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     }
 
     auto cat = std::make_shared<LabelCategory>();
-    cat->color = GetStandardColor(value);
+    cat->color = LabelCategory::GetStandardColor(value);
     cat->name = QString("Category %0").arg(value);
     cat->value = value;
     cat->definition = def.get();    

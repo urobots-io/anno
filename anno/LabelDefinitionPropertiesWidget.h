@@ -19,6 +19,8 @@ private slots:
     void OnRenderingScriptTextChanged();
     void OnChangeCategoryValue();
     void OnChangeCategoryColor();
+    void ShowAddCodeLineMenu();
+    void AddCodeLine();
 
 private:
     void UpdateCategoryData();

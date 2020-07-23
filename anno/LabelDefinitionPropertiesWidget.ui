@@ -44,10 +44,48 @@
         <widget class="QLineEdit" name="description_lineEdit"/>
        </item>
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Rendering Script:</string>
-         </property>
+        <widget class="QWidget" name="widget_3" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Rendering Script:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_code_line_pushButton">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="MainWindow.qrc">
+              <normaloff>:/MainWindow/Resources/add.ico</normaloff>:/MainWindow/Resources/add.ico</iconset>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -168,6 +206,8 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="MainWindow.qrc"/>
+ </resources>
  <connections/>
 </ui>

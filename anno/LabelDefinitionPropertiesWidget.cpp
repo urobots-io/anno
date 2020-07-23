@@ -1,6 +1,7 @@
 #include "LabelDefinitionPropertiesWidget.h"
 #include "Highlighter.h"
 #include "messagebox.h"
+#include "ScriptPainter.h"
 #include <QInputDialog>
 #include <QColorDialog>
 
@@ -17,6 +18,7 @@ LabelDefinitionPropertiesWidget::LabelDefinitionPropertiesWidget(QWidget *parent
     connect(ui.rendering_script_textEdit, &QTextEdit::textChanged, this, &LabelDefinitionPropertiesWidget::OnRenderingScriptTextChanged);
     connect(ui.change_category_color_toolButton, &QToolButton::clicked, this, &LabelDefinitionPropertiesWidget::OnChangeCategoryColor);
     connect(ui.change_category_value_toolButton, &QToolButton::clicked, this, &LabelDefinitionPropertiesWidget::OnChangeCategoryValue);
+    connect(ui.add_code_line_pushButton, &QPushButton::clicked, this, &LabelDefinitionPropertiesWidget::ShowAddCodeLineMenu);
 
     ui.stackedWidget->setCurrentWidget(ui.empty_page);
 }
@@ -122,3 +124,44 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryColor() {
     }
 }
 
+void LabelDefinitionPropertiesWidget::ShowAddCodeLineMenu() {    
+    QMenu context_menu(this);
+
+    std::vector<QAction*> actions;
+    auto &meta = ScriptPainter::staticMetaObject;
+    for (int i = 0; i < meta.methodCount(); ++i) {
+        auto m = meta.method(i);
+        if (m.methodType() == m.Slot) {
+            auto name = QString::fromLatin1(m.name());
+            if (!name[0].isUpper()) {
+                // Ignore default qt functions starting with lowcase.
+                continue;
+            }
+            
+            QStringList params;
+            for (auto p : m.parameterNames()) {
+                auto pname = QString::fromLatin1(p).trimmed();
+                if (!pname.isEmpty()) {
+                    params << pname;
+                }                    
+            }
+
+            name += "(" + params.join(",") + ")";                
+            auto a = new QAction(name, &context_menu);
+            a->setObjectName(name);
+            connect(a, &QAction::triggered, this, &LabelDefinitionPropertiesWidget::AddCodeLine);
+            actions.push_back(a);
+        }
+    }
+
+    std::sort(actions.begin(), actions.end(), [](QAction *a, QAction* b) {return a->objectName().compare(b->objectName()); });    
+        
+    for (auto a : actions) {
+        context_menu.addAction(a);
+    }    
+    context_menu.exec(ui.widget->mapToGlobal(ui.add_code_line_pushButton->geometry().bottomRight()));
+}
+
+void LabelDefinitionPropertiesWidget::AddCodeLine() {
+    ui.rendering_script_textEdit->insertPlainText(sender()->objectName());
+}

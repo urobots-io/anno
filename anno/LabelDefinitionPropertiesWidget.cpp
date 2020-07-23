@@ -154,7 +154,7 @@ void LabelDefinitionPropertiesWidget::ShowAddCodeLineMenu() {
         }
     }
 
-    std::sort(actions.begin(), actions.end(), [](QAction *a, QAction* b) {return a->objectName().compare(b->objectName()); });    
+    std::sort(actions.begin(), actions.end(), [](QAction *a, QAction* b) {return a->objectName().compare(b->objectName()) < 0; });
         
     for (auto a : actions) {
         context_menu.addAction(a);

@@ -57,7 +57,6 @@ vector<FileTreeItemInfo> RestDatasetFilesystem::LoadFolder(QStringList path) {
             ++ifolder;
         }
     }
-
     return result;
 }
 
@@ -94,7 +93,6 @@ bool RestDatasetFilesystem::CreateSubfolder(const QStringList destination, QStri
     catch (exception&) {
         return false;
     }
-
     return true;
 }
 
@@ -115,12 +113,19 @@ bool RestDatasetFilesystem::CopyLocalFile(const QStringList destination, QString
     }
     catch (exception&) {
         return false;
-    }    
-
+    }
     return false;
 }
 
-bool RestDatasetFilesystem::Rename(const QStringList path, const QStringList new_path) {
-    // TODO(ap): implement
-    return false;
+bool RestDatasetFilesystem::Rename(const QStringList path, const QStringList new_path) {    
+    auto params = Params(path.join("/"));
+    params.insert("new_path", QJsonValue::fromVariant(root_path_ + new_path.join("/")));
+    QByteArray bytes;
+    try {
+        bytes = CallDatasetFunction("move", params, ContentType::json);
+    }
+    catch (exception&) {
+        return false;
+    }
+    return true;
 }

@@ -307,14 +307,16 @@ bool SourcePicturesTreeModel::CreateSubfolder(const QModelIndex & index, QString
         return false;
     }
 
-    beginInsertRows(index, int(folder->children.size()), int(folder->children.size()));
+    if (folder->state == ElementState::loaded) {
+        beginInsertRows(index, int(folder->children.size()), int(folder->children.size()));
 
-    auto child = new FileTreeElement(this);
-    child->is_folder = true;
-    child->name = name;
-    folder->AddChild(child);
+        auto child = new FileTreeElement(this);
+        child->is_folder = true;
+        child->name = name;
+        folder->AddChild(child);
 
-    endInsertRows();
+        endInsertRows();
+    }
     return true;
 }
 

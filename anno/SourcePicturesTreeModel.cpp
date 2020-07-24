@@ -31,6 +31,10 @@ SourcePicturesTreeModel::~SourcePicturesTreeModel() {
     RecursiveDelete(root_);
 }
 
+QModelIndex SourcePicturesTreeModel::GetFilesRootIndex() {
+    return createIndex(0, 0, root_->children[0]);
+}
+
 void SourcePicturesTreeModel::RecursiveDelete(FileTreeElement * e) {
     for (auto c : e->children)
         RecursiveDelete(c);

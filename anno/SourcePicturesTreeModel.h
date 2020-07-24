@@ -57,6 +57,8 @@ public:
     bool IsCompletelyLoaded() const { return completely_loaded_; }
     void LoadCompletely();
 
+    QModelIndex GetFilesRootIndex();
+
 public slots:
     void OnFileModelModified(bool);
 

@@ -120,6 +120,10 @@ void SourcePicturesWidget::OnNewFileSystem(std::shared_ptr<FilesystemInterface> 
 		this, &SourcePicturesWidget::OnCurrentChanged);
 
     ui.treeView->setEnabled(filesystem != nullptr);
+
+    if (filesystem) {
+        ui.treeView->expand(sort_filter_model_->mapFromSource(tree_model_->GetFilesRootIndex()));
+    }
 }
 
 void SourcePicturesWidget::SelectFile(int offset) {

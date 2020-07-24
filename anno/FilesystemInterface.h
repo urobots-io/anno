@@ -19,4 +19,7 @@ struct FilesystemInterface {
 
     /// Copy local file to the destination folder.
     virtual bool CopyLocalFile(const QStringList destination, QString source_path) = 0;
+
+    /// Rename element.
+    virtual bool Rename(const QStringList source, const QStringList destination) = 0;
 };

@@ -120,3 +120,7 @@ bool RestDatasetFilesystem::CopyLocalFile(const QStringList destination, QString
     return false;
 }
 
+bool RestDatasetFilesystem::Rename(const QStringList path, const QStringList new_path) {
+    // TODO(ap): implement
+    return false;
+}

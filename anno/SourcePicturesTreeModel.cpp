@@ -97,8 +97,28 @@ QVariant SourcePicturesTreeModel::data(const QModelIndex &index, int role) const
             return  QVariant(QColor(Qt::red));
         }
     }
+    else if (role == Qt::EditRole) {
+        return item->name;
+    }
 
     return QVariant();
+}
+
+bool SourcePicturesTreeModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if (role == Qt::EditRole) {
+        auto item = static_cast<FileTreeElement*>(index.internalPointer());        
+        auto source = GetPathList(item);
+        auto destination = source;
+        destination.last() = value.toString();
+
+        if (loader_->Rename(source, destination)) {
+            file_model_provider_->Rename(source, destination);            
+            item->name = destination.last();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 Qt::ItemFlags SourcePicturesTreeModel::flags(const QModelIndex &index) const {
@@ -107,7 +127,9 @@ Qt::ItemFlags SourcePicturesTreeModel::flags(const QModelIndex &index) const {
     }
 
     auto item = static_cast<FileTreeElement*>(index.internalPointer());
-    return (item && item->is_folder ? Qt::ItemIsDropEnabled : Qt::NoItemFlags) | QAbstractItemModel::flags(index);
+    return (item && item->is_folder ? Qt::ItemIsDropEnabled : Qt::NoItemFlags) 
+        | QAbstractItemModel::flags(index)
+        | ((item->parent && item->parent != root_) ? Qt::ItemIsEditable : 0);
 }
 
 QVariant SourcePicturesTreeModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -180,8 +202,6 @@ int SourcePicturesTreeModel::rowCount(const QModelIndex & parent) const {
     auto item = parent.isValid()
         ? static_cast<FileTreeElement*>(parent.internalPointer())
         : root_;
-
-    
 
     if (item && item->is_folder && item->state == ElementState::created) {
         return 1; // we do not know how many items we have

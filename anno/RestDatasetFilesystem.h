@@ -11,6 +11,7 @@ struct RestDatasetFilesystem final : public FilesystemInterface {
     bool Remove(QString filename) override;    
     bool CreateSubfolder(const QStringList destination, QString name) override;
     bool CopyLocalFile(const QStringList destination, QString source_path) override;
+    bool Rename(const QStringList path, const QStringList new_path) override;
 
 private:
     QJsonObject Params(QString path);

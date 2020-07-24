@@ -30,6 +30,7 @@ public:
     std::shared_ptr<FileModel> GetFileModel(QStringList path) override;
     std::vector<FileTreeItemInfo> GetFolderInfo(QStringList path) override;
     void DeleteAllLabels(QStringList path) override;
+    void Rename(QStringList source, QStringList destination) override;
 
     QJsonObject GenerateHeader();
     bool ApplyHeader(QJsonObject, QString & error);

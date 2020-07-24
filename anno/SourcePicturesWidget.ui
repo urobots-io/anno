@@ -68,6 +68,12 @@
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditKeyPressed</set>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
     </widget>
    </item>
    <item>

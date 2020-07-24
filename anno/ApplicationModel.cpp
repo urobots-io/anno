@@ -58,6 +58,7 @@
 #define K_CUSTOM_PROP_CASES "cases"
 
 using namespace urobots::qt_helpers;
+using namespace std;
 
 ApplicationModel::ApplicationModel(QObject *parent)
     : QObject(parent) {
@@ -790,7 +791,10 @@ void ApplicationModel::DeleteAllLabels(QStringList path) {
 }
 
 std::vector<FileTreeItemInfo> ApplicationModel::GetFolderInfo(QStringList path) {
-    auto path_id = path.join("/");    
+    auto path_id = path.join("/");
+    if (path_id.length()) {
+        path_id += "/";
+    }
 
     std::set<QString> subdirs;
     std::vector<FileTreeItemInfo> result;
@@ -802,17 +806,6 @@ std::vector<FileTreeItemInfo> ApplicationModel::GetFolderInfo(QStringList path) 
         auto file_id = i.first;
         if (file_id.startsWith(path_id)) {
             auto file_id_rest = file_id.right(file_id.length() - path_id.length());
-            if (path_id.length() && file_id_rest.contains("/")) {
-                if (file_id_rest[0] != '/') {
-                    // i.e. path = "1/a" and file_id = "1/aAAA..."
-                    continue;
-                }
-                else {
-                    // remove leading "/"
-                    file_id_rest.remove(0, 1);
-                }
-            }
-
             auto parts = file_id_rest.split("/");
             if (parts.length() == 1) {
                 FileTreeItemInfo file;
@@ -834,6 +827,45 @@ std::vector<FileTreeItemInfo> ApplicationModel::GetFolderInfo(QStringList path) 
     }
 
     return result;
+}
+
+void ApplicationModel::Rename(QStringList source, QStringList destination) {
+    auto source_path = source.join("/");
+    auto destination_path = destination.join("/");  
+    bool changed = false;
+
+    if (file_models_.count(source_path) == 1) {
+        // It is a file model, rename it.
+        auto file = file_models_[source_path];
+        file_models_.erase(source_path);
+        file_models_[destination_path] = file;
+        file->set_id(destination_path);   
+        changed = true;
+    }
+    else {
+        // This might be a folder.
+        source_path += "/";
+        destination_path += "/";
+        QStringList files_to_rename;
+        for (auto i : file_models_) {
+            if (i.first.startsWith(source_path)) {
+                files_to_rename.push_back(i.first);
+            }
+        }
+        for (auto n : files_to_rename) {
+            auto file = file_models_[n];
+            file_models_.erase(n);
+            
+            auto n_new = destination_path + n.right(n.length() - source_path.length());
+            file_models_[n_new] = file;
+            file->set_id(n_new);
+            changed = true;
+        }
+    }
+
+    if (changed) {
+        set_is_modified(true);
+    }
 }
 
 void ApplicationModel::OnFileModifiedChanged(bool value) {

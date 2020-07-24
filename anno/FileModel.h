@@ -12,7 +12,7 @@ public:
     FileModel(QString id);
     ~FileModel();
 
-    Q_PROPERTY(QString id READ get_id CONSTANT);
+    Q_PROPERTY(QString id READ get_id WRITE set_id NOTIFY id_changed);
     Q_PROPERTY(bool is_modified READ get_is_modified WRITE set_is_modified NOTIFY is_modified_changed);
     
     QUndoStack *GetUndoStack() { return &undo_stack_; }
@@ -51,11 +51,13 @@ public:
 
 public slots:
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified);
+    IMPLEMENT_Q_PROPERTY_WRITE(QString, id);
 
 signals:        
     void is_modified_changed(bool);
     void rendering_required();
     void file_updated(bool);
+    void id_changed(QString);
     void select_label_required(std::shared_ptr<Label>);
 
 private:

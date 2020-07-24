@@ -65,5 +65,20 @@ bool LocalFilesystem::Remove(QString filename) {
     }
 }
 
+bool LocalFilesystem::Rename(const QStringList source, const QStringList destination) {
+    auto abs_source = GetLocalPath(source.join("/"));
+    auto abs_destination = GetLocalPath(destination.join("/"));
+    QFileInfo fi(abs_source);
+    if (fi.exists()) {
+        if (fi.isDir()) {
+            return QDir().rename(abs_source, abs_destination);
+        }
+        else {
+            return QFile().rename(abs_source, abs_destination);
+        }
+    }
+    return false;
+}
+
 
 

@@ -9,14 +9,17 @@
 #include <QSortFilterProxyModel>
 
 struct FileModelProviderInterface {
-    /// get file model defined by the path
+    /// Get file model defined by the path.
     virtual std::shared_ptr<FileModel> GetFileModel(QStringList path) = 0;
 
-    /// get names of files and folders in the path
+    /// Get names of files and folders in the path.
     virtual std::vector<FileTreeItemInfo> GetFolderInfo(QStringList path) = 0;
 
-    /// remove all markers for files in this folder, recursively
+    /// Remove all markers for files in this folder, recursively.
     virtual void DeleteAllLabels(QStringList path) = 0;
+
+    /// Rename file model. If source is a folder, rename all included models, recursively.
+    virtual void Rename(QStringList source, QStringList destination) = 0;
 };
 
 class SourcePicturesTreeModel : public QAbstractItemModel
@@ -31,6 +34,7 @@ public:
     void fetchMore(const QModelIndex &parent) override;
 
     QVariant data(const QModelIndex &index, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -44,6 +48,7 @@ public:
     bool Remove(const QModelIndex &, QString & error);
     bool CreateSubfolder(const QModelIndex &, QString);
     void ReloadFolder(const QModelIndex &, int, int);    
+
     //  TODO: make use of name_filters
     void InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl> &urls, const QStringList &name_filters = QStringList());
 
@@ -137,6 +142,7 @@ private:
     void UnregisterFileModel(FileModel*);
 
     FileTreeElement* CreateChild(const FileTreeItemInfo &, FileTreeElement* parent,const QStringList &path, bool is_valid);
+    // TODO: move to FileTreeElement 
     QStringList GetPathList(FileTreeElement*) const;
 
     CopiedObjectInfo* CreateCopiedObjectInfoFromFileInfo(const QFileInfo &info, CopiedObjectInfo* parent);

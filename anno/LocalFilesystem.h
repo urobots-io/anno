@@ -12,6 +12,7 @@ struct LocalFilesystem final : public FilesystemInterface {
     bool Remove(QString filename) override;
     bool CreateSubfolder(const QStringList destination, QString name) override;
     bool CopyLocalFile(const QStringList destination, QString source_path) override;
+    bool Rename(const QStringList source, const QStringList destination) override;
 
 private:
     QString root_path_;

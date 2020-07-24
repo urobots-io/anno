@@ -30,6 +30,14 @@ QString LocalFilesystem::GetLocalPath(QString filename) const {
 
 bool LocalFilesystem::CreateSubfolder(const QStringList destination, QString name) {
     QString destination_abs = root_path_ + "/" + destination.join("/");
+
+    QFileInfo fi(destination_abs + name);
+    if (fi.exists()) {
+        if (fi.isDir()) {
+            return false;
+        }
+    }
+    
     return QDir(destination_abs).mkpath(name);
 }
 

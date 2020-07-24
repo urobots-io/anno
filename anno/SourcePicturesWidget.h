@@ -22,6 +22,7 @@ public slots:
     void SelectNextFile();
     void SelectPreviousFile();
 
+    void OnRenameFile();
     void OnDeleteFile();
     void OnReloadFolder();
     void OnRevealInExplorer();
@@ -32,7 +33,7 @@ private:
     void SelectFile(int offset);
 
     template<class T>
-    void AddAction(QMenu *menu, QString icon, QString text, T callback);
+    QAction* AddAction(QMenu *menu, QString icon, QString text, T callback);
 
 private slots:
     void OnTextFilterChanged();
@@ -51,4 +52,7 @@ private:
     QMenu *folder_menu_ = nullptr;
 
     QModelIndex menu_index_;
+
+    QAction* delete_folder_action_ = nullptr;
+    QAction* rename_folder_action_ = nullptr;
 };

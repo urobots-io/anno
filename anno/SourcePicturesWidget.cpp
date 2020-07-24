@@ -45,6 +45,7 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
 
     // file menu
     file_menu_ = new QMenu(topLevelWidget());
+    AddAction(file_menu_, QString(), tr("Rename"), &SourcePicturesWidget::OnRenameFile);
     AddAction(file_menu_, QString(), tr("Reveal in Explorer"), &SourcePicturesWidget::OnRevealInExplorer);
     file_menu_->addSeparator();
     AddAction(file_menu_, "delete.ico", tr("Delete file"), &SourcePicturesWidget::OnDeleteFile);
@@ -52,12 +53,13 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
     
     // folder menu
     folder_menu_ = new QMenu(topLevelWidget());
+    rename_folder_action_ = AddAction(folder_menu_, QString(), tr("Rename"), &SourcePicturesWidget::OnRenameFile);
     AddAction(folder_menu_, QString(), tr("Reveal in Explorer"), &SourcePicturesWidget::OnRevealInExplorer);
     folder_menu_->addSeparator();
     AddAction(folder_menu_, "refresh.ico", tr("Reload folder"), &SourcePicturesWidget::OnReloadFolder);    
     AddAction(folder_menu_, "add.ico", tr("Create subfolder..."), &SourcePicturesWidget::OnCreateFolder);
     folder_menu_->addSeparator();
-    AddAction(folder_menu_, "delete.ico", tr("Delete folder"), &SourcePicturesWidget::OnDeleteFile);
+    delete_folder_action_ = AddAction(folder_menu_, "delete.ico", tr("Delete folder"), &SourcePicturesWidget::OnDeleteFile);
 }
 
 SourcePicturesWidget::~SourcePicturesWidget()
@@ -65,12 +67,13 @@ SourcePicturesWidget::~SourcePicturesWidget()
 }
 
 template<class T>
-void SourcePicturesWidget::AddAction(QMenu *menu, QString icon, QString text, T callback) {
+QAction* SourcePicturesWidget::AddAction(QMenu *menu, QString icon, QString text, T callback) {
     auto action = icon.isEmpty() 
         ? new QAction(text, menu)
         : new QAction(QIcon(":/MainWindow/Resources/" + icon), text, menu);
     connect(action, &QAction::triggered, this, callback);
     menu->addAction(action);
+    return action;
 }
 
 void SourcePicturesWidget::OnLoadedFilterChanged(bool value) {
@@ -156,8 +159,14 @@ void SourcePicturesWidget::OnCustomContextMenu(const QPoint &point) {
     }
 
     auto info = tree_model_->GetFileInfo(menu_index_);
-
     auto menu = (info.is_folder ? folder_menu_ : file_menu_);
+
+    if (info.is_folder) {
+        bool is_root_folder = info.name.isEmpty();
+        if (delete_folder_action_) delete_folder_action_->setEnabled(!is_root_folder);
+        if (rename_folder_action_) rename_folder_action_->setEnabled(!is_root_folder);
+    }
+
     menu->popup(ui.treeView->viewport()->mapToGlobal(point));
 }
 
@@ -180,6 +189,12 @@ void SourcePicturesWidget::OnDeleteFile() {
                 messagebox::Critical(error);
             }
         }
+    }
+}
+
+void SourcePicturesWidget::OnRenameFile() {
+    if (menu_index_.isValid()) {
+        ui.treeView->edit(sort_filter_model_->mapFromSource(menu_index_));
     }
 }
 

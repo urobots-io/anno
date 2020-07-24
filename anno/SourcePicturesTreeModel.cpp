@@ -319,6 +319,10 @@ bool SourcePicturesTreeModel::Remove(const QModelIndex & index, QString & error)
 
     auto file = static_cast<FileTreeElement*>(index.internalPointer());
     auto folder = static_cast<FileTreeElement*>(parent_index.internalPointer());
+    if (!folder) {
+        error = tr("Root folder cannot be deleted");
+        return false;
+    }
     
     int row = file->parent_index;
     auto file_model = file->GetFileModel();

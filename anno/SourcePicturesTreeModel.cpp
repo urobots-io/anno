@@ -133,7 +133,7 @@ Qt::ItemFlags SourcePicturesTreeModel::flags(const QModelIndex &index) const {
     auto item = static_cast<FileTreeElement*>(index.internalPointer());
     return (item && item->is_folder ? Qt::ItemIsDropEnabled : Qt::NoItemFlags) 
         | QAbstractItemModel::flags(index)
-        | ((item->parent && item->parent != root_) ? Qt::ItemIsEditable : 0);
+        | ((item->parent && item->parent != root_) ? Qt::ItemIsEditable : Qt::NoItemFlags);
 }
 
 QVariant SourcePicturesTreeModel::headerData(int section, Qt::Orientation orientation, int role) const {

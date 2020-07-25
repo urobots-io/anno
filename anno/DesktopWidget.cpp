@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QJSEngine>
 #include <QMatrix3x3>
+#include <QMetaMethod>
 #include <QMouseEvent>
 #include <QPointF>
 #include <QTransform>

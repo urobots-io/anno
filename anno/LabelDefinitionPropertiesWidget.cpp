@@ -2,8 +2,10 @@
 #include "Highlighter.h"
 #include "messagebox.h"
 #include "ScriptPainter.h"
-#include <QInputDialog>
 #include <QColorDialog>
+#include <QInputDialog>
+#include <QMenu>
+#include <QMetaMethod>
 
 using namespace urobots::qt_helpers;
 

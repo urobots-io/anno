@@ -432,6 +432,9 @@
     <ClCompile Include="ToolboxProxyModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileTreeElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -607,6 +610,9 @@
     </ClInclude>
     <ClInclude Include="product_info.h">
       <Filter>Version</Filter>
+    </ClInclude>
+    <ClInclude Include="FileTreeElement.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

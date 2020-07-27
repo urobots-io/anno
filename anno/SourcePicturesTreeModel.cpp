@@ -16,7 +16,7 @@ SourcePicturesTreeModel::SourcePicturesTreeModel(std::shared_ptr<FilesystemInter
     root_ = new FileTreeElement(this);
     root_->is_folder = true;
     root_->name = "__root__";
-    root_->state = ElementState::loaded;
+    root_->state = FileTreeElement::ElementState::loaded;
 
     // create root for the filesystem
     auto files = new FileTreeElement(this);
@@ -111,7 +111,7 @@ QVariant SourcePicturesTreeModel::data(const QModelIndex &index, int role) const
 bool SourcePicturesTreeModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (role == Qt::EditRole) {
         auto item = static_cast<FileTreeElement*>(index.internalPointer());        
-        auto source = GetPathList(item);
+        auto source = item->GetPathList();
         auto destination = source;
         destination.last() = value.toString();
 
@@ -183,7 +183,7 @@ bool SourcePicturesTreeModel::canFetchMore(const QModelIndex &parent) const {
         ? static_cast<FileTreeElement*>(parent.internalPointer())
         : root_;
     
-    return item && item->is_folder && item->state == ElementState::created;
+    return item && item->is_folder && item->state == FileTreeElement::ElementState::created;
 }
 
 void SourcePicturesTreeModel::fetchMore(const QModelIndex &parent) {
@@ -194,7 +194,7 @@ void SourcePicturesTreeModel::fetchMore(const QModelIndex &parent) {
         ? static_cast<FileTreeElement*>(parent.internalPointer())
         : root_;
 
-    if (item && item->is_folder && item->state == ElementState::created) {
+    if (item && item->is_folder && item->state == FileTreeElement::ElementState::created) {
         LoadChildren(parent, item);
     }
 }
@@ -207,7 +207,7 @@ int SourcePicturesTreeModel::rowCount(const QModelIndex & parent) const {
         ? static_cast<FileTreeElement*>(parent.internalPointer())
         : root_;
 
-    if (item && item->is_folder && item->state == ElementState::created) {
+    if (item && item->is_folder && item->state == FileTreeElement::ElementState::created) {
         return 1; // we do not know how many items we have
     }
     
@@ -228,13 +228,6 @@ void SourcePicturesTreeModel::UnregisterFileModel(FileModel* file) {
     file->disconnect(this);
 }
 
-QStringList SourcePicturesTreeModel::GetPathList(FileTreeElement *e) const {
-    QStringList path;
-    for (FileTreeElement* i = e; i != root_ && i->parent != root_; i = i->parent)
-        path.insert(0, i->name);
-    return path;
-}
-
 void SourcePicturesTreeModel::LoadCompletely() {
     if (!completely_loaded_) {
         RecursiveLoadChildren(root_);
@@ -243,7 +236,7 @@ void SourcePicturesTreeModel::LoadCompletely() {
 }
 
 void SourcePicturesTreeModel::RecursiveLoadChildren(FileTreeElement* e) {
-    if (e->state == ElementState::created) {
+    if (e->state == FileTreeElement::ElementState::created) {
         LoadChildren({}, e);
     }
 
@@ -255,12 +248,12 @@ void SourcePicturesTreeModel::RecursiveLoadChildren(FileTreeElement* e) {
 }
 
 void SourcePicturesTreeModel::LoadChildren(QModelIndex parentIndex, FileTreeElement* e) {
-    if (!e->is_folder || e->state == ElementState::loading || !loader_)
+    if (!e->is_folder || e->state == FileTreeElement::ElementState::loading || !loader_)
         return;
 
-    e->state = ElementState::loading;
+    e->state = FileTreeElement::ElementState::loading;
 
-    QStringList path = GetPathList(e);
+    auto path = e->GetPathList();
     auto dir_files = loader_->LoadFolder(path);
     auto model_files = file_model_provider_->GetFolderInfo(path);
     int valid_files_count = int(dir_files.size());
@@ -293,7 +286,7 @@ void SourcePicturesTreeModel::LoadChildren(QModelIndex parentIndex, FileTreeElem
         }
     }
 
-    e->state = ElementState::loaded;
+    e->state = FileTreeElement::ElementState::loaded;
 }
 
 bool SourcePicturesTreeModel::CreateSubfolder(const QModelIndex & index, QString name) {
@@ -302,12 +295,12 @@ bool SourcePicturesTreeModel::CreateSubfolder(const QModelIndex & index, QString
         return false;
     }
 
-    QStringList path = GetPathList(folder);
+    auto path = folder->GetPathList();
     if (!loader_->CreateSubfolder(path, name)) {
         return false;
     }
 
-    if (folder->state == ElementState::loaded) {
+    if (folder->state == FileTreeElement::ElementState::loaded) {
         beginInsertRows(index, int(folder->children.size()), int(folder->children.size()));
 
         auto child = new FileTreeElement(this);
@@ -338,7 +331,7 @@ bool SourcePicturesTreeModel::Remove(const QModelIndex & index, QString & error)
         return false;
     }        
     
-    auto file_path = GetPathList(file);
+    auto file_path = file->GetPathList();
     if (!loader_->Remove(file_path.join("/"))) {
         error = tr("Failed to delete file or folder from the source location");
         return false;
@@ -381,18 +374,27 @@ void SourcePicturesTreeModel::ReloadFolder(const QModelIndex & index, int row, i
         endRemoveRows();
     }
 
-    folder->state = ElementState::created;
+    folder->state = FileTreeElement::ElementState::created;
 
     LoadChildren(index, folder);
 }
 
 SourcePicturesTreeModel::CopiedObjectInfo * SourcePicturesTreeModel::CreateCopiedObjectInfoFromFileInfo(const QFileInfo &info, CopiedObjectInfo * parent) {
-    CopiedObjectInfo* obj= new CopiedObjectInfo(parent);
-    obj->absolute_path = info.absoluteFilePath();
-    obj->file_name = info.fileName();
+    CopiedObjectInfo* obj = new CopiedObjectInfo(parent);
     obj->is_folder = info.isDir();
+    if (obj->is_folder) {
+        QDir d(info.absoluteFilePath());
+        obj->absolute_path = d.absolutePath();
+        obj->file_name = d.dirName();
+    }
+    else {
+        obj->absolute_path = info.absoluteFilePath();
+        obj->file_name = info.fileName();
+    }
+
     initial_copied_objects_count++;
     qDebug() << initial_copied_objects_count;
+    qDebug() << obj->file_name;
     return obj;
 }
 
@@ -402,30 +404,32 @@ void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, in
         return;
 
     auto folder = static_cast<FileTreeElement*>(index.internalPointer());
-    QStringList path = GetPathList(folder);
-    QVector<CopiedObjectInfo*> copiedRootElements(urls.size());
+    auto path = folder->GetPathList();
+
+    QVector<CopiedObjectInfo*> copiedRootElements;
+    copiedRootElements.reserve(urls.size());
+
     initial_copied_objects_count = 0;
-    int i = 0;
     for(auto url : urls) {
-        QString p = url.path();
-        if (p[0] == '/')
-            p = p.mid(1);
+        if (!url.isLocalFile()) {
+            continue;
+        }
         //  Create an info about current url´s object first
-        copiedRootElements[i] = CreateCopiedObjectInfoFromFileInfo( QFileInfo(p) , nullptr);
+        auto root_element = CreateCopiedObjectInfoFromFileInfo(QFileInfo(url.toLocalFile()), nullptr);
+        copiedRootElements << root_element;
         //  Recursively create infos about all the children objects
-        CreateCopiedObjectInfoRecursively(copiedRootElements[i]);
-        ++i;
+        CreateCopiedObjectInfoRecursively(root_element);
     }
 
-    //QDialog to indicate the progress and cancel it
-    QProgressDialog progress(tr("Inserting files..."),tr("Cancel"), 0,initial_copied_objects_count, parent_widget_);
+    // QDialog to indicate the progress and cancel it
+    QProgressDialog progress(tr("Inserting files..."), tr("Cancel"), 0, initial_copied_objects_count, parent_widget_);
     progress.setWindowModality(Qt::WindowModality::WindowModal);
     current_progress_dialog_ = &progress;
 
     //  Using created infos copy all the objects
     already_copied_objects_count = 0;
-    for (i = 0; i < copiedRootElements.size();++i) {
-        InsertObjectsRecursively(copiedRootElements[i], path);
+    for (auto root_element: copiedRootElements) {
+        InsertObjectsRecursively(root_element, path);
     }
 
     qDeleteAll(copiedRootElements);
@@ -434,6 +438,7 @@ void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, in
 
 
 void SourcePicturesTreeModel::CreateCopiedObjectInfoRecursively(CopiedObjectInfo * parent) {
+    qDebug(parent->absolute_path.toLatin1());
     QDir directory(parent->absolute_path);
     auto entries = directory.entryInfoList({}, QDir::AllEntries | QDir::NoDotAndDotDot);
     for (int i = 0; i < entries.size(); ++i) {
@@ -493,7 +498,7 @@ Qt::DropActions SourcePicturesTreeModel::supportedDropActions() const{
     return QAbstractItemModel::supportedDropActions() | Qt::CopyAction;
 }
 
-SourcePicturesTreeModel::FileTreeElement* SourcePicturesTreeModel::CreateChild(const FileTreeItemInfo &info, FileTreeElement * parent, const QStringList &path, bool is_valid) {
+FileTreeElement* SourcePicturesTreeModel::CreateChild(const FileTreeItemInfo &info, FileTreeElement * parent, const QStringList &path, bool is_valid) {
     auto child = new FileTreeElement(this);
     child->is_folder = info.is_folder;
     child->is_valid = is_valid;

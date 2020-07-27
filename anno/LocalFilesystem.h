@@ -3,7 +3,7 @@
 #include <QDir>
 
 struct LocalFilesystem final : public FilesystemInterface {
-    LocalFilesystem(QString root_path) : root_path_(root_path) {}
+    LocalFilesystem(QString root_path);
 
     QString GetLocalPath(QString filename) const override;
     std::vector<FileTreeItemInfo> LoadFolder(QStringList path) override;

@@ -2,6 +2,7 @@
 #include "implement_q_property.h"
 #include "FilesystemInterface.h"
 #include "FileModel.h"
+#include "FileTreeElement.h"
 #include <QAbstractItemModel>
 #include <QFileInfo>
 #include <QObject>
@@ -59,72 +60,14 @@ public:
 
     QModelIndex GetFilesRootIndex();
 
+
+    void RegisterFileModel(FileModel*);
+    void UnregisterFileModel(FileModel*);
+
 public slots:
     void OnFileModelModified(bool);
 
 private:
-    enum class ElementState {
-        /// element created, but not loaded
-        created,
-
-        /// loading is in progress
-        loading,
-
-        /// element loaded
-        loaded
-    };
-
-    struct FileTreeElement {
-        ElementState state = ElementState::created;
-
-        FileTreeElement *parent = nullptr;
-        
-        int parent_index = 0;
-
-        QString name;
-        
-        bool is_folder = false;
-
-        bool is_valid = true;
-
-        QPixmap thumbnail;
-        
-        std::vector<FileTreeElement*> children;
-
-        FileTreeElement(SourcePicturesTreeModel* parent) : parent_(parent) {
-
-        }
-
-        ~FileTreeElement() {
-            if (file_model_ && parent_)
-                parent_->UnregisterFileModel(file_model_.get());
-        }
-
-        std::shared_ptr<FileModel> GetFileModel() {
-            return file_model_;
-        }
-
-        void SetFileModel(std::shared_ptr<FileModel> file_model) {
-            if (file_model_ && parent_)
-                parent_->UnregisterFileModel(file_model_.get());
-
-            file_model_ = file_model;
-
-            if (file_model_ && parent_)
-                parent_->RegisterFileModel(file_model_.get());
-        }
-        
-        void AddChild(FileTreeElement *child) {
-            child->parent = this;
-            child->parent_index = int(children.size());
-            children.push_back(child);
-        }
-
-    private:
-        std::shared_ptr<FileModel> file_model_;
-        SourcePicturesTreeModel* parent_ = nullptr;
-    };
-
     //  A structure to store info and pointers to a parent and children. It is a mix of the classes QFileInfo and FileTreeElement
     struct CopiedObjectInfo
     {
@@ -140,12 +83,7 @@ private:
     void LoadChildren(QModelIndex index, FileTreeElement*);
     void RecursiveDelete(FileTreeElement*);
 
-    void RegisterFileModel(FileModel*);
-    void UnregisterFileModel(FileModel*);
-
     FileTreeElement* CreateChild(const FileTreeItemInfo &, FileTreeElement* parent,const QStringList &path, bool is_valid);
-    // TODO: move to FileTreeElement 
-    QStringList GetPathList(FileTreeElement*) const;
 
     CopiedObjectInfo* CreateCopiedObjectInfoFromFileInfo(const QFileInfo &info, CopiedObjectInfo* parent);
     void CreateCopiedObjectInfoRecursively(CopiedObjectInfo* parent);

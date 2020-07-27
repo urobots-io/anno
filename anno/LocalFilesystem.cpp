@@ -4,6 +4,11 @@
 
 using namespace std;
 
+LocalFilesystem::LocalFilesystem(QString root_path)
+    : root_path_(root_path)
+{
+}
+
 vector<FileTreeItemInfo> LocalFilesystem::LoadFolder(QStringList path) {
     QDir directory(root_path_ + "/" + path.join("/"));
 
@@ -46,6 +51,10 @@ bool LocalFilesystem::CopyLocalFile(const QStringList destination, QString sourc
         root_path_ % "/" % 
         destination.join("/") % "/" % 
         QFileInfo(source_path).fileName();
+
+    qDebug(source_path.toLatin1());
+    qDebug(new_path.toLatin1());
+
     return QFile::copy(source_path, new_path);
 }
 

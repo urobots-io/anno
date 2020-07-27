@@ -391,10 +391,7 @@ SourcePicturesTreeModel::CopiedObjectInfo * SourcePicturesTreeModel::CreateCopie
         obj->absolute_path = info.absoluteFilePath();
         obj->file_name = info.fileName();
     }
-
-    initial_copied_objects_count++;
-    qDebug() << initial_copied_objects_count;
-    qDebug() << obj->file_name;
+    objects_to_copy_count_++;
     return obj;
 }
 
@@ -406,45 +403,45 @@ void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, in
     auto folder = static_cast<FileTreeElement*>(index.internalPointer());
     auto path = folder->GetPathList();
 
-    QVector<CopiedObjectInfo*> copiedRootElements;
-    copiedRootElements.reserve(urls.size());
+    QVector<CopiedObjectInfo*> root_elements_to_copy;
+    root_elements_to_copy.reserve(urls.size());
 
-    initial_copied_objects_count = 0;
+    objects_to_copy_count_ = 0;
     for(auto url : urls) {
         if (!url.isLocalFile()) {
             continue;
         }
         //  Create an info about current url´s object first
         auto root_element = CreateCopiedObjectInfoFromFileInfo(QFileInfo(url.toLocalFile()), nullptr);
-        copiedRootElements << root_element;
+        root_elements_to_copy << root_element;
         //  Recursively create infos about all the children objects
         CreateCopiedObjectInfoRecursively(root_element);
     }
 
     // QDialog to indicate the progress and cancel it
-    QProgressDialog progress(tr("Inserting files..."), tr("Cancel"), 0, initial_copied_objects_count, parent_widget_);
+    QProgressDialog progress(tr("Inserting files..."), tr("Cancel"), 0, objects_to_copy_count_, parent_widget_);
     progress.setWindowModality(Qt::WindowModality::WindowModal);
     current_progress_dialog_ = &progress;
 
     //  Using created infos copy all the objects
-    already_copied_objects_count = 0;
-    for (auto root_element: copiedRootElements) {
+    copied_objects_count_ = 0;
+    for (auto root_element: root_elements_to_copy) {
         InsertObjectsRecursively(root_element, path);
     }
 
-    qDeleteAll(copiedRootElements);
+    qDeleteAll(root_elements_to_copy);
     ReloadFolder(index,row, column);
 }
 
 
 void SourcePicturesTreeModel::CreateCopiedObjectInfoRecursively(CopiedObjectInfo * parent) {
-    qDebug(parent->absolute_path.toLatin1());
     QDir directory(parent->absolute_path);
     auto entries = directory.entryInfoList({}, QDir::AllEntries | QDir::NoDotAndDotDot);
     for (int i = 0; i < entries.size(); ++i) {
         CopiedObjectInfo* info = CreateCopiedObjectInfoFromFileInfo(entries[i], parent);
-        if (info->is_folder)
+        if (info && info->is_folder) {
             CreateCopiedObjectInfoRecursively(info);
+        }
     }
 }
 
@@ -458,7 +455,7 @@ void SourcePicturesTreeModel::InsertObjectsRecursively(CopiedObjectInfo * object
 
     // TODO: handle result
 
-    current_progress_dialog_->setValue(++already_copied_objects_count);
+    current_progress_dialog_->setValue(++copied_objects_count_);
 
     path.append(object->file_name);
     for (size_t i = 0; i < object->children.size(); ++i) {

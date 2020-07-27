@@ -52,8 +52,8 @@ bool LocalFilesystem::CopyLocalFile(const QStringList destination, QString sourc
         destination.join("/") % "/" % 
         QFileInfo(source_path).fileName();
 
-    qDebug(source_path.toLatin1());
-    qDebug(new_path.toLatin1());
+    //qDebug(source_path.toLatin1());
+    //qDebug(new_path.toLatin1());
 
     return QFile::copy(source_path, new_path);
 }

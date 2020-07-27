@@ -103,7 +103,8 @@ private:
     std::shared_ptr<FilesystemInterface> loader_;
     FileModelProviderInterface *file_model_provider_ = nullptr;
     QWidget* parent_widget_;
-    int initial_copied_objects_count, already_copied_objects_count;
+    int objects_to_copy_count_;
+    int copied_objects_count_;
     QProgressDialog* current_progress_dialog_;
     bool completely_loaded_ = false;
 };

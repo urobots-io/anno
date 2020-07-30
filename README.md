@@ -1,6 +1,30 @@
 # anno
-Cross-platform image labeling tool for AI
+Cross-platform tool for labeling image data.
+[Video introduction to anno](https://youtu.be/RrjGU2vSIOM)
 
+## Features
+- Supports a wide range of marker types:
+  - Point
+  - Oriented point
+  - Axis aligned rectangle
+  - Rectangle with rotation
+  - Polygon
+  - Polyline
+- Configurable rendering of all marker types.
+- Configurable dependencies between properties of markers: i.e. some markers can share width or height or position on image.
+- Supports a wide variety of image formats. Pre-build Windows version supports EXR format.
+- The project file is JSON file wich contains project-specific marker definitions and labeling information.
+- The user interface is optimized for fast sub-pixel accurate labeling.
+
+## Requirements
+- Windows / macOS / Ubuntu
+
+## Installation
+There are options:
+- Pre-build binaries from [the release section](https://github.com/urobots-io/anno/releases).
+- Cross-platform build is possible with Qt Creator from the open source [Qt setup](https://www.qt.io/).
+
+## Specifications
 Project file format:
 ```jsonc
 {

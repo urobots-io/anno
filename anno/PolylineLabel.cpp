@@ -24,6 +24,7 @@ QStringList PolylineLabel::ToStringsList() {
 void PolylineLabel::FromStringsList(QStringList const & value) {
     Label::FromStringsList(value);
     state_ = State::ready;
+    UpdateAABB();
 }
 
 void PolylineLabel::OnPaint(const PaintInfo & pi) {
@@ -113,7 +114,7 @@ bool PolylineLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
     return true;
 }
 
-PolylineLabel::ExtraActionType PolylineLabel::DetectExtraAction(const WorldInfo & wi, int & index) {   
+PolylineLabel::ExtraActionType PolylineLabel::DetectExtraAction(const WorldInfo & wi, int & index) const {   
     // check handles
     for (size_t i = 0; i < handles_.size(); ++i) {
         auto p0 = handles_[i]->GetPosition();
@@ -153,3 +154,32 @@ QTransform PolylineLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y());
 }
 
+void PolylineLabel::HandlePositionChanged(LabelHandle *, QPointF) {
+    UpdateAABB();
+}
+
+void PolylineLabel::UpdateAABB() {
+    if (handles_.size()) {
+        auto p0 = handles_[0]->GetPosition();
+        auto p1 = p0;
+        for (size_t i = 1; i < handles_.size(); ++i) {
+            auto p = handles_[i]->GetPosition();
+            p0.setX(std::min(p0.x(), p.x()));
+            p0.setY(std::min(p0.y(), p.y()));
+            p1.setX(std::max(p1.x(), p.x()));
+            p1.setY(std::max(p1.y(), p.y()));
+        }
+        aabb_ = QRectF(p0, p1);
+    }
+    else {
+        aabb_ = QRectF();
+    }
+}
+
+bool PolylineLabel::HitTest(const WorldInfo & wi) const {
+    if (aabb_.contains(wi.position)) {
+        int index;
+        return DetectExtraAction(wi, index) != ExtraActionType::Nothing;
+    }
+    return false;
+}

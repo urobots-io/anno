@@ -147,9 +147,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="version.cpp">
-      <Filter>Version</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_AboutDialog.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -387,9 +384,6 @@
     <ClCompile Include="ModifyLabelTextFileModelCommand.cpp">
       <Filter>Source Files\FileModelCommands</Filter>
     </ClCompile>
-    <ClCompile Include="RestImageConverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="triangulation\construct.c">
       <Filter>Source Files\Triangulation</Filter>
     </ClCompile>
@@ -454,9 +448,6 @@
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="version.h">
-      <Filter>Version</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_AboutDialog.h">
       <Filter>Generated Files</Filter>
@@ -590,9 +581,6 @@
     <ClInclude Include="ImageConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RestImageConverter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -613,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="FileTreeElement.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="git_rev.h">
+      <Filter>Version</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -741,11 +732,6 @@
     <ResourceCompile Include="anno.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="svn.template.txt">
-      <Filter>Version</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\examples\labels.anno">

@@ -13,7 +13,6 @@ public:
 
 	QPointF GetPosition() const { return pos_; }
 
-	// TODO(ap): source (default, left_mouse, right_mouse)
 	virtual void SetPosition(QPointF pos, bool notify_parent = true);
 
 	Label* GetParentLabel() const { return parent_; }

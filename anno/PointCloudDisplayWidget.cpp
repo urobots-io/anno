@@ -427,7 +427,7 @@ void PointCloudDisplayWidget::SetupImage(QString filename, std::shared_ptr<Files
         }
         
         float scale = std::min(1.f / image.width(), 1.f / image.height());
-        float z_scale = 0.00003f; // TODO: chronimet constant   
+        float z_scale = 0.00003f; // TODO(ap): make adjustable by the user
         image_offset_ = QVector3D(-image.width() * scale, image.height() * scale, zmax * z_scale);
         image_scale_ = QVector3D(scale * 2, -scale * 2, -z_scale);
 

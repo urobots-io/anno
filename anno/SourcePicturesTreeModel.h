@@ -49,9 +49,8 @@ public:
     bool Remove(const QModelIndex &, QString & error);
     bool CreateSubfolder(const QModelIndex &, QString);
     void ReloadFolder(const QModelIndex &, int, int);    
-
-    //  TODO: make use of name_filters
-    void InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl> &urls, const QStringList &name_filters = QStringList());
+    
+    void InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl> &urls);
 
     std::shared_ptr<FilesystemInterface> GetFileSystem() const { return loader_; }
 

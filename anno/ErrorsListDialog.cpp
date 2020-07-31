@@ -2,10 +2,19 @@
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 
-ErrorsListDialog::ErrorsListDialog(QStringList errors, QWidget *parent)
+ErrorsListDialog::ErrorsListDialog(QString title, QString message, QStringList errors, QWidget *parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
+
+    setWindowTitle(title);
+
+    if (!message.isEmpty()) {
+        ui.label->setText(message);
+    }
+    else {
+        ui.label->hide();
+    }
 
     auto model = new QStandardItemModel(errors.size(), 1);
     model->setHorizontalHeaderLabels(QStringList()
@@ -21,7 +30,9 @@ ErrorsListDialog::ErrorsListDialog(QStringList errors, QWidget *parent)
     proxy->setSourceModel(model);
     ui.tableView->setModel(proxy);
     ui.tableView->resizeColumnsToContents();
+    ui.tableView->resizeRowsToContents();
     ui.tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 }
 
 ErrorsListDialog::~ErrorsListDialog()

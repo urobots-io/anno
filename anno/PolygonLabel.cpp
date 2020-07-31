@@ -102,7 +102,7 @@ bool PolygonLabel::IsNearStartPoint(const WorldInfo & wi) const {
 
 	if (h->size()) {
 		auto start_pos = h->at(0)->GetPosition();
-		if ((start_pos - wi.position).manhattanLength() < 7 / wi.world_scale) { // TODO: config
+		if ((start_pos - wi.position).manhattanLength() < distance_to_finish_creation_ / wi.world_scale) { 
 			return true;
 		}
 	}

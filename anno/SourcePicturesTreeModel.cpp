@@ -395,8 +395,7 @@ SourcePicturesTreeModel::CopiedObjectInfo * SourcePicturesTreeModel::CreateCopie
     return obj;
 }
 
-void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl>& urls, const QStringList &name_filters) {
-    Q_UNUSED(name_filters)
+void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl>& urls) {    
     if (!index.isValid())
         return;
 
@@ -453,7 +452,7 @@ void SourcePicturesTreeModel::InsertObjectsRecursively(CopiedObjectInfo * object
         ? loader_->CreateSubfolder(path, object->file_name)
         : loader_->CopyLocalFile(path, object->absolute_path);
 
-    // TODO: handle result
+    // TODO(ap): handle result, show error to user.
 
     current_progress_dialog_->setValue(++copied_objects_count_);
 
@@ -481,9 +480,8 @@ QMimeData * SourcePicturesTreeModel::mimeData(const QModelIndexList & indexes) c
 }
 
 bool SourcePicturesTreeModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent) {
-    Q_UNUSED(action)
-    QList<QUrl> urls = data->urls();
-    InsertFiles(parent, row, column, urls);
+    Q_UNUSED(action)    
+    InsertFiles(parent, row, column, data->urls());
     return true;
 }
 

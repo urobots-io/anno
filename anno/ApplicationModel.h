@@ -33,7 +33,7 @@ public:
     void Rename(QStringList source, QStringList destination) override;
 
     QJsonObject GenerateHeader();
-    bool ApplyHeader(QJsonObject, QString & error);
+    bool ApplyHeader(QJsonObject, QStringList & errors);
 
     /// Return shated indexes which are present in the document
     std::set<int> GetExistingSharedIndexes(LabelDefinition *def);
@@ -64,6 +64,8 @@ private:
 	IMPLEMENT_Q_PROPERTY_WRITE(QString, project_filename);	
 	IMPLEMENT_Q_PROPERTY_WRITE(std::shared_ptr<LabelDefinitionsTreeModel>, label_definitions);
     IMPLEMENT_Q_PROPERTY_WRITE(std::shared_ptr<FilesystemInterface>, filesystem);
+
+    std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonObject & types, QStringList& errors);
         
 signals:
     void image_script_changed(QString);

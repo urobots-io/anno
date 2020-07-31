@@ -74,4 +74,6 @@ private:
     double area_;
 
     QRectF aabb_;
+
+    const int distance_to_finish_creation_ = 7; // in pixels
 };

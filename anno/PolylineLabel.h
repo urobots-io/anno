@@ -50,7 +50,5 @@ private:
 
     State state_;
 
-    QPointF next_point_;
-    
-    // TODO: create and maintain aabb
+    QPointF next_point_;    
 };

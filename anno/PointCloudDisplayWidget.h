@@ -24,8 +24,7 @@ public:
     Q_PROPERTY(bool use_arcball_navigation READ get_use_arcball_navigation WRITE set_use_arcball_navigation NOTIFY use_arcball_navigation_changed);
 
     void SetupImage(QString image_path, std::shared_ptr<FilesystemInterface> filesystem);
-
-    // TODO: change into properties
+    
     QString ImageFilepath() const { return image_filepath_; }
     QString PointCloudFilepath() const { return point_cloud_filepath_.length() ? point_cloud_filepath_ : image_filepath_; }
 

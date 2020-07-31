@@ -64,9 +64,7 @@
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
-echo const char* git_rev = R^"( &gt;  git_rev.h
-git rev-parse --short HEAD &gt;&gt; git_rev.h
-echo )^";  &gt;&gt;  git_rev.h
+call gen_git_rev_windows.bat
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER)d.dll "$(OutDir)"
@@ -98,9 +96,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
-echo const char* git_rev = R^"( &gt;  git_rev.h
-git rev-parse --short HEAD &gt;&gt; git_rev.h
-echo )^";  &gt;&gt;  git_rev.h
+call gen_git_rev_windows.bat
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER).dll "$(OutDir)"

@@ -257,9 +257,9 @@ bool MainWindow::OnSave(bool select_new_filename) {
             recent_projects_.AddValue(project_filename);
         }
     }
-    else {
-        // TODO(ap): set proper caption
-        ErrorsListDialog dialog(errors);
+    else {        
+        ErrorsListDialog dialog(tr("Save project error"), 
+            tr("Failed to save project %0").arg(project_filename), errors);
         dialog.exec();
     }
 
@@ -345,14 +345,8 @@ void MainWindow::OpenProject(const QString & full_file_name) {
     
     QStringList errors;
     if (!model_.OpenProject(full_file_name, errors)) {
-        if (errors.size() == 1) {
-            urobots::qt_helpers::messagebox::Critical(errors[0]);
-        } 
-        else {
-            // TODO(ap): set proper caption
-            ErrorsListDialog dialog(errors);
-            dialog.exec();
-        }
+        ErrorsListDialog dialog(tr("Open project error"), tr("Failed to open project %0").arg(full_file_name), errors);
+        dialog.exec();        
     }
     else {        
 #if _DEBUG

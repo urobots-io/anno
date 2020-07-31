@@ -395,8 +395,7 @@ SourcePicturesTreeModel::CopiedObjectInfo * SourcePicturesTreeModel::CreateCopie
     return obj;
 }
 
-void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl>& urls, const QStringList &name_filters) {
-    Q_UNUSED(name_filters)
+void SourcePicturesTreeModel::InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl>& urls) {    
     if (!index.isValid())
         return;
 
@@ -481,9 +480,8 @@ QMimeData * SourcePicturesTreeModel::mimeData(const QModelIndexList & indexes) c
 }
 
 bool SourcePicturesTreeModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent) {
-    Q_UNUSED(action)
-    QList<QUrl> urls = data->urls();
-    InsertFiles(parent, row, column, urls);
+    Q_UNUSED(action)    
+    InsertFiles(parent, row, column, data->urls());
     return true;
 }
 

@@ -7,7 +7,7 @@ class ErrorsListDialog : public QDialog
     Q_OBJECT
 
 public:
-    ErrorsListDialog(QStringList errors, QWidget *parent = Q_NULLPTR);
+    ErrorsListDialog(QString title, QString message, QStringList errors, QWidget *parent = Q_NULLPTR);
     ~ErrorsListDialog();
 
 private:

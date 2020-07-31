@@ -772,7 +772,7 @@ std::shared_ptr<LabelHandle> DesktopWidget::FindClosestHandle(QPointF position) 
     std::shared_ptr<LabelHandle> closest_handle;
     double closest_dist = 7.0 / world_scale_;
 
-    // TODO: optimize (sort handles on change, etc)
+    // TODO(ap): optimize (sort handles on change, etc)
     for (auto label : file_->labels_) {
         for (auto handle : label->GetHandles()) {
             auto length = (handle->GetPosition() - position).manhattanLength();

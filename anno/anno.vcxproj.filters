@@ -387,9 +387,6 @@
     <ClCompile Include="ModifyLabelTextFileModelCommand.cpp">
       <Filter>Source Files\FileModelCommands</Filter>
     </ClCompile>
-    <ClCompile Include="RestImageConverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="triangulation\construct.c">
       <Filter>Source Files\Triangulation</Filter>
     </ClCompile>
@@ -588,9 +585,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImageConverter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RestImageConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImageData.h">

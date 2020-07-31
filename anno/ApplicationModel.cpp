@@ -3,7 +3,6 @@
 #include "LocalFilesystem.h"
 #include "messagebox.h"
 #include "RestDatasetFilesystem.h"
-#include "RestImageConverter.h"
 #include "ProxyLabel.h"
 #include "qjson_helpers.h"
 #include "rest.h"
@@ -893,9 +892,12 @@ std::shared_ptr<FileModel> ApplicationModel::GetFirstFileModel() {
 std::shared_ptr<ImageConverter> ApplicationModel::GetImageConverter() {
     if (!files_loader_.empty()) {
         auto converter_type = files_loader_["type"].toString();
-        if (converter_type == "rest_converter") {
-            return std::make_shared<RestImageConverter>(files_loader_["params"].toObject());
+        /*
+        For possible use in the future:
+        if (converter_type == "MyType") {
+            return std::make_shared<MyTypeConverter>(files_loader_["params"].toObject());
         }
+        */
     }
     return {};
 }

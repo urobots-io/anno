@@ -31,13 +31,13 @@ SOURCES += \
     ModifyLabelTextFileModelCommand.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
     PointLabel.cpp PolygonLabel.cpp PolylineLabel.cpp ProjectDefinitionsDialog.cpp ProjectSettingsWidget.cpp \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
-    RestDatasetFilesystem.cpp RestImageConverter.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
+    RestDatasetFilesystem.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
     stdafx.cpp \
     SourcePicturesWidget.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp version.cpp win_helpers.cpp \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
 HEADERS += \
-    AboutDialog.h ApplicationModel.h ArcBall.h BlobPacker.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
+    AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
     ColorTransformer.h \
     CreateLabelFileModelCommand.h CustomProperty.h CustomPropertyTableItemDelegate.h CustomPropertyTableModel.h \
     DeleteAllLabelsFileModelCommand.h DeleteLabelFileModelCommand.h Desktop3dWindow.h DesktopWidget.h ElidedLabelWidget.h ErrorsListDialog.h \
@@ -49,7 +49,7 @@ HEADERS += \
     ModifyLabelTextFileModelCommand.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
     PointCloudDisplayWidget.h PointLabel.h PolygonLabel.h PolylineLabel.h ProjectDefinitionsDialog.h ProjectSettingsWidget.h \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
-    RestImageConverter.h ScriptPainter.h settings.h SharedPropertyDefinition.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
+    ScriptPainter.h settings.h SharedPropertyDefinition.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
     stdafx.h \
     ToolboxProxyModel.h ToolboxWidget.h version.h win_helpers.h WorldInfo.h \
     triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h

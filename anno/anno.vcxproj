@@ -321,7 +321,6 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="PolygonLabel.cpp" />
     <ClCompile Include="rest.cpp" />
     <ClCompile Include="RestDatasetFilesystem.cpp" />
-    <ClCompile Include="RestImageConverter.cpp" />
     <ClCompile Include="ScriptPainter.cpp" />
     <ClCompile Include="settings.cpp" />
     <ClCompile Include="SourcePicturesTreeModel.cpp" />
@@ -541,7 +540,6 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     </CustomBuild>
     <ClInclude Include="rest.h" />
     <ClInclude Include="RestDatasetFilesystem.h" />
-    <ClInclude Include="RestImageConverter.h" />
     <CustomBuild Include="ScriptPainter.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>

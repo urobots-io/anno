@@ -33,7 +33,7 @@ public:
     void Rename(QStringList source, QStringList destination) override;
 
     QJsonObject GenerateHeader();
-    bool ApplyHeader(QJsonObject, QString & error);
+    bool ApplyHeader(QJsonObject, QStringList & errors);
 
     /// Return shated indexes which are present in the document
     std::set<int> GetExistingSharedIndexes(LabelDefinition *def);

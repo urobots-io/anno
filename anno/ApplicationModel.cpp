@@ -287,8 +287,7 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
 }
 }
 
-// TODO(ap): return list of errors
-bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
+bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
     auto definitions = LoadLabelDefinitions(json[K_MARKER_TYPES].toObject());
 
     // assignments, will be performed, if all checks will be OK
@@ -306,36 +305,35 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
             });
 
             if (new_definition == definitions.end()) {
-                error = tr("Missing label definition: \"%0\"")
-                    .arg(old_definition->type_name);
-                return false;
+                errors << tr("Missing label definition: \"%0\"").arg(old_definition->type_name);
+                break;
             }
 
             if (!(*new_definition)->GetCategory(old_category->value)) {
-                error = tr("Missing category \"%0\" of definition: \"%1\"")
+                errors << tr("Missing category \"%0\" of definition: \"%1\"")
                     .arg(old_category->value)
                     .arg(old_definition->type_name);
-                return false;
+                break;
             }
 
             auto value_type_old = old_definition->value_type;
             auto value_type_new = (*new_definition)->value_type;
             if (value_type_old != value_type_new) {
-                error = tr("Cannot change label type of \"%0\" from \"%1\" to \"%2\"")
+                errors << tr("Cannot change label type of \"%0\" from \"%1\" to \"%2\"")
                     .arg(old_definition->type_name)                    
                     .arg(LabelTypeToString(value_type_old))
                     .arg(LabelTypeToString(value_type_new));
-                return false;
+                break;
             }
 
             auto is_shared_old = old_definition->is_shared();
             auto is_shared_new = (*new_definition)->is_shared();
             if (is_shared_new != is_shared_old) {
-                error = tr("Cannot change shared type of \"%0\" from \"%1\" to \"%2\"")
+                errors << tr("Cannot change shared type of \"%0\" from \"%1\" to \"%2\"")
                     .arg(old_definition->type_name)                    
                     .arg(is_shared_old)
                     .arg(is_shared_new);
-                return false;
+                break;
             }
 
             if (is_shared_new) {
@@ -344,18 +342,18 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
                 auto shared_count_old = int(old_definition->shared_labels.size());
                 auto shared_count_new = int((*new_definition)->shared_labels.size());
                 if (index >= shared_count_new) {
-                    error = tr("Cannot reduce shared_count type of \"%0\" from \"%1\" to \"%2\"")
+                    errors << tr("Cannot reduce shared_count type of \"%0\" from \"%1\" to \"%2\"")
                         .arg(old_definition->type_name)
                         .arg(shared_count_old)
                         .arg(shared_count_new);
-                    return false;
+                    break;
                 }
                 else {
                     auto proxy = dynamic_cast<ProxyLabel*>(label.get());
                     if (!proxy) {
-                        error = tr("Intenal error, cannot get cast to ProxyLabel label of \"%0\"")
+                        errors << tr("Intenal error, cannot get cast to ProxyLabel label of \"%0\"")
                             .arg(old_definition->type_name);
-                        return false;
+                        break;
                     }
                     (*new_definition)->shared_labels[index] = proxy->GetProxyClient();
                     assignments[proxy->GetProxyClient().get()] = (*new_definition)->categories[0];
@@ -364,6 +362,10 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QString & error) {
 
             assignments[label.get()] = (*new_definition)->GetCategory(old_category->value);
         }
+    }
+
+    if (errors.size()) {
+        return false;
     }
 
     // apply new labels

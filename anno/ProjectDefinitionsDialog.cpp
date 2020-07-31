@@ -1,13 +1,10 @@
 #include "ProjectDefinitionsDialog.h"
 #include "ApplicationModel.h"
+#include "ErrorsListDialog.h"
 #include "Highlighter.h"
-#include "messagebox.h"
 #include "PropertyDatabase.h"
 #include "qjson_helpers.h"
 #include <QPushButton>
-
-using namespace urobots::qt_helpers;
-
 
 ProjectDefinitionsDialog::ProjectDefinitionsDialog(ApplicationModel *model, QWidget *parent)
 : QDialog(parent)
@@ -46,21 +43,26 @@ void ProjectDefinitionsDialog::OnApply() {
 
 void ProjectDefinitionsDialog::Apply(bool close_if_success) {
     auto content = ui.textEdit->document()->toPlainText();
-    QString error;
-    auto json = LoadJsonFromText(content.toUtf8(), error);
+    
+    QStringList errors;
+    QString json_error;    
+    auto json = LoadJsonFromText(content.toUtf8(), json_error);
     if (json.isNull()) {
-        messagebox::Critical(error);
-        return;
+        errors << json_error;
+    }
+    else {
+        model_->ApplyHeader(json.object(), errors);
     }
 
-    if (!model_->ApplyHeader(json.object(), error)) {
-        messagebox::Critical(error);
-        return;
+    if (errors.size()) {
+        ErrorsListDialog dialog(tr("Definition error"), tr("Definition contains errors and cannot be applied."), errors, this);
+        dialog.exec();
     }
-
-    PropertyDatabase::Instance().Modify();
-    if (close_if_success) {
-        close();
+    else {
+        PropertyDatabase::Instance().Modify();
+        if (close_if_success) {
+            close();
+        }
     }
 }
 

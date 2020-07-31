@@ -452,7 +452,7 @@ void SourcePicturesTreeModel::InsertObjectsRecursively(CopiedObjectInfo * object
         ? loader_->CreateSubfolder(path, object->file_name)
         : loader_->CopyLocalFile(path, object->absolute_path);
 
-    // TODO: handle result
+    // TODO(ap): handle result, show error to user.
 
     current_progress_dialog_->setValue(++copied_objects_count_);
 

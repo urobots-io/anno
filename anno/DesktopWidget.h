@@ -192,8 +192,7 @@ private:
     /// label used as a stamp during creation
     std::shared_ptr<Label> stamp_label_;
 
-	/// type of label which shall be created in creation mode    
-    // TODO(ap): fix bug - open file with creation mode enabled
+	/// type of label which shall be created in creation mode        
 	std::shared_ptr<LabelCategory> category_for_creation_;
 
 	/// is creation mode

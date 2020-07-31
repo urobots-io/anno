@@ -147,8 +147,7 @@ bool ApplicationModel::OpenProject(QString filename, QStringList & errors) {
     }
 }
 
-namespace {
-std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonObject & types) {
+std::vector<std::shared_ptr<LabelDefinition>> ApplicationModel::LoadLabelDefinitions(const QJsonObject & types, QStringList& errors) {
     std::vector<std::shared_ptr<LabelDefinition>> definitions;
     for (auto key : types.keys()) {
         auto def = std::make_shared<LabelDefinition>();
@@ -256,15 +255,10 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
                 // create label shared between other labels
                 auto shared_label = LabelFactory::CreateLabel(def->value_type);
                 if (!shared_label) {
-                    // TODO(ap): propagate this error
-                    throw std::runtime_error("Failed to create shared label");
-                    /*
                     errors << tr("Failed to create label with type \"%0\" for definition \"%1\"")
-                    .arg(LabelTypeToString(definition->label_type))
-                    .arg(definition->name);
-                    file_content_ok = false;
-                    continue;
-                    */
+                        .arg(LabelTypeToString(def->value_type))
+                        .arg(def->type_name);
+                    return {};
                 }
 
                 // setup valid shared label index
@@ -285,10 +279,12 @@ std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonOb
 
     return definitions;
 }
-}
 
 bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
-    auto definitions = LoadLabelDefinitions(json[K_MARKER_TYPES].toObject());
+    auto definitions = LoadLabelDefinitions(json[K_MARKER_TYPES].toObject(), errors);
+    if (errors.size()) {
+        return false;
+    }
 
     // assignments, will be performed, if all checks will be OK
     std::map<Label*, std::shared_ptr<LabelCategory>> assignments;    
@@ -420,11 +416,13 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
         set_filesystem(std::make_shared<LocalFilesystem>(files_root_dir_s));
     }
 
-    set_label_definitions(std::make_shared<LabelDefinitionsTreeModel>(
-        this, LoadLabelDefinitions(definitions[K_MARKER_TYPES].toObject())));
-    connect(get_label_definitions().get(), &LabelDefinitionsTreeModel::Changed, this, &ApplicationModel::SetModified);
+    auto label_definitions = LoadLabelDefinitions(definitions[K_MARKER_TYPES].toObject(), errors);
+    if (errors.size()) {
+        return false;
+    }
+    set_label_definitions(std::make_shared<LabelDefinitionsTreeModel>(this, label_definitions));
 
-    bool file_content_ok = true;
+    connect(get_label_definitions().get(), &LabelDefinitionsTreeModel::Changed, this, &ApplicationModel::SetModified);    
 
     for (auto file_marker : json[K_FILES].toArray()) {
         auto filename = file_marker.toObject()[K_FILE_NAME].toString();
@@ -438,21 +436,17 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             auto definition = get_label_definitions()->FindDefinition(type_name);
             if (!definition) {
                 errors << tr("Definition with name \"%0\" does not exist").arg(type_name);
-                file_content_ok = false;
                 continue;
             }
 
             if (!definition->categories.size()) {
                 errors << tr("Definition \"%0\" has no categories").arg(definition->type_name);
-                file_content_ok = false;
-                continue;
             }
 
             if (!definition->GetCategory(category)) {
                 errors << tr("Definition \"%0\" has no category \"%1\"")
                     .arg(definition->type_name)
                     .arg(category);
-                file_content_ok = false;
                 continue;
             }
 
@@ -461,7 +455,6 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
                 errors << tr("Definition \"%0\" shared count is less than label shared index \"%1\"")
                     .arg(definition->type_name)
                     .arg(shared_index);
-                file_content_ok = false;
                 continue;
             }
 
@@ -477,7 +470,6 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
                     errors << tr("Failed to create label with type \"%0\" for definition \"%1\"")
                         .arg(LabelTypeToString(definition->value_type))
                         .arg(definition->type_name);
-                    file_content_ok = false;
                     continue;
                 }
             }
@@ -506,7 +498,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
         }
     }
 
-    return file_content_ok;
+    return errors.size() == 0;
 }
 
 QJsonObject ApplicationModel::GenerateHeader() {

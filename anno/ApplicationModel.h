@@ -64,6 +64,8 @@ private:
 	IMPLEMENT_Q_PROPERTY_WRITE(QString, project_filename);	
 	IMPLEMENT_Q_PROPERTY_WRITE(std::shared_ptr<LabelDefinitionsTreeModel>, label_definitions);
     IMPLEMENT_Q_PROPERTY_WRITE(std::shared_ptr<FilesystemInterface>, filesystem);
+
+    std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonObject & types, QStringList& errors);
         
 signals:
     void image_script_changed(QString);

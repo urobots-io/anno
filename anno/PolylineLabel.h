@@ -31,6 +31,10 @@ public:
 
     QTransform GetTransform(bool scale, bool rotate) override;
 
+    void HandlePositionChanged(LabelHandle *, QPointF) override;
+
+    bool HitTest(const WorldInfo & wi) const override;
+
 private:
     enum class ExtraActionType {
         Nothing,
@@ -40,7 +44,9 @@ private:
 
     typedef std::vector<LabelHandle*> Handles;
 
-    ExtraActionType DetectExtraAction(const WorldInfo & wi, int & index);    
+    ExtraActionType DetectExtraAction(const WorldInfo & wi, int & index) const;    
+
+    void UpdateAABB();
 
 private:
     enum class State {
@@ -50,5 +56,7 @@ private:
 
     State state_;
 
-    QPointF next_point_;    
+    QPointF next_point_;   
+
+    QRectF aabb_;
 };

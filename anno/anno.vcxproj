@@ -64,6 +64,10 @@
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
+echo const char* git_rev = R^"( &gt;  git_rev.h
+git rev-parse --short HEAD &gt;&gt; git_rev.h
+echo )^";  &gt;&gt;  git_rev.h
+
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER)d.dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgproc$(OPENCV_VER)d.dll "$(OutDir)"
@@ -93,6 +97,10 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir
     </Link>
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
+
+echo const char* git_rev = R^"( &gt;  git_rev.h
+git rev-parse --short HEAD &gt;&gt; git_rev.h
+echo )^";  &gt;&gt;  git_rev.h
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER).dll "$(OutDir)"
@@ -351,7 +359,6 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="version.cpp" />
     <ClCompile Include="win_helpers.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +373,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions)  "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml" "-fstdafx.h" "-f../../%(Filename)%(Extension)"</Command>
     </CustomBuild>
     <ClInclude Include="FileTreeElement.h" />
+    <ClInclude Include="git_rev.h" />
     <ClInclude Include="product_info.h" />
     <ClInclude Include="ArcBall.h" />
     <ClInclude Include="ColoredVertexData.h" />
@@ -599,7 +607,6 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions)  "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml" "-fstdafx.h" "-f../../%(Filename)%(Extension)"</Command>
     </CustomBuild>
     <ClInclude Include="GeneratedFiles\ui_ProjectSettingsWidget.h" />
-    <ClInclude Include="version.h" />
     <CustomBuild Include="DesktopWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing DesktopWidget.h...</Message>
@@ -742,9 +749,6 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="anno.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="svn.template.txt" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AboutDialog.ui">

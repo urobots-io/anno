@@ -40,3 +40,4 @@ anno/GeneratedFiles
 # qt creator files
 build-anno*/
 *.pro.user
+anno/git_rev.h

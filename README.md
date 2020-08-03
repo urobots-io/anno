@@ -1,6 +1,8 @@
 # anno
 Cross-platform tool for labeling image data.
-[Video introduction to anno](https://youtu.be/RrjGU2vSIOM)
+[Video introduction to anno](https://youtu.be/RrjGU2vSIOM).
+
+<img src="https://user-images.githubusercontent.com/9085494/89163912-a8055380-d576-11ea-8f8d-da664c6f4687.png"/>
 
 ## Features
 - Supports a wide range of marker types:
@@ -15,6 +17,8 @@ Cross-platform tool for labeling image data.
 - Supports a wide variety of image formats. Pre-build Windows version supports EXR format.
 - The project file is JSON file wich contains project-specific marker definitions and labeling information.
 - The user interface is optimized for fast sub-pixel accurate labeling.
+
+<img src="https://user-images.githubusercontent.com/9085494/89164042-d5520180-d576-11ea-8a74-f4a13a6716d7.gif"/>
 
 ## Requirements
 - Windows / macOS / Ubuntu

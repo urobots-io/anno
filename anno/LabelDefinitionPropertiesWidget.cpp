@@ -65,6 +65,7 @@ void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> de
     else if (definition_) {
         ui.stackedWidget->setCurrentWidget(ui.marker_page);
 
+
         ui.rendering_script_textEdit->blockSignals(true);
         ui.rendering_script_textEdit->setText(def ? def->get_rendering_script() : QString());
         ui.rendering_script_textEdit->blockSignals(false);
@@ -72,6 +73,8 @@ void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> de
         ui.description_lineEdit->blockSignals(true);
         ui.description_lineEdit->setText(def ? def->get_description() : QString());
         ui.description_lineEdit->blockSignals(false);
+
+        ui.value_type_lineEdit->setText(def ? LabelTypeToString(def->value_type) : QString());
 
         setEnabled(def != nullptr);
     }

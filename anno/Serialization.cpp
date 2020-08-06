@@ -1,6 +1,7 @@
 #include "Serialization.h"
 #include "LabelFactory.h"
 #include "qjson_helpers.h"
+#include <QJsonArray>
 
 #define K_DEFINITION_NAME "name"
 #define K_DEFINITION_DESCRIPTION "description"

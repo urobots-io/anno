@@ -85,6 +85,10 @@ public:
         return client_->Rotate(angle); 
     }
 
+    bool MoveBy(QPointF offset) override { 
+        return client_->MoveBy(offset); 
+    }
+
     void SetComputeVisualisationData(bool value) override { 
         client_->SetComputeVisualisationData(value); 
     }

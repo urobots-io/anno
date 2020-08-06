@@ -95,7 +95,20 @@ bool LabelDefinitionsTreeModel::setData(const QModelIndex &index, const QVariant
             return true;
         }
         else if (item.first) {
-            item.first->type_name = value.toString();
+            auto definition = item.first;
+            auto new_name = value.toString();
+            if (definition->type_name == new_name) {
+                return true;
+            }
+
+            for (auto d : definitions_) {
+                if (d.get() != definition.get() && d->type_name == new_name) {
+                    emit Error(tr("Cannot rename marker to %0, marker with this name already exists").arg(new_name));
+                    return false;
+                }
+            }
+
+            definition->type_name = value.toString();
             DefinitionChanged();
             return true;
         }

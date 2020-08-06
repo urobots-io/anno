@@ -38,6 +38,7 @@ public:
 
 signals:
     void Changed();
+    void Error(QString);
 
 public slots:
     void DefinitionChanged();

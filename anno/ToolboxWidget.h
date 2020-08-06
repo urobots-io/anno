@@ -26,6 +26,7 @@ public slots:
     void ShowAddMarkerMenu();
     void AddMarkerType();
     void OnCustomContextMenu(const QPoint &point);
+    void OnError(QString);
 
 private slots:
 	void OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous);	

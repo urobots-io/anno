@@ -1,4 +1,5 @@
 #include "ToolboxWidget.h"
+#include "messagebox.h"
 #include <QMenu>
 
 ToolboxWidget::ToolboxWidget(QWidget *parent)
@@ -46,11 +47,19 @@ void ToolboxWidget::AddAction(QMenu *menu, QString icon, QString text, T callbac
 }
 
 void ToolboxWidget::SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeModel> model) {
+    if (definitions_) {
+        definitions_->disconnect(this);
+    }
+
     CleanupSelection();    
 
     proxy_.setSourceModel(nullptr);    
 
 	definitions_ = model;
+
+    if (definitions_) {
+        connect(definitions_.get(), &LabelDefinitionsTreeModel::Error, this, &ToolboxWidget::OnError);
+    }
 
     proxy_.setSourceModel(model.get());
 
@@ -205,4 +214,9 @@ void ToolboxWidget::DeleteCategoryFromImages() {
         }
     }
 }
+
+void ToolboxWidget::OnError(QString message) {
+    urobots::qt_helpers::messagebox::Critical(message);
+}
+
 

@@ -1,5 +1,6 @@
 #include "LabelDefinitionsTreeModel.h"
 #include "ApplicationModel.h"
+#include "Serialization.h"
 
 LabelDefinitionsTreeModel::LabelDefinitionsTreeModel(ApplicationModel *parent, const std::vector<std::shared_ptr<LabelDefinition>> & definitions)
     : QAbstractItemModel(parent)
@@ -228,6 +229,8 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     definitions_.push_back(def);    
     endInsertRows();
 
+    emit Changed();
+
     return createIndex(pos, 0, def.get());
 }
 
@@ -252,6 +255,8 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
     beginInsertRows(index, pos, pos);
     def->categories.push_back(cat);
     endInsertRows();
+
+    emit Changed();
 
     return createIndex(pos, 0, cat.get());
 }
@@ -295,3 +300,44 @@ void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelCategory> category) 
         endRemoveRows();
     }
 }
+
+QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefinition> marker) {
+    auto index = GetIndex(marker.get());
+    if (!index.isValid()) {
+        return QModelIndex();
+    }
+
+    QString name = marker->type_name + tr(" copy");
+    int copy_index = 1;
+    bool name_found = false;
+    while (!name_found) {        
+        for (auto d : definitions_) {
+            if (d->type_name == name) {
+                name.clear();
+                break;
+            }
+        }
+
+        name_found = !name.isEmpty();
+        if (!name_found) {
+            name = marker->type_name + tr(" copy(%0)").arg(++copy_index);
+        }
+    }
+
+    QStringList errors;    
+    if (auto new_marker = DeserializeLabelDefinition(Serialize(marker), errors)) {
+        new_marker->type_name = name;
+
+        int pos = index.row() + 1;
+        beginInsertRows(QModelIndex(), pos, pos);
+        definitions_.insert(definitions_.begin() + index.row(), new_marker);
+        endInsertRows();
+
+        emit Changed();
+
+        return createIndex(pos, 0, new_marker.get());
+    }
+
+    return QModelIndex();
+}
+

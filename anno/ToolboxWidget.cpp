@@ -20,14 +20,16 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     connect(ui.treeView, &QWidget::customContextMenuRequested, this, &ToolboxWidget::OnCustomContextMenu);
 
     marker_menu_ = new QMenu(topLevelWidget());
-    AddAction(marker_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
+    AddAction(marker_menu_, "rename.ico", tr("Rename"), &ToolboxWidget::RenameItem);
     AddAction(marker_menu_, "add.ico", tr("Add Category"), &ToolboxWidget::AddCategory);
+    marker_menu_->addSeparator();
+    AddAction(marker_menu_, "copy.ico", tr("Clone"), &ToolboxWidget::CloneMarker);
     marker_menu_->addSeparator();
     AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
     AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);
 
     category_menu_ = new QMenu(topLevelWidget());
-    AddAction(category_menu_, QString(), tr("Rename"), &ToolboxWidget::RenameItem);
+    AddAction(category_menu_, "rename.ico", tr("Rename"), &ToolboxWidget::RenameItem);
     category_menu_->addSeparator();
     AddAction(category_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteCategory);
     AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);
@@ -186,7 +188,18 @@ void ToolboxWidget::AddCategory() {
 void ToolboxWidget::DeleteMarker() {
     if (definitions_) {
         if (auto marker = definitions_->GetDefinition(menu_index_)) {
-            DeleteRequested(marker, nullptr, false);
+            emit DeleteRequested(marker, nullptr, false);
+        }
+    }
+}
+
+void ToolboxWidget::CloneMarker() {
+    if (definitions_) {
+        if (auto marker = definitions_->GetDefinition(menu_index_)) {
+            auto index = definitions_->CloneDefinition(marker);
+            if (index.isValid()) {                
+                ui.treeView->edit(proxy_.mapFromSource(index));
+            }
         }
     }
 }
@@ -194,7 +207,7 @@ void ToolboxWidget::DeleteMarker() {
 void ToolboxWidget::DeleteMarkerFromImages() {
     if (definitions_) {
         if (auto marker = definitions_->GetDefinition(menu_index_)) {
-            DeleteRequested(marker, nullptr, true);
+            emit DeleteRequested(marker, nullptr, true);
         }
     }
 }
@@ -202,7 +215,7 @@ void ToolboxWidget::DeleteMarkerFromImages() {
 void ToolboxWidget::DeleteCategory() {
     if (definitions_) {
         if (auto category = definitions_->GetCategory(menu_index_)) {
-            DeleteRequested(nullptr, category, false);
+            emit DeleteRequested(nullptr, category, false);
         }
     }
 }
@@ -210,7 +223,7 @@ void ToolboxWidget::DeleteCategory() {
 void ToolboxWidget::DeleteCategoryFromImages() {
     if (definitions_) {
         if (auto category = definitions_->GetCategory(menu_index_)) {
-            DeleteRequested(nullptr, category, false);
+            emit DeleteRequested(nullptr, category, false);
         }
     }
 }

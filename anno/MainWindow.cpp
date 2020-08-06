@@ -173,7 +173,6 @@ void MainWindow::OnDeleteRequest(std::shared_ptr<LabelDefinition> definition, st
             model_.Delete(category, delete_only_instances);
         }
     }
-
 }
 
 void MainWindow::OnDesktopCreationModeChanged(bool value) {

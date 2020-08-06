@@ -16,7 +16,7 @@ public:
 signals:
     void SelectionChanged(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>);
     void DoubleClick(std::shared_ptr<LabelCategory>);
-    void DeleteRequested(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>, bool delete_only_instances);
+    void DeleteRequested(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>, bool delete_only_instances);    
 
 public slots:
     void SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeModel>);
@@ -35,6 +35,7 @@ private slots:
     void RenameItem();
     void AddCategory();
     void DeleteMarker();
+    void CloneMarker();
     void DeleteMarkerFromImages();
     void DeleteCategory();
     void DeleteCategoryFromImages();

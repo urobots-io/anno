@@ -20,5 +20,10 @@
         <file>Resources/select.png</file>
         <file>Resources/anno.ico</file>
         <file>Resources/new.ico</file>
+        <file>Resources/copy.ico</file>
+        <file>Resources/find.ico</file>
+        <file>Resources/nav_back.ico</file>
+        <file>Resources/nav_forward.ico</file>
+        <file>Resources/rename.ico</file>
     </qresource>
 </RCC>

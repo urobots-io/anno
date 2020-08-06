@@ -35,6 +35,7 @@ public:
 
     void Delete(std::shared_ptr<LabelDefinition>);
     void Delete(std::shared_ptr<LabelCategory>);
+    QModelIndex CloneDefinition(std::shared_ptr<LabelDefinition>);
 
 signals:
     void Changed();

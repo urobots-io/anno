@@ -432,6 +432,9 @@
     <ClCompile Include="Serialization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ToolLabel.cpp">
+      <Filter>Source Files\Labels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -610,6 +613,9 @@
     </ClInclude>
     <ClInclude Include="Serialization.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolLabel.h">
+      <Filter>Header Files\Labels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

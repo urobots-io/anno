@@ -24,7 +24,7 @@ QStringList PolylineLabel::ToStringsList() {
 void PolylineLabel::FromStringsList(QStringList const & value) {
     Label::FromStringsList(value);
     state_ = State::ready;
-    UpdateAABB();
+    UpdateInternalData();
 }
 
 void PolylineLabel::OnPaint(const PaintInfo & pi) {
@@ -155,10 +155,10 @@ QTransform PolylineLabel::GetTransform(bool scale, bool rotate) {
 }
 
 void PolylineLabel::HandlePositionChanged(LabelHandle *, QPointF) {
-    UpdateAABB();
+    UpdateInternalData();
 }
 
-void PolylineLabel::UpdateAABB() {
+void PolylineLabel::UpdateInternalData() {
     if (handles_.size()) {
         auto p0 = handles_[0]->GetPosition();
         auto p1 = p0;

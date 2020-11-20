@@ -198,6 +198,16 @@
                     "width": 200
                 },
                 "value_type": "rect"
+            },
+            "tool": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "my tool"
+                    }
+                ],
+                "value_type": "tool"
             }
         },
         "user_data": {
@@ -276,6 +286,11 @@
                     "category": 0,
                     "type": "oriented_point",
                     "value": "869.189 285.586 0.0906599"
+                },
+                {
+                    "category": 0,
+                    "type": "tool",
+                    "value": "677.82 279.345 744.171 123.399 727.358 45.2847 1287.94 50.8905"
                 }
             ],
             "name": "cars.jpg"

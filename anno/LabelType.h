@@ -9,6 +9,7 @@ enum class LabelType {
 	polygon,
     polyline,
     rect,
+    tool,
 
     max_types
 };
@@ -23,6 +24,7 @@ inline QString LabelTypeToString(LabelType label_type) {
 	case LabelType::circle: return "circle";
 	case LabelType::polygon: return "polygon";
     case LabelType::polyline: return "polyline";
+    case LabelType::tool: return "tool";
 	}
 }
 
@@ -34,6 +36,7 @@ inline LabelType LabelTypeFromString(QString type_name) {
 	else if (type_name == "circle") return LabelType::circle;
 	else if (type_name == "oriented_rect") return LabelType::oriented_rect;
 	else if (type_name == "rect") return LabelType::rect;
+    else if (type_name == "tool") return LabelType::tool;
 	
 	return LabelType::point;
 }

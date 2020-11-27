@@ -77,7 +77,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir
     <ClCompile>
       <PreprocessorDefinitions>ANNO_USE_OPENCV;UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_SCRIPT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WINEXTRAS_LIB;QT_WIDGETS_LIB;QT_QML_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\GeneratedFiles;$(ProjectDir)..;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(OPENCV_DIR)\include;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat />
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>

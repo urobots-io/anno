@@ -23,6 +23,7 @@ using namespace urobots::qt_helpers;
 
 #define NEW_PROJECT_IMAGE_FOLDER "NEW_PROJECT_IMAGE_FOLDER"
 #define SAVE_PROJECT_FOLDER "SAVE_PROJECT_FOLDER"
+#define OPEN_PROJECT_FOLDER "OPEN_PROJECT_FOLDER"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -299,13 +300,17 @@ void MainWindow::OnOpenProject() {
 		return;
 	}
 
+    auto projects_folder = QSettings().value(OPEN_PROJECT_FOLDER).toString();
 	auto full_file_name = QFileDialog::getOpenFileName(
 		this,
 		tr("Open project"), 
-		QString(), 
+		projects_folder, 
 		tr("All files (*.*);;Anno files (*.anno)"));
 	
     if (!full_file_name.isNull()) {
+        projects_folder = QFileInfo(full_file_name).absoluteDir().path();
+        QSettings().setValue(OPEN_PROJECT_FOLDER, projects_folder);
+
         OpenProject(full_file_name);
     }
 }

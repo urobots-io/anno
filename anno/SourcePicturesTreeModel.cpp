@@ -313,6 +313,20 @@ bool SourcePicturesTreeModel::CreateSubfolder(const QModelIndex & index, QString
     return true;
 }
 
+void SourcePicturesTreeModel::RemoveMarkers(const QModelIndex & index) {
+    auto element = static_cast<FileTreeElement*>(index.internalPointer());
+    if (!element) {
+        return;
+    }
+    
+    if (element->is_folder) {
+        file_model_provider_->DeleteAllLabels(element->GetPathList());
+    }
+    else if (auto model = element->GetFileModel()) {
+        model->DeleteAllLabels();
+    }    
+}
+
 bool SourcePicturesTreeModel::Remove(const QModelIndex & index, QString & error) {
     auto parent_index = parent(index);
 

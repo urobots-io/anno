@@ -49,7 +49,7 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
     AddAction(file_menu_, QString(), tr("Reveal in Explorer"), &SourcePicturesWidget::OnRevealInExplorer);
     file_menu_->addSeparator();
     AddAction(file_menu_, "delete.ico", tr("Delete file"), &SourcePicturesWidget::OnDeleteFile);
-    AddAction(file_menu_, "delete.ico", tr("Delete markers"), &SourcePicturesWidget::OnDeleteFileMarkers);        
+    AddAction(file_menu_, "clean.ico", tr("Remove markers"), &SourcePicturesWidget::OnRemoveMarkers);        
     
     // folder menu
     folder_menu_ = new QMenu(topLevelWidget());
@@ -60,6 +60,7 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
     AddAction(folder_menu_, "add.ico", tr("Create subfolder..."), &SourcePicturesWidget::OnCreateFolder);
     folder_menu_->addSeparator();
     delete_folder_action_ = AddAction(folder_menu_, "delete.ico", tr("Delete folder"), &SourcePicturesWidget::OnDeleteFile);
+    AddAction(folder_menu_, "clean.ico", tr("Remove markers"), &SourcePicturesWidget::OnRemoveMarkers);
 }
 
 SourcePicturesWidget::~SourcePicturesWidget()
@@ -228,13 +229,10 @@ void SourcePicturesWidget::OnRevealInExplorer() {
 #endif
 }
 
-void SourcePicturesWidget::OnDeleteFileMarkers() {
+void SourcePicturesWidget::OnRemoveMarkers() {
     if (menu_index_.isValid()) {
-        auto file_model = tree_model_->GetFileModel(menu_index_);
-        if (file_model) {
-            file_model->DeleteAllLabels();
-        }        
-    }
+        tree_model_->RemoveMarkers(menu_index_);
+    }    
 }
 
 void SourcePicturesWidget::OnCreateFolder() {

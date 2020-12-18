@@ -48,7 +48,8 @@ public:
 
     bool Remove(const QModelIndex &, QString & error);
     bool CreateSubfolder(const QModelIndex &, QString);
-    void ReloadFolder(const QModelIndex &, int, int);    
+    void ReloadFolder(const QModelIndex &, int, int); 
+    void RemoveMarkers(const QModelIndex &);
     
     void InsertFiles(const QModelIndex & index, int row, int column, const QList<QUrl> &urls);
 
@@ -58,7 +59,6 @@ public:
     void LoadCompletely();
 
     QModelIndex GetFilesRootIndex();
-
 
     void RegisterFileModel(FileModel*);
     void UnregisterFileModel(FileModel*);

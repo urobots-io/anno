@@ -26,13 +26,13 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     AddAction(marker_menu_, "copy.ico", tr("Clone"), &ToolboxWidget::CloneMarker);
     marker_menu_->addSeparator();
     AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
-    AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);
+    AddAction(marker_menu_, "clean.ico", tr("Remove from images"), &ToolboxWidget::DeleteMarkerFromImages);
 
     category_menu_ = new QMenu(topLevelWidget());
     AddAction(category_menu_, "rename.ico", tr("Rename"), &ToolboxWidget::RenameItem);
     category_menu_->addSeparator();
     AddAction(category_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteCategory);
-    AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);
+    AddAction(category_menu_, "clean.ico", tr("Remove from images"), &ToolboxWidget::DeleteCategoryFromImages);
 }
 
 ToolboxWidget::~ToolboxWidget()

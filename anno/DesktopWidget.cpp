@@ -577,7 +577,7 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
     if (!file_ || !image_.get_loaded())
         return;
 
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton && QApplication::keyboardModifiers() == Qt::NoModifier) {
         switch (cursor_mode_) {
         case CursorMode::select:
             if (hovered_handle_) {
@@ -596,7 +596,6 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
         case CursorMode::modifying:
             if (selected_label_) {
                 selected_label_->OnCreateClick(GetWorldInfo(), true);
-
                 if (selected_label_->IsCreationFinished()) {
                     SetCursorMode(CursorMode::select);
                 }
@@ -711,7 +710,8 @@ void DesktopWidget::mouseMoveEvent(QMouseEvent *event) {
     if (!file_) {
         // do nothing
     }
-    else if (event->buttons() == Qt::MidButton) {
+    else if (event->buttons() == Qt::MidButton || 
+        (event->buttons() == Qt::LeftButton && (QApplication::keyboardModifiers() & Qt::ControlModifier))) {
         auto delta = old_pos - mouse_pos_pixels_;
         world_offset_ -= QPointF(delta.x() / world_scale_, delta.y() / world_scale_);
         fit_to_view_on_resize_ = false;

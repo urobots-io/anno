@@ -185,14 +185,6 @@ void ToolboxWidget::AddCategory() {
     }
 }
 
-void ToolboxWidget::DeleteMarker() {
-    if (definitions_) {
-        if (auto marker = definitions_->GetDefinition(menu_index_)) {
-            emit DeleteRequested(marker, nullptr, false);
-        }
-    }
-}
-
 void ToolboxWidget::CloneMarker() {
     if (definitions_) {
         if (auto marker = definitions_->GetDefinition(menu_index_)) {
@@ -200,6 +192,14 @@ void ToolboxWidget::CloneMarker() {
             if (index.isValid()) {                
                 ui.treeView->edit(proxy_.mapFromSource(index));
             }
+        }
+    }
+}
+
+void ToolboxWidget::DeleteMarker() {
+    if (definitions_) {
+        if (auto marker = definitions_->GetDefinition(menu_index_)) {
+            emit DeleteRequested(marker, nullptr, false);
         }
     }
 }
@@ -223,7 +223,7 @@ void ToolboxWidget::DeleteCategory() {
 void ToolboxWidget::DeleteCategoryFromImages() {
     if (definitions_) {
         if (auto category = definitions_->GetCategory(menu_index_)) {
-            emit DeleteRequested(nullptr, category, false);
+            emit DeleteRequested(nullptr, category, true);
         }
     }
 }

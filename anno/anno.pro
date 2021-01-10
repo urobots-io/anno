@@ -40,7 +40,7 @@ SOURCES += \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
     RestDatasetFilesystem.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
     stdafx.cpp Serialization.cpp \
-    SourcePicturesWidget.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
+    SourcePicturesWidget.cpp ToolLabel.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
 HEADERS += \    
@@ -58,7 +58,7 @@ HEADERS += \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
     ScriptPainter.h settings.h SharedPropertyDefinition.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
     stdafx.h Serialization.h \
-    ToolboxProxyModel.h ToolboxWidget.h win_helpers.h WorldInfo.h \
+    ToolboxProxyModel.h ToolboxWidget.h ToolLabel.h win_helpers.h WorldInfo.h \
     triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h
 
 FORMS += \

@@ -4,6 +4,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
+#include <memory>
 
 using namespace std;
 

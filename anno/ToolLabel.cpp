@@ -1,4 +1,5 @@
 #include "ToolLabel.h"
+#include "geometry.h"
 using namespace std;
 
 ToolLabel::ToolLabel(const WorldInfo * wi) 
@@ -26,7 +27,7 @@ void ToolLabel::OnPaint(const PaintInfo & pi) {
     
 
     QPointF point;
-    auto intersection = line0.intersects(line1, &point);
+    auto intersection = geometry::Intersection(line0, line1, &point);
     if (intersection == QLineF::NoIntersection) {
         return;
     }

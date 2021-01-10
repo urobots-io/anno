@@ -1,4 +1,5 @@
 #include "PolylineLabel.h"
+#include "geometry.h"
 using namespace std;
 
 PolylineLabel::PolylineLabel(const WorldInfo * wi) {
@@ -137,7 +138,7 @@ PolylineLabel::ExtraActionType PolylineLabel::DetectExtraAction(const WorldInfo 
         edge2.setAngle(edge.angle() + 90);
         edge2.setP1(edge2.p1() + edge2.p1() - edge2.p2());
 
-        if (QLineF::BoundedIntersection == edge.intersects(edge2, nullptr)) {
+        if (QLineF::BoundedIntersection == geometry::Intersection(edge, edge2)) {
             index = int(i);
             return ExtraActionType::CreateHandle;
         }

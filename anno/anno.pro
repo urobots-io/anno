@@ -39,11 +39,13 @@ SOURCES += \
     PointLabel.cpp PolygonLabel.cpp PolylineLabel.cpp ProjectDefinitionsDialog.cpp ProjectSettingsWidget.cpp \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
     RestDatasetFilesystem.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
+    StartupDialog.cpp \
     stdafx.cpp Serialization.cpp \
     SourcePicturesWidget.cpp ToolLabel.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
-HEADERS += \    
+HEADERS += \
+    StartupDialog.h \
     AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
     ColorTransformer.h \
     CreateLabelFileModelCommand.h CustomProperty.h CustomPropertyTableItemDelegate.h CustomPropertyTableModel.h \
@@ -65,7 +67,8 @@ FORMS += \
     AboutDialog.ui Desktop3dWindow.ui \
     ErrorsListDialog.ui ImageSettingsWidget.ui LabelDefinitionPropertiesWidget.ui \
     LabelPropertiesWidget.ui MainWindow.ui ProjectDefinitionsDialog.ui \
-    ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui
+    ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui \
+    StartupDialog.ui
 
 RESOURCES += MainWindow.qrc
 

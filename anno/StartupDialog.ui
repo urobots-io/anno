@@ -54,7 +54,7 @@
    <item>
     <widget class="QListWidget" name="listWidget">
      <property name="textElideMode">
-      <enum>Qt::ElideMiddle</enum>
+      <enum>Qt::ElideRight</enum>
      </property>
     </widget>
    </item>

@@ -435,6 +435,15 @@
     <ClCompile Include="ToolLabel.cpp">
       <Filter>Source Files\Labels</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_StartupDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_StartupDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="StartupDialog.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -617,6 +626,9 @@
     <ClInclude Include="ToolLabel.h">
       <Filter>Header Files\Labels</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_StartupDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.ui">
@@ -738,6 +750,12 @@
     </CustomBuild>
     <CustomBuild Include="ToolboxProxyModel.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="StartupDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="StartupDialog.h">
+      <Filter>Header Files\UI</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

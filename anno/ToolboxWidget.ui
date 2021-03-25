@@ -90,6 +90,20 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="toggle_tree_state_pushButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="MainWindow.qrc">
+          <normaloff>:/MainWindow/Resources/tree_view.ico</normaloff>:/MainWindow/Resources/tree_view.ico</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

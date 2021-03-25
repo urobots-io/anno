@@ -26,5 +26,6 @@
         <file>Resources/nav_forward.ico</file>
         <file>Resources/rename.ico</file>
         <file>Resources/clean.ico</file>
+        <file>Resources/tree_view.ico</file>
     </qresource>
 </RCC>

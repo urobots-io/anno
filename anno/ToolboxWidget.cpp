@@ -16,6 +16,8 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     connect(&proxy_, &QAbstractItemModel::rowsInserted, this, &ToolboxWidget::OnRowsAdded);
     connect(ui.add_marker_type_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowAddMarkerMenu);
 
+    connect(ui.toggle_tree_state_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ToggleTreeOpenState);
+
     ui.treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.treeView, &QWidget::customContextMenuRequested, this, &ToolboxWidget::OnCustomContextMenu);
 
@@ -232,4 +234,36 @@ void ToolboxWidget::OnError(QString message) {
     urobots::qt_helpers::messagebox::Critical(message);
 }
 
+
+void ToolboxWidget::ToggleTreeOpenState() {
+    if (!definitions_) {
+        return;
+    }
+
+    int num_opened = 0;
+    int num_closed = 0;
+    for (auto d : definitions_->GetDefinitions()) {
+        auto index = proxy_.mapFromSource(definitions_->GetIndex(d.get()));
+        if (ui.treeView->isExpanded(index)) {
+            ++num_opened;
+        }
+        else {
+            ++num_closed;
+        }
+
+    }
+
+    bool close = num_opened > num_closed;
+    if (num_opened == num_closed) {
+        close = toggle_closes_;
+        toggle_closes_ = !toggle_closes_;
+    }
+    
+    if (close) {
+        ui.treeView->collapseAll();
+    }
+    else {
+        ui.treeView->expandAll();
+    }    
+}
 

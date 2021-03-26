@@ -1,0 +1,29 @@
+{
+    "definitions": {
+        "files_root_dir": "images/tools",
+        "marker_types": {
+            "Tools": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Category 0"
+                    }
+                ],
+                "value_type": "tool"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "Tools",
+                    "value": "1129.29 1311.61 131.071 1274.46 1124.64 1049.29 823.062 1233.75"
+                }
+            ],
+            "name": "mig15-1.gif"
+        }
+    ]
+}

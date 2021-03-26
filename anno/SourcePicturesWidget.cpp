@@ -1,12 +1,15 @@
 #include "SourcePicturesWidget.h"
 #include "messagebox.h"
-#ifndef ANNO_EXCLUDE_WINDOWS_CODE
-#include <Shlobj.h>
-#endif
 #include <QInputDialog>
 #include <QMenu>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
+#ifdef Q_OS_WIN
+#include <Shlobj.h>
+#endif
+#ifdef Q_OS_MAC
+#include <QProcess>
+#endif
 
 using namespace urobots::qt_helpers;
 
@@ -210,23 +213,39 @@ void SourcePicturesWidget::OnReloadFolder() {
 }
 
 void SourcePicturesWidget::OnRevealInExplorer() {
-#ifndef ANNO_EXCLUDE_WINDOWS_CODE
-    if (menu_index_.isValid()) {
-        QString error;
-        auto info = tree_model_->GetFileInfo(menu_index_);
-        CoInitialize(0);
-        auto local_filename = tree_model_->GetFileSystem()->GetLocalPath(info.name);
-        if (local_filename.length()) {             
-            auto wname = QFileInfo(local_filename).absoluteFilePath().replace("/", "\\").toStdWString();
-            auto pidl = ILCreateFromPath(wname.c_str());
-            if (pidl) {
-                SHOpenFolderAndSelectItems(pidl, 0, 0, 0);
-                ILFree(pidl);
-            }
-        }
-        CoUninitialize();
+    if (!menu_index_.isValid()) {
+        return;
     }
+    auto info = tree_model_->GetFileInfo(menu_index_);
+    auto local_filename = tree_model_->GetFileSystem()->GetLocalPath(info.name);
+    if (!local_filename.length()) {
+        return;
+    }
+
+#ifdef Q_OS_WIN
+    QString error;
+    CoInitialize(0);
+    auto wname = QFileInfo(local_filename).absoluteFilePath().replace("/", "\\").toStdWString();
+    auto pidl = ILCreateFromPath(wname.c_str());
+    if (pidl) {
+        SHOpenFolderAndSelectItems(pidl, 0, 0, 0);
+        ILFree(pidl);
+    }
+    CoUninitialize();
 #endif
+
+#ifdef Q_OS_MAC
+    QStringList script_args;
+    script_args << QLatin1String("-e")
+            << QString::fromLatin1("tell application \"Finder\" to reveal POSIX file \"%1\"")
+            .arg(local_filename);
+    QProcess::execute(QLatin1String("/usr/bin/osascript"), script_args);
+    script_args.clear();
+    script_args << QLatin1String("-e")
+            << QLatin1String("tell application \"Finder\" to activate");
+    QProcess::execute("/usr/bin/osascript", script_args);
+#endif
+
 }
 
 void SourcePicturesWidget::OnRemoveMarkers() {

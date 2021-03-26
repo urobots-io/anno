@@ -41,3 +41,6 @@ anno/GeneratedFiles
 build-anno*/
 *.pro.user
 anno/git_rev.h
+
+# Mac files
+*.DS_Store

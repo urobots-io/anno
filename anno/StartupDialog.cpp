@@ -1,7 +1,9 @@
 #include "StartupDialog.h"
 #include "ui_StartupDialog.h"
+#include <QDir>
 #include <QScrollBar>
 #include <QSettings>
+#include <QUrl>
 
 StartupDialog::StartupDialog(QWidget *parent) :
     QDialog(parent),

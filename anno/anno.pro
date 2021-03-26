@@ -9,7 +9,6 @@ CONFIG += c++11
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += ANNO_EXCLUDE_WINDOWS_CODE
 
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER = stdafx.h

@@ -1,5 +1,6 @@
 #pragma once
 #include "CircleLabel.h"
+#include "OrientedCircleLabel.h"
 #include "OrientedPointLabel.h"
 #include "OrientedRectLabel.h"
 #include "PointLabel.h"
@@ -12,6 +13,7 @@ struct LabelFactory {
     static std::shared_ptr<Label> CreateLabel(LabelType type, const WorldInfo *wi = nullptr) {        
         switch (type) {
         case LabelType::circle: return std::make_shared<CircleLabel>(wi);
+        case LabelType::oriented_circle: return std::make_shared<OrientedCircleLabel>(wi);
         case LabelType::oriented_rect: return std::make_shared<OrientedRectLabel>(wi);
         case LabelType::oriented_point: return std::make_shared<OrientedPointLabel>(wi);
         case LabelType::point: return std::make_shared<PointLabel>(wi);

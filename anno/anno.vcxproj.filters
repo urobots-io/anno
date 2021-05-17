@@ -444,6 +444,9 @@
     <ClCompile Include="StartupDialog.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="OrientedCircleLabel.cpp">
+      <Filter>Source Files\Labels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -628,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_StartupDialog.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrientedCircleLabel.h">
+      <Filter>Header Files\Labels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

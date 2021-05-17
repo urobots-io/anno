@@ -6,7 +6,7 @@ class CircleLabel : public CloneableLabel<CircleLabel> {
 public:
 	CircleLabel(const WorldInfo * wi);	
 
-    void InitStamp() override;    
+    void InitStamp() override;
 
     void ConnectSharedProperties(bool connect, bool inject_my_values) override;
 

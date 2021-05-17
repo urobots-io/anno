@@ -423,9 +423,11 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
             int rh = fm.height() + border * 2;
 
             auto rectangle = QRectF(pos.x() - rw/2, pos.y() - rh/2, rw, rh);
-            painter.setPen(Qt::transparent);
-            painter.setBrush(QBrush(QColor::fromRgb(255, 240, 205, 220)));
-            painter.drawRect(rectangle);
+            if (!rectangle.contains(mouse_pos_pixels_)) {
+                painter.setPen(Qt::transparent);
+                painter.setBrush(QBrush(QColor::fromRgb(255, 240, 205, 220)));
+                painter.drawRect(rectangle);
+            }
             painter.setPen(Qt::black);
             painter.drawText(rectangle, Qt::AlignCenter, hint.text);
         }
@@ -515,6 +517,7 @@ void DesktopWidget::RenderCreationCross(QPainter & painter) {
         case LabelType::rect:
             break;
 
+        case LabelType::oriented_circle:
         case LabelType::oriented_point:
         case LabelType::oriented_rect:
             draw_with_angle = true;

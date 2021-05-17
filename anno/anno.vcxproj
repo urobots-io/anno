@@ -267,6 +267,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="ModifyLabelCategoryFileModelCommand.cpp" />
     <ClCompile Include="ModifyLabelGeometryFileModelCommand.cpp" />
     <ClCompile Include="ModifyLabelTextFileModelCommand.cpp" />
+    <ClCompile Include="OrientedCircleLabel.cpp" />
     <ClCompile Include="OrientedPointLabel.cpp" />
     <ClCompile Include="PointCloudDisplayWidget.cpp" />
     <ClCompile Include="PolylineLabel.cpp" />
@@ -380,6 +381,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClInclude Include="FileTreeElement.h" />
     <ClInclude Include="GeneratedFiles\ui_StartupDialog.h" />
     <ClInclude Include="git_rev.h" />
+    <ClInclude Include="OrientedCircleLabel.h" />
     <ClInclude Include="product_info.h" />
     <ClInclude Include="ArcBall.h" />
     <ClInclude Include="ColoredVertexData.h" />

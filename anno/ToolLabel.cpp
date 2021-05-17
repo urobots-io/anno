@@ -82,7 +82,7 @@ void ToolLabel::Paint3(const PaintInfo & pi, PaintExtraFunctions* pf) {
     auto p2 = handles_[2]->GetPosition();
 
     QLineF line0(p0, p1);
-    QLineF line1(p1, p2);
+    QLineF line1(p2, p1);
 
     pi.painter->setPen(GetOutlinePen(pi));
     pi.painter->drawLine(line0);

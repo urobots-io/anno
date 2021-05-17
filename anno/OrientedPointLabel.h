@@ -10,7 +10,7 @@ public:
     
     void CenterTo(QPointF position, double angle) override;
 
-	void OnPaint(const PaintInfo &) override;
+	void OnPaint(const PaintInfo &, PaintExtraFunctions*) override;
 
     QTransform GetTransform(bool scale, bool rotate) override;
 

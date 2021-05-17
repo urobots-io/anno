@@ -49,7 +49,7 @@ public:
 	virtual Label *Clone() = 0;
 
 	/// render a label
-	virtual void OnPaint(const PaintInfo &) = 0;
+	virtual void OnPaint(const PaintInfo &, PaintExtraFunctions*) = 0;
 
 	/// returns true if position is above the label
 	virtual bool HitTest(const WorldInfo &) const { return false;  }

@@ -46,7 +46,7 @@ void PolygonLabel::FromStringsList(QStringList const & list) {
     state_ = State::ready;
 }
 
-void PolygonLabel::OnPaint(const PaintInfo & pi) {
+void PolygonLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	if (triangles_.size()) {
 		pi.painter->setPen(Qt::transparent);
 		

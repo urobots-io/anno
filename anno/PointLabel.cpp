@@ -13,7 +13,7 @@ void PointLabel::CenterTo(QPointF position, double angle) {
     handles_[0]->SetPosition(position);
 }
 
-void PointLabel::OnPaint(const PaintInfo & pi) {
+void PointLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	pi.painter->setPen(GetOutlinePen(pi));
 
 	auto h = handles_.front();

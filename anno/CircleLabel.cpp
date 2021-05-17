@@ -52,7 +52,7 @@ void CircleLabel::CenterTo(QPointF position, double angle) {
     handles_[0]->SetPosition(position);
 }
 
-void CircleLabel::OnPaint(const PaintInfo & pi) {
+void CircleLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	pi.painter->setPen(GetOutlinePen(pi));
 
     auto p0 = handles_[0]->GetPosition();

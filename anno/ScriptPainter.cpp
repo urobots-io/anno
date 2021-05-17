@@ -63,6 +63,6 @@ void ScriptPainter::RenderLabel(QJSEngine & engine, Label *label) {
         this->label = nullptr;
     }
     else {
-        label->OnPaint(pi);
+        label->OnPaint(pi, pf);
     }
 }

@@ -28,7 +28,7 @@ void PolylineLabel::FromStringsList(QStringList const & value) {
     UpdateInternalData();
 }
 
-void PolylineLabel::OnPaint(const PaintInfo & pi) {
+void PolylineLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
     pi.painter->setPen(GetOutlinePen(pi));
 
     vector<QPointF> points;

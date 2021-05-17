@@ -36,9 +36,9 @@ public:
         return copy;
     }
 	
-    void OnPaint(const PaintInfo & pi) override { 
+    void OnPaint(const PaintInfo & pi, PaintExtraFunctions* pf) override {
         client_->category_ = category_; 
-        client_->OnPaint(pi); 
+        client_->OnPaint(pi, pf); 
     }
 	
 	bool HitTest(const WorldInfo & wi) const override { 

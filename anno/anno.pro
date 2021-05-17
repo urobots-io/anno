@@ -34,7 +34,7 @@ SOURCES += \
     ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
     LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
     MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
-    ModifyLabelTextFileModelCommand.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
+    ModifyLabelTextFileModelCommand.cpp OrientedCircleLabel.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
     PointLabel.cpp PolygonLabel.cpp PolylineLabel.cpp ProjectDefinitionsDialog.cpp ProjectSettingsWidget.cpp \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
     RestDatasetFilesystem.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
@@ -54,7 +54,7 @@ HEADERS += \
     ImageModel.h ImageSettingsWidget.h implement_q_property.h Label.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
     LabelDefinitionsTreeModel.h LabelFactory.h LabelHandle.h LabelPropertiesWidget.h LabelType.h LocalFilesystem.h \
     MainWindow.h messagebox.h ModifyLabelCategoryFileModelCommand.h ModifyLabelGeometryFileModelCommand.h \
-    ModifyLabelTextFileModelCommand.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
+    ModifyLabelTextFileModelCommand.h OrientedCircleLabel.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
     PointCloudDisplayWidget.h PointLabel.h PolygonLabel.h PolylineLabel.h ProjectDefinitionsDialog.h ProjectSettingsWidget.h \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
     ScriptPainter.h settings.h SharedPropertyDefinition.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
@@ -76,3 +76,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+# Windows libs
+win32  {
+    LIBS += Ole32.lib
+    LIBS += User32.lib
+}

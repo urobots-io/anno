@@ -621,6 +621,8 @@ void DesktopWidget::StartExtraActionUnderCursor() {
 void DesktopWidget::mousePressEvent(QMouseEvent *event) {
     SetMousePos(event);
 
+    lbutton_pressed_in_background_ = false;
+
     if (!file_ || !image_.get_loaded())
         return;
 
@@ -637,6 +639,7 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
                 // cleanup selection
                 selected_handle_ = nullptr;
                 set_selected_label(FindLabelUnderCursor());
+                lbutton_pressed_in_background_ = true;
             }
             break;
 
@@ -758,7 +761,8 @@ void DesktopWidget::mouseMoveEvent(QMouseEvent *event) {
         // do nothing
     }
     else if (event->buttons() == Qt::MidButton || 
-        (event->buttons() == Qt::LeftButton && (QApplication::keyboardModifiers() & Qt::ControlModifier))) {
+        (event->buttons() == Qt::LeftButton && (QApplication::keyboardModifiers() & Qt::ControlModifier)) ||
+        (event->buttons() == Qt::LeftButton && lbutton_pressed_in_background_)) {
         auto delta = old_pos - mouse_pos_pixels_;
         world_offset_ -= QPointF(delta.x() / world_scale_, delta.y() / world_scale_);
         fit_to_view_on_resize_ = false;

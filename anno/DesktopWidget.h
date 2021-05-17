@@ -240,6 +240,9 @@ private:
     /// True, if system cursor (arrow) shall is hidden.
     bool hide_cursor_ = false;
 
+    /// LButton was pressed on the empty area.
+    bool lbutton_pressed_in_background_ = false;
+
 public:
     IMPLEMENT_Q_PROPERTY_READ(mouse_pos)
     IMPLEMENT_Q_PROPERTY_READ(world_scale)

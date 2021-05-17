@@ -416,7 +416,7 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
                 .translate(hint.position.x(), hint.position.y())
                 .translate(world_offset_.x(), world_offset_.y());
 
-            auto pos = t * QPointF(0, 0);
+            auto pos = t.map(QPointF(0, 0));
 
             const int border = 3;
             int rw = fm.horizontalAdvance(hint.text) + border * 2;

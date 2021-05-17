@@ -2,6 +2,7 @@
 #include "geometry.h"
 #include <QStringBuilder>
 #include <QTextStream>
+#include <QVector2D>
 
 using namespace std;
 

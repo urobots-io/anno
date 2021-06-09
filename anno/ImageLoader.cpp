@@ -1,5 +1,10 @@
 #include "ImageLoader.h"
 #include "FilesystemInterface.h"
+#ifdef ANNO_USE_OPENCV
+#include <ImfHeader.h>
+#include <ImfInputFile.h>
+#include <ImfIO.h>
+#endif
 
 using namespace std;
 
@@ -19,6 +24,32 @@ void ImageLoader::StartLoading(QString filename, std::shared_ptr<FilesystemInter
 	start();
 }
 
+#ifdef ANNO_USE_OPENCV
+class MemStream : public Imf::IStream
+{
+    QByteArray buffer_;
+    int pos_ = 0;
+
+public:
+    MemStream(QByteArray buffer) : Imf::IStream("memory"), buffer_(buffer), pos_(0) {}
+
+    bool read(char c[/*n*/], int n) override {
+        if (pos_ + n < buffer_.size()) {
+            memcpy(&c[0], buffer_.data() + pos_, n);
+            pos_ += n;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    Imf::Int64 tellg() override { return pos_; }
+    void seekg(Imf::Int64 pos) override { pos_ = pos; }
+    void clear() override {}
+};
+
+#endif
+
 void ImageLoader::run() {
     auto buffer = filesystem_->LoadFile(filename_);
     bool image_ok = true;
@@ -30,6 +61,13 @@ void ImageLoader::run() {
         if (image_.empty()) {
             error_text_ = tr("Cannot load file %0").arg(filename_);
             image_ok = false;
+        }
+
+        if (filename_.endsWith("exr")) {
+            MemStream ms(buffer);
+            Imf::InputFile input(ms);
+            auto header = input.header();
+            qDebug() << header.compression();
         }
 #else
         QImage image;

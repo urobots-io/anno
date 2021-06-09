@@ -173,6 +173,8 @@ void DesktopWidget::ImageLoaded() {
         else {
             set_status({});
         }
+
+        set_image_properties(loader->GetProperties());
     }
 
     auto i = std::find(loaders_.begin(), loaders_.end(), loader);

@@ -95,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
 	// selected label
     connect(ui.desktop, &DesktopWidget::selected_label_changed, ui.label_editor, &LabelPropertiesWidget::OnSelectedLabelChanged);
     connect(ui.label_editor, &LabelPropertiesWidget::DeleteLabel, ui.desktop, &DesktopWidget::DeleteLabel);
+    connect(ui.desktop, &DesktopWidget::image_properties_changed, ui.image_properties, &ImagePropertiesWidget::setProperties);
 
     // project settings
     ui.project_settings->Init(&model_);

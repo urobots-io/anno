@@ -1,9 +1,12 @@
 #include "ImageLoader.h"
 #include "FilesystemInterface.h"
 #ifdef ANNO_USE_OPENCV
+#pragma warning(disable: 4996)
 #include <ImfHeader.h>
 #include <ImfInputFile.h>
 #include <ImfIO.h>
+#include <ImfAttribute.h>
+#include <ImfStringAttribute.h>
 #endif
 
 using namespace std;
@@ -67,7 +70,11 @@ void ImageLoader::run() {
             MemStream ms(buffer);
             Imf::InputFile input(ms);
             auto header = input.header();
-            qDebug() << header.compression();
+            for (auto i = header.begin(); i != header.end(); ++i) {
+                if (auto text = dynamic_cast<Imf::StringAttribute*>(&i.attribute())) {
+                    properties_[QString::fromLatin1(i.name())] = QString::fromLatin1(text->value().c_str());
+                }                                
+            }
         }
 #else
         QImage image;

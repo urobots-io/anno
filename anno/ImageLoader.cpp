@@ -59,14 +59,14 @@ void ImageLoader::run() {
 
     if (buffer.size()) {
 #ifdef ANNO_USE_OPENCV
-        cv::Mat rawData(1, int(buffer.size()), CV_8UC1, (void*)buffer.data());
-        image_ = cv::imdecode(rawData, cv::IMREAD_ANYCOLOR | cv::IMREAD_ANYDEPTH);
-        if (image_.empty()) {
-            error_text_ = tr("Cannot load file %0").arg(filename_);
-            image_ok = false;
-        }
-
         if (filename_.endsWith("exr")) {
+            cv::Mat rawData(1, int(buffer.size()), CV_8UC1, (void*)buffer.data());
+            image_ = cv::imdecode(rawData, cv::IMREAD_ANYCOLOR | cv::IMREAD_ANYDEPTH);
+            if (image_.empty()) {
+                error_text_ = tr("Cannot load file %0").arg(filename_);
+                image_ok = false;
+            }
+        
             MemStream ms(buffer);
             Imf::InputFile input(ms);
             auto header = input.header();
@@ -75,12 +75,25 @@ void ImageLoader::run() {
                     properties_[QString::fromLatin1(i.name())] = QString::fromLatin1(text->value().c_str());
                 }                                
             }
+        }    
+        else {
+            QImage image;
+            image.loadFromData(buffer);
+            image = image.convertToFormat(QImage::Format_BGR888);
+            cv::Mat(image.height(), image.width(), CV_8UC3, (cv::Scalar*)image.bits()).copyTo(image_);
+            for (auto key : image.textKeys()) {
+                properties_[key] = image.text(key);
+            }
         }
 #else
         QImage image;
         image.loadFromData(buffer);
         image_ = image;
         image_ok = !image_.isNull();
+
+        for (auto key : image.textKeys()) {
+            properties_[key] = image.text(key);
+        }
 #endif
     }
 

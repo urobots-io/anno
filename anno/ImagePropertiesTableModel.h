@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ImageData.h"
 #include <QAbstractTableModel>
 
 class ImagePropertiesTableModel : public QAbstractTableModel
@@ -7,7 +7,7 @@ class ImagePropertiesTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    ImagePropertiesTableModel(QVariantMap properties, QObject *parent);
+    ImagePropertiesTableModel(const ImageProperties& properties, QObject *parent);
     ~ImagePropertiesTableModel();
 
     int rowCount(const QModelIndex &parent) const override;
@@ -18,5 +18,5 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    QVariantMap properties_;
+    ImageProperties properties_;
 };

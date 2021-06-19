@@ -36,7 +36,7 @@ public:
 	/// Selected label
     Q_PROPERTY(std::shared_ptr<Label> selected_label READ get_selected_label WRITE set_selected_label NOTIFY selected_label_changed)
     /// Image properties
-    Q_PROPERTY(QVariantMap image_properties READ get_image_properties WRITE set_image_properties NOTIFY image_properties_changed)
+    Q_PROPERTY(ImageProperties image_properties READ get_image_properties WRITE set_image_properties NOTIFY image_properties_changed)
 
     
 	// begin: qt widget events
@@ -104,7 +104,7 @@ public slots:
     DECLARE_Q_PROPERTY_WRITE(std::shared_ptr<LabelCategory>, category_for_creation)
     DECLARE_Q_PROPERTY_WRITE(bool, is_creation_mode)
     IMPLEMENT_Q_PROPERTY_WRITE(bool, fit_to_view_on_load)
-    IMPLEMENT_Q_PROPERTY_WRITE_ALWAYS(QVariantMap, image_properties)
+    IMPLEMENT_Q_PROPERTY_WRITE_ALWAYS(ImageProperties, image_properties)
 
 private slots:
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_loading_image)
@@ -124,7 +124,7 @@ signals:
     void is_loading_image_changed(bool);
     void selected_label_changed(std::shared_ptr<FileModel>, std::shared_ptr<Label>);
     void status_changed(QString);
-    void image_properties_changed(QVariantMap);
+    void image_properties_changed(const ImageProperties&);
 	    
 private:
     void SetCategoryValueForSelectedLabel(int category_value);
@@ -247,8 +247,8 @@ private:
     /// LButton was pressed on the empty area.
     bool lbutton_pressed_in_background_ = false;
 
-    /// Image properties
-    QVariantMap image_properties_;
+    /// Image properties.
+    ImageProperties image_properties_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(mouse_pos)

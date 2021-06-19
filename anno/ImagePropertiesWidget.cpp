@@ -13,7 +13,7 @@ ImagePropertiesWidget::~ImagePropertiesWidget()
 {
 }
 
-void ImagePropertiesWidget::setProperties(QVariantMap map) {
+void ImagePropertiesWidget::setProperties(const ImageProperties& props) {
     delete ui.tableView->model();
-    ui.tableView->setModel(new ImagePropertiesTableModel(map, this));    
+    ui.tableView->setModel(new ImagePropertiesTableModel(props, this));
 }

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ImageData.h"
 #include <QWidget>
 #include "ui_ImagePropertiesWidget.h"
 
@@ -12,7 +12,7 @@ public:
     ~ImagePropertiesWidget();
 
 public slots:
-    void setProperties(QVariantMap);
+    void setProperties(const ImageProperties&);
 
 private:
     Ui::ImagePropertiesWidget ui;

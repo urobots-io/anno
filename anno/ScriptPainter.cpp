@@ -1,6 +1,7 @@
 #include "ScriptPainter.h"
 #include "PropertyDatabase.h"
 #include <QJSEngine>
+#include <QDebug>
 
 ScriptPainter::ScriptPainter(QObject* parent) 
     : QObject(parent) {
@@ -55,7 +56,7 @@ void ScriptPainter::RenderLabel(QJSEngine & engine, Label *label) {
 
         auto result = engine.evaluate(script);
         if (result.isError()) {
-            qDebug(result.toString().toLatin1());
+            qDebug() << result.toString();
         }
         
         ResetTransform();

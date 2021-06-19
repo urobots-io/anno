@@ -32,6 +32,8 @@ SOURCES += \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
     FileTreeElement.cpp \
     ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
+    ImagePropertiesTableModel.cpp \
+    ImagePropertiesWidget.cpp \
     LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
     MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
     ModifyLabelTextFileModelCommand.cpp OrientedCircleLabel.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
@@ -44,6 +46,8 @@ SOURCES += \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
 HEADERS += \
+    ImagePropertiesTableModel.h \
+    ImagePropertiesWidget.h \
     StartupDialog.h \
     AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
     ColorTransformer.h \
@@ -65,6 +69,7 @@ HEADERS += \
 FORMS += \
     AboutDialog.ui Desktop3dWindow.ui \
     ErrorsListDialog.ui ImageSettingsWidget.ui LabelDefinitionPropertiesWidget.ui \
+    ImagePropertiesWidget.ui \
     LabelPropertiesWidget.ui MainWindow.ui ProjectDefinitionsDialog.ui \
     ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui \
     StartupDialog.ui

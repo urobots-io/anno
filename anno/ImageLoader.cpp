@@ -53,6 +53,17 @@ public:
 
 #endif
 
+namespace {
+void GetProperties(const QImage& image, const QByteArray& buffer, ImageProperties &props) {
+    props.push_back({ "Size", QString("%0 bytes").arg(buffer.size()) });
+    props.push_back({ "Width", QString("%0 pix").arg(image.width()) });
+    props.push_back({ "Height", QString("%0 pix").arg(image.height()) });
+    for (auto key : image.textKeys()) {
+        props.push_back({ key, image.text(key) });
+    }
+}
+}
+
 void ImageLoader::run() {
     auto buffer = filesystem_->LoadFile(filename_);
     bool image_ok = true;
@@ -66,6 +77,10 @@ void ImageLoader::run() {
                 error_text_ = tr("Cannot load file %0").arg(filename_);
                 image_ok = false;
             }
+
+            props.push_back({ "Size", QString("%0 bytes").arg(buffer.size()) });
+            props.push_back({ "Width", QString("%0 pix").arg(image_.cols) });
+            props.push_back({ "Height", QString("%0 pix").arg(image_.rows) });
         
             MemStream ms(buffer);
             Imf::InputFile input(ms);
@@ -81,9 +96,8 @@ void ImageLoader::run() {
             image.loadFromData(buffer);
             image = image.convertToFormat(QImage::Format_BGR888);
             cv::Mat(image.height(), image.width(), CV_8UC3, (cv::Scalar*)image.bits()).copyTo(image_);
-            for (auto key : image.textKeys()) {
-                properties_[key] = image.text(key);
-            }
+
+            ::GetProperties(image, buffer, properties_);
         }
 #else
         QImage image;
@@ -91,9 +105,7 @@ void ImageLoader::run() {
         image_ = image;
         image_ok = !image_.isNull();
 
-        for (auto key : image.textKeys()) {
-            properties_[key] = image.text(key);
-        }
+        ::GetProperties(image, buffer, properties_);
 #endif
     }
 

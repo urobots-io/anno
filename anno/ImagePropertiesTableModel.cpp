@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ImagePropertiesTableModel.h"
 
-ImagePropertiesTableModel::ImagePropertiesTableModel(QVariantMap properties, QObject *parent)
+ImagePropertiesTableModel::ImagePropertiesTableModel(const ImageProperties& properties, QObject *parent)
     : QAbstractTableModel(parent)
     , properties_(properties)
 {
@@ -33,14 +33,14 @@ QVariant ImagePropertiesTableModel::data(const QModelIndex &index, int role) con
     switch (column) {
     case 0:
         if (role == Qt::DisplayRole) {
-            return (properties_.begin() + row).key();
+            return properties_[row].name;
         }
         else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
         break;
 
     case 1:
         if (role == Qt::DisplayRole) {
-            return (properties_.begin() + row).value();
+            return properties_[row].value;
         }         
         break;
 
@@ -53,7 +53,8 @@ QVariant ImagePropertiesTableModel::data(const QModelIndex &index, int role) con
 }
 
 Qt::ItemFlags ImagePropertiesTableModel::flags(const QModelIndex &index) const {
-    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
+    Q_UNUSED(index);
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsSelectable;
     return flags;
 }
 

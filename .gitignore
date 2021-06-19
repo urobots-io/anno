@@ -41,3 +41,6 @@ anno/GeneratedFiles
 build-anno*/
 *.pro.user
 anno/git_rev.h
+anno/.DS_Store
+anno/data/.DS_Store
+anno/data/examples/images/.DS_Store

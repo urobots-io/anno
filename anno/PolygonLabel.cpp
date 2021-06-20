@@ -1,4 +1,5 @@
 #include "PolygonLabel.h"
+#include "geometry.h"
 #include "triangulation/interface.h"
 
 using namespace std;
@@ -45,7 +46,7 @@ void PolygonLabel::FromStringsList(QStringList const & list) {
     state_ = State::ready;
 }
 
-void PolygonLabel::OnPaint(const PaintInfo & pi) {
+void PolygonLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	if (triangles_.size()) {
 		pi.painter->setPen(Qt::transparent);
 		
@@ -288,7 +289,7 @@ PolygonLabel::ExtraActionType PolygonLabel::DetectExtraAction(const WorldInfo & 
 			edge2.setAngle(edge.angle() + 90);
 			edge2.setP1(edge2.p1() + edge2.p1() - edge2.p2());
 
-			if (QLineF::BoundedIntersection == edge.intersects(edge2, nullptr)) {
+            if (QLineF::BoundedIntersection == geometry::Intersection(edge, edge2)) {
 				index = i;
 				contour = c;
 				return ExtraActionType::CreateHandle;
@@ -337,7 +338,7 @@ void PolygonLabel::Triangulate() {
 			auto last = lines.size();
 			if (!i) --last;
             for (size_t j = i + 2; j < last; ++j) {
-                if (QLineF::BoundedIntersection == lines[i].intersects(lines[j], nullptr)) {
+                if (QLineF::BoundedIntersection == geometry::Intersection(lines[i], lines[j])) {
                     return;
                 }				
 			}
@@ -346,7 +347,7 @@ void PolygonLabel::Triangulate() {
 		// make sure there are no intersections of segments with other contours
         for (size_t i = 0; i < lines.size(); ++i) {
             for (size_t j = 0; j < all_lines.size(); ++j) {
-                if (QLineF::BoundedIntersection == lines[i].intersects(all_lines[j], nullptr)) {
+                if (QLineF::BoundedIntersection == geometry::Intersection(lines[i], all_lines[j])) {
                     return;
                 }
 			}

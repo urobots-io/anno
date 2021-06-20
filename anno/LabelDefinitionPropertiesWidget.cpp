@@ -85,8 +85,8 @@ void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> de
 }
 
 void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
-    if (category_) {
-        auto value = category_->value;
+    if (auto category = category_) {
+        auto value = category->value;
         while (true) {
             bool ok;
             value = QInputDialog::getInt(
@@ -95,12 +95,12 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
                 value,
                 -99999, 99999, 1, &ok);
 
-            if (!ok || value == category_->value) {
+            if (!ok || value == category->value) {
                 return;
             }
 
             bool value_valid = true;
-            for (auto c : category_->definition->categories) {
+            for (auto c : category->definition->categories) {
                 if (c->value == value) {
                     messagebox::Critical(tr("Value %0 is already used by category %1").arg(value).arg(c->name));
                     value_valid = false;
@@ -109,9 +109,11 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
             }
 
             if (value_valid) {
-                category_->value = value;
-                emit category_->definition->Changed();
-                UpdateCategoryData();
+                category->value = value;
+                emit category->definition->Changed();
+                if (category_) {
+                    UpdateCategoryData();
+                }
                 break;
             }
         }
@@ -119,12 +121,14 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
 }
 
 void LabelDefinitionPropertiesWidget::OnChangeCategoryColor() {
-    if (category_) {
-        auto color = QColorDialog::getColor(category_->color, this, tr("Caregory Color"));
+    if (auto category = category_) {
+        auto color = QColorDialog::getColor(category->color, this, tr("Caregory Color"));
         if (color.isValid()) {
-            category_->color = color;
-            emit category_->definition->Changed();
-            UpdateCategoryData();
+            category->color = color;
+            emit category->definition->Changed();
+            if (category_) {
+                UpdateCategoryData();
+            }
         }
     }
 }

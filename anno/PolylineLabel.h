@@ -7,7 +7,7 @@ public:
 
     ~PolylineLabel();
 
-    void OnPaint(const PaintInfo &) override;
+    void OnPaint(const PaintInfo &, PaintExtraFunctions*) override;
 
     bool IsCreationFinished() const override;
 
@@ -35,7 +35,7 @@ public:
 
     bool HitTest(const WorldInfo & wi) const override;
 
-private:
+protected:
     enum class ExtraActionType {
         Nothing,
         DeleteHandle,
@@ -46,9 +46,9 @@ private:
 
     ExtraActionType DetectExtraAction(const WorldInfo & wi, int & index) const;    
 
-    void UpdateAABB();
+    virtual void UpdateInternalData();
 
-private:
+protected:
     enum class State {
         creation,
         ready

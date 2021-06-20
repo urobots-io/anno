@@ -23,6 +23,7 @@ using namespace urobots::qt_helpers;
 
 #define NEW_PROJECT_IMAGE_FOLDER "NEW_PROJECT_IMAGE_FOLDER"
 #define SAVE_PROJECT_FOLDER "SAVE_PROJECT_FOLDER"
+#define OPEN_PROJECT_FOLDER "OPEN_PROJECT_FOLDER"
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -94,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
 	// selected label
     connect(ui.desktop, &DesktopWidget::selected_label_changed, ui.label_editor, &LabelPropertiesWidget::OnSelectedLabelChanged);
     connect(ui.label_editor, &LabelPropertiesWidget::DeleteLabel, ui.desktop, &DesktopWidget::DeleteLabel);
+    connect(ui.desktop, &DesktopWidget::image_properties_changed, ui.image_properties, &ImagePropertiesWidget::setProperties);
 
     // project settings
     ui.project_settings->Init(&model_);
@@ -299,13 +301,17 @@ void MainWindow::OnOpenProject() {
 		return;
 	}
 
+    auto projects_folder = QSettings().value(OPEN_PROJECT_FOLDER).toString();
 	auto full_file_name = QFileDialog::getOpenFileName(
 		this,
 		tr("Open project"), 
-		QString(), 
+		projects_folder, 
 		tr("All files (*.*);;Anno files (*.anno)"));
 	
     if (!full_file_name.isNull()) {
+        projects_folder = QFileInfo(full_file_name).absoluteDir().path();
+        QSettings().setValue(OPEN_PROJECT_FOLDER, projects_folder);
+
         OpenProject(full_file_name);
     }
 }

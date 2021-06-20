@@ -5,10 +5,10 @@
 using namespace std;
 
 CircleLabel::CircleLabel(const WorldInfo * wi)
-	: creation_completed_(wi == nullptr) {    
+: creation_completed_(wi == nullptr) {    
     QPointF position0 = wi ? wi->position : QPointF(0, 0);
     QPointF position1 = position0;
-    if (creation_completed_) position1 += +QPointF(default_dimension_, 0);
+    if (creation_completed_) position1 += QPointF(default_dimension_, 0);
     handles_.push_back(make_shared<LabelHandle>(position0, this));
     handles_.push_back(make_shared<LabelHandle>(position1, this));    
 }
@@ -29,7 +29,7 @@ void CircleLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     assert(category_);
     auto def = category_->definition;
     if (connect) {
-        def->ConnectProperty(radius_, "radius", inject_my_values);        
+        def->ConnectProperty(radius_, "radius", inject_my_values);
     }
     else {        
         radius_.Disconnect();
@@ -52,7 +52,7 @@ void CircleLabel::CenterTo(QPointF position, double angle) {
     handles_[0]->SetPosition(position);
 }
 
-void CircleLabel::OnPaint(const PaintInfo & pi) {
+void CircleLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	pi.painter->setPen(GetOutlinePen(pi));
 
     auto p0 = handles_[0]->GetPosition();

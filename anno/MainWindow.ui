@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
-    <height>589</height>
+    <width>1279</width>
+    <height>901</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -363,9 +363,14 @@
                 <string>Project</string>
                </attribute>
               </widget>
-              <widget class="ImageSettingsWidget" name="image_settings">
+              <widget class="ImagePropertiesWidget" name="image_properties">
                <attribute name="title">
                 <string>Image</string>
+               </attribute>
+              </widget>
+              <widget class="ImageSettingsWidget" name="image_settings">
+               <attribute name="title">
+                <string>Display</string>
                </attribute>
               </widget>
              </widget>
@@ -385,7 +390,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>832</width>
+     <width>1279</width>
      <height>21</height>
     </rect>
    </property>
@@ -634,6 +639,12 @@
    <class>ElidedLabelWidget</class>
    <extends>QWidget</extends>
    <header>ElidedLabelWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ImagePropertiesWidget</class>
+   <extends>QWidget</extends>
+   <header>ImagePropertiesWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -15,6 +15,20 @@
 #include <cmath>
 #include <string>
 
+struct PaintExtraFunctionsDW : public PaintExtraFunctions {
+    struct Hint {
+        QString text;
+        QPointF position; 
+        QColor color;
+    };
+    
+    std::vector<Hint> hints;
+
+    void AddHint(QString text, QPointF position, QColor color) {
+        hints.push_back({ text, position, color });
+    }
+};
+
 DesktopWidget::DesktopWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -159,6 +173,8 @@ void DesktopWidget::ImageLoaded() {
         else {
             set_status({});
         }
+
+        set_image_properties(loader->GetProperties());
     }
 
     auto i = std::find(loaders_.begin(), loaders_.end(), loader);
@@ -296,6 +312,8 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
         painter.drawPixmap(0, 0, image_.GetPixmap());
     }
 
+    PaintExtraFunctionsDW extra_functions;
+
     // Setup world transform matrix
     painter.setTransform(GetWorldTransform());
 
@@ -303,17 +321,14 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
         if (PropertyDatabase::Instance().GetStateIndex() != props_db_state_on_paint_) {
             props_db_state_on_paint_ = PropertyDatabase::Instance().GetStateIndex();
             model_->UpdateSharedProperties();
-        }
+        }        
 
         /** Explicitely define parent to avoid transfer of pointer ownership
         another way to prevent PO transfer is to call QQmlEngine::setObjectOwnership        
         QQmlEngine::setObjectOwnership(&test, QQmlEngine::CppOwnership);
         */
         ScriptPainter xp(this);  
-        
-        xp.pi.painter = &painter;
-        xp.pi.world_scale = world_scale_;
-        xp.original_transform = painter.transform();
+        xp.Init(&painter, world_scale_, painter.transform(), &extra_functions);
 
         QJSValue objectValue = js_engine_.newQObject(&xp);
         
@@ -340,12 +355,12 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
         }
 
         for (auto label : file_->labels_) {
-            xp.pi.is_selected = (selected_label_ == label);
-            xp.pi.is_highlighted = !xp.pi.is_selected && (hovered_label_ == label);
+            xp.Info().is_selected = (selected_label_ == label);
+            xp.Info().is_highlighted = !xp.Info().is_selected && (hovered_label_ == label);
             xp.RenderLabel(js_engine_, label.get());
 
-            auto label_selected = xp.pi.is_selected;
-            auto label_highlighted = xp.pi.is_highlighted;
+            auto label_selected = xp.Info().is_selected;
+            auto label_highlighted = xp.Info().is_highlighted;
 
             // show handles of selected label OR hovered handle/label
             for (auto handle : label->GetHandles()) {
@@ -358,8 +373,8 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
                 }
 
                 if (label_selected || label_highlighted || hovered_handle_ == handle) {
-                    xp.pi.is_selected = label_selected || (label_highlighted && hovered_handle_ == handle);
-                    handle->OnPaint(xp.pi);
+                    xp.Info().is_selected = label_selected || (label_highlighted && hovered_handle_ == handle);
+                    handle->OnPaint(xp.Info());
                 }
             }
         }
@@ -380,10 +395,43 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
             }
 
             if (!def->is_shared() || stamp_label_->GetSharedLabelIndex() != -1) {
-                xp.pi.is_selected = true;
+                xp.Info().is_selected = true;
                 stamp_label_->CenterTo(mouse_pos_, geometry::Deg2Rad(mouse_angle_));
                 xp.RenderLabel(js_engine_, stamp_label_.get());
             }
+        }
+    }
+
+    // Draw hints
+    if (extra_functions.hints.size()) {
+        painter.setTransform(QTransform());
+
+        auto font = painter.font();
+        font.setBold(false);
+        font.setPointSizeF(10);
+        painter.setFont(font);
+
+        QFontMetrics fm(font);
+        for (auto hint : extra_functions.hints) {    
+            auto t = QTransform()
+                .scale(world_scale_, world_scale_)
+                .translate(hint.position.x(), hint.position.y())
+                .translate(world_offset_.x(), world_offset_.y());
+
+            auto pos = t.map(QPointF(0, 0));
+
+            const int border = 3;
+            int rw = fm.horizontalAdvance(hint.text) + border * 2;
+            int rh = fm.height() + border * 2;
+
+            auto rectangle = QRectF(pos.x() - rw/2, pos.y() - rh/2, rw, rh);
+            if (!rectangle.contains(mouse_pos_pixels_)) {
+                painter.setPen(Qt::transparent);
+                painter.setBrush(QBrush(QColor::fromRgb(255, 240, 205, 220)));
+                painter.drawRect(rectangle);
+            }
+            painter.setPen(Qt::black);
+            painter.drawText(rectangle, Qt::AlignCenter, hint.text);
         }
     }
 
@@ -471,6 +519,7 @@ void DesktopWidget::RenderCreationCross(QPainter & painter) {
         case LabelType::rect:
             break;
 
+        case LabelType::oriented_circle:
         case LabelType::oriented_point:
         case LabelType::oriented_rect:
             draw_with_angle = true;
@@ -574,10 +623,12 @@ void DesktopWidget::StartExtraActionUnderCursor() {
 void DesktopWidget::mousePressEvent(QMouseEvent *event) {
     SetMousePos(event);
 
+    lbutton_pressed_in_background_ = false;
+
     if (!file_ || !image_.get_loaded())
         return;
 
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton && QApplication::keyboardModifiers() == Qt::NoModifier) {
         switch (cursor_mode_) {
         case CursorMode::select:
             if (hovered_handle_) {
@@ -590,13 +641,13 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
                 // cleanup selection
                 selected_handle_ = nullptr;
                 set_selected_label(FindLabelUnderCursor());
+                lbutton_pressed_in_background_ = true;
             }
             break;
 
         case CursorMode::modifying:
             if (selected_label_) {
                 selected_label_->OnCreateClick(GetWorldInfo(), true);
-
                 if (selected_label_->IsCreationFinished()) {
                     SetCursorMode(CursorMode::select);
                 }
@@ -711,7 +762,9 @@ void DesktopWidget::mouseMoveEvent(QMouseEvent *event) {
     if (!file_) {
         // do nothing
     }
-    else if (event->buttons() == Qt::MidButton) {
+    else if (event->buttons() == Qt::MidButton || 
+        (event->buttons() == Qt::LeftButton && (QApplication::keyboardModifiers() & Qt::ControlModifier)) ||
+        (event->buttons() == Qt::LeftButton && lbutton_pressed_in_background_)) {
         auto delta = old_pos - mouse_pos_pixels_;
         world_offset_ -= QPointF(delta.x() / world_scale_, delta.y() / world_scale_);
         fit_to_view_on_resize_ = false;

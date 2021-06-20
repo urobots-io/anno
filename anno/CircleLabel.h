@@ -6,13 +6,13 @@ class CircleLabel : public CloneableLabel<CircleLabel> {
 public:
 	CircleLabel(const WorldInfo * wi);	
 
-    void InitStamp() override;    
+    void InitStamp() override;
 
     void ConnectSharedProperties(bool connect, bool inject_my_values) override;
 
     void CenterTo(QPointF position, double angle) override;
 
-	void OnPaint(const PaintInfo &) override;
+	void OnPaint(const PaintInfo &, PaintExtraFunctions*) override;
 
     bool HitTest(const WorldInfo &) const override;
 

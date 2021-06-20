@@ -23,6 +23,15 @@ class ScriptPainter : public QObject {
 public:
     ScriptPainter(QObject* parent = nullptr);
 
+    void Init(QPainter *painter, float world_scale, QTransform original_transform, PaintExtraFunctions* pf) {
+        this->pi.painter = painter;
+        this->pi.world_scale = world_scale;
+        this->pf = pf;
+        this->original_transform = original_transform;
+    }
+
+    PaintInfo &Info() { return pi; }
+
     void RenderLabel(QJSEngine & engine, Label *label);
 
 public slots:
@@ -37,7 +46,7 @@ public slots:
     
     /// render native label class graphics
     void RenderBase() {
-        if (label) label->OnPaint(pi);
+        if (label) label->OnPaint(pi, pf);
     }
 
     /// set label coordinate system
@@ -139,8 +148,9 @@ public slots:
 private:
     inline QPainter* painter() const { return pi.painter; }
 
-public:
+private:
     PaintInfo pi;
+    PaintExtraFunctions* pf = nullptr;
     Label *label = nullptr;
     QTransform original_transform;
 };

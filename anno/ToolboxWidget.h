@@ -39,6 +39,7 @@ private slots:
     void DeleteMarkerFromImages();
     void DeleteCategory();
     void DeleteCategoryFromImages();
+    void ToggleTreeOpenState();
 
 private:
     template<class T>
@@ -53,4 +54,5 @@ private:
     QMenu *marker_menu_ = nullptr;
     QMenu *category_menu_ = nullptr;
     QModelIndex menu_index_;
+    bool toggle_closes_ = true;
 };

@@ -3,6 +3,7 @@
 #include "product_info.h"
 #include "ProjectDefinitionsDialog.h"
 #include "settings.h"
+#include "StartupDialog.h"
 #include <QtWidgets/QApplication>
 
 namespace {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]) {
 	
 	urobots::qt_helpers::settings::Initialize("anno");
 
-	MainWindow w;
+    MainWindow w;
 	w.showMaximized();    
 
     // wait until window is maximized
@@ -28,12 +29,19 @@ int main(int argc, char *argv[]) {
 	if (argc > 1) {
 		w.OpenProject(QString::fromLatin1(argv[1]));
 	}
-
-#if (0)
-    // ap: test
-    ProjectDefinitionsDialog dialog(&w.GetModel(), &w);
-    dialog.exec();
-#endif
+    else {
+        StartupDialog dialog(&w);
+        dialog.exec();
+        if (dialog.OpenProject()) {
+            w.OnOpenProject();
+        }
+        else if (dialog.NewProject()) {
+            w.OnNewProject();
+        }
+        else if (!dialog.SelectedProject().isEmpty()) {
+            w.OpenProject(dialog.SelectedProject());
+        }
+    }
 
 	return a.exec();
 }

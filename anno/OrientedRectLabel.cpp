@@ -113,7 +113,7 @@ void OrientedRectLabel::HandlePositionChanged(LabelHandle* h, QPointF offset) {
 	}
 }
 
-void OrientedRectLabel::OnPaint(const PaintInfo & pi) {
+void OrientedRectLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	float cx2 = width_.get() / 2;	
 	float cy2 = height_.get() / 2;
 	float cxx = std::min(cx2, cy2) / 3;

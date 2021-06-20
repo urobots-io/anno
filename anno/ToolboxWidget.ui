@@ -72,6 +72,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="add_marker_type_pushButton">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -84,6 +90,26 @@
           <width>16</width>
           <height>16</height>
          </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="toggle_tree_state_pushButton">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="MainWindow.qrc">
+          <normaloff>:/MainWindow/Resources/tree_view.ico</normaloff>:/MainWindow/Resources/tree_view.ico</iconset>
         </property>
         <property name="flat">
          <bool>true</bool>

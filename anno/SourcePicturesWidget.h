@@ -26,7 +26,7 @@ public slots:
     void OnDeleteFile();
     void OnReloadFolder();
     void OnRevealInExplorer();
-    void OnDeleteFileMarkers();
+    void OnRemoveMarkers();
     void OnCreateFolder();
 
 private:
@@ -53,6 +53,7 @@ private:
 
     QModelIndex menu_index_;
 
-    QAction* delete_folder_action_ = nullptr;
-    QAction* rename_folder_action_ = nullptr;
+    QAction *delete_folder_action_ = nullptr;
+    QAction *rename_folder_action_ = nullptr;
+    QAction *remove_markers_in_folder_action_ = nullptr;
 };

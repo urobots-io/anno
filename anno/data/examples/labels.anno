@@ -29,6 +29,21 @@
                 },
                 "value_type": "circle"
             },
+            "oriented_circle": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Good"
+                    },
+                    {
+                        "color": "#00ff00",
+                        "id": 1,
+                        "name": "Bad"
+                    }
+                ],
+                "value_type": "oriented_circle"
+            },
             "oriented_point": {
                 "axis_length": [
                     30,
@@ -198,6 +213,16 @@
                     "width": 200
                 },
                 "value_type": "rect"
+            },
+            "tool": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "my tool"
+                    }
+                ],
+                "value_type": "tool"
             }
         },
         "user_data": {
@@ -275,7 +300,27 @@
                 {
                     "category": 0,
                     "type": "oriented_point",
-                    "value": "869.189 285.586 0.0906599"
+                    "value": "869.189 285.586 0.0541167"
+                },
+                {
+                    "category": 0,
+                    "type": "tool",
+                    "value": "654.482 1044.53 1279.53 1048.73"
+                },
+                {
+                    "category": 0,
+                    "type": "oriented_circle",
+                    "value": "1537.4 723.591 -1.26988  73.5733"
+                },
+                {
+                    "category": 1,
+                    "type": "oriented_circle",
+                    "value": "1826.1 723.591 -1.75065  63.4538"
+                },
+                {
+                    "category": 0,
+                    "type": "tool",
+                    "value": "612.438 761.431 320.934 832.905 15.4161 803.474"
                 }
             ],
             "name": "cars.jpg"

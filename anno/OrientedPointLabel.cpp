@@ -40,7 +40,7 @@ void OrientedPointLabel::CenterTo(QPointF position, double angle) {
     handles_[0]->SetPosition(position);
 }
 
-void OrientedPointLabel::OnPaint(const PaintInfo & pi) {
+void OrientedPointLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	pi.painter->setPen(GetOutlinePen(pi));
 
     pi.painter->drawLine(handles_[0]->GetPosition(), handles_[1]->GetPosition());

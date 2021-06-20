@@ -2,15 +2,27 @@
 #include "Label.h"
 #include "PropertyDatabase.h"
 
-class OrientedPointLabel : public CloneableLabel<OrientedPointLabel> {
+class OrientedCircleLabel : public CloneableLabel<OrientedCircleLabel> {
 public:
-    OrientedPointLabel(const WorldInfo *);
+    OrientedCircleLabel(const WorldInfo *);
+
+    void InitStamp() override;
 
     void ConnectSharedProperties(bool connect, bool inject_my_values) override;
     
     void CenterTo(QPointF position, double angle) override;
 
 	void OnPaint(const PaintInfo &, PaintExtraFunctions*) override;
+
+    bool HitTest(const WorldInfo &) const override;
+
+    double Area() const override;
+
+    bool IsCreationFinished() const override;
+
+    bool OnCreateMove(const WorldInfo &) override;
+
+    void OnCreateClick(const WorldInfo &, bool) override;
 
     QTransform GetTransform(bool scale, bool rotate) override;
 
@@ -35,6 +47,9 @@ private:
     
 private:
     LabelProperty angle_;
+    LabelProperty radius_;
+
+    bool creation_completed_;    
 
     static const int axis_length = 50;
 };

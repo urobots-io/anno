@@ -89,7 +89,7 @@ void RectLabel::CenterTo(QPointF position, double angle) {
     handles_[1]->SetPosition(position + size2, false);
 }
 
-void RectLabel::OnPaint(const PaintInfo & pi) {
+void RectLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
     pi.painter->setPen(GetOutlinePen(pi));
     auto p0 = handles_[0]->GetPosition();
     auto p1 = handles_[1]->GetPosition();

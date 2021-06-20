@@ -19,6 +19,8 @@ public:
 	
     ImageData GetLoadedImage() const { return image_; }
 
+    const ImagePropertiesList& GetProperties() const { return properties_; }
+
 private:
 	void run() override;
 
@@ -27,5 +29,6 @@ private:
     std::shared_ptr<ImageConverter> converter_;
     ImageData image_;
     QString error_text_;
+    ImagePropertiesList properties_;
     std::shared_ptr<FilesystemInterface> filesystem_;
 };

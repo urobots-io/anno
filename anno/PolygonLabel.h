@@ -7,7 +7,7 @@ public:
 
 	~PolygonLabel();
 
-	void OnPaint(const PaintInfo &) override;
+	void OnPaint(const PaintInfo &, PaintExtraFunctions*) override;
 
 	bool IsCreationFinished() const override;
 

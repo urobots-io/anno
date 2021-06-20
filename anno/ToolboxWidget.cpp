@@ -16,6 +16,8 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     connect(&proxy_, &QAbstractItemModel::rowsInserted, this, &ToolboxWidget::OnRowsAdded);
     connect(ui.add_marker_type_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowAddMarkerMenu);
 
+    connect(ui.toggle_tree_state_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ToggleTreeOpenState);
+
     ui.treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.treeView, &QWidget::customContextMenuRequested, this, &ToolboxWidget::OnCustomContextMenu);
 
@@ -26,13 +28,13 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     AddAction(marker_menu_, "copy.ico", tr("Clone"), &ToolboxWidget::CloneMarker);
     marker_menu_->addSeparator();
     AddAction(marker_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteMarker);
-    AddAction(marker_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteMarkerFromImages);
+    AddAction(marker_menu_, "clean.ico", tr("Remove from images"), &ToolboxWidget::DeleteMarkerFromImages);
 
     category_menu_ = new QMenu(topLevelWidget());
     AddAction(category_menu_, "rename.ico", tr("Rename"), &ToolboxWidget::RenameItem);
     category_menu_->addSeparator();
     AddAction(category_menu_, "delete.ico", tr("Delete"), &ToolboxWidget::DeleteCategory);
-    AddAction(category_menu_, "delete.ico", tr("Delete from images"), &ToolboxWidget::DeleteCategoryFromImages);
+    AddAction(category_menu_, "clean.ico", tr("Remove from images"), &ToolboxWidget::DeleteCategoryFromImages);
 }
 
 ToolboxWidget::~ToolboxWidget()
@@ -185,14 +187,6 @@ void ToolboxWidget::AddCategory() {
     }
 }
 
-void ToolboxWidget::DeleteMarker() {
-    if (definitions_) {
-        if (auto marker = definitions_->GetDefinition(menu_index_)) {
-            emit DeleteRequested(marker, nullptr, false);
-        }
-    }
-}
-
 void ToolboxWidget::CloneMarker() {
     if (definitions_) {
         if (auto marker = definitions_->GetDefinition(menu_index_)) {
@@ -200,6 +194,14 @@ void ToolboxWidget::CloneMarker() {
             if (index.isValid()) {                
                 ui.treeView->edit(proxy_.mapFromSource(index));
             }
+        }
+    }
+}
+
+void ToolboxWidget::DeleteMarker() {
+    if (definitions_) {
+        if (auto marker = definitions_->GetDefinition(menu_index_)) {
+            emit DeleteRequested(marker, nullptr, false);
         }
     }
 }
@@ -223,7 +225,7 @@ void ToolboxWidget::DeleteCategory() {
 void ToolboxWidget::DeleteCategoryFromImages() {
     if (definitions_) {
         if (auto category = definitions_->GetCategory(menu_index_)) {
-            emit DeleteRequested(nullptr, category, false);
+            emit DeleteRequested(nullptr, category, true);
         }
     }
 }
@@ -232,4 +234,36 @@ void ToolboxWidget::OnError(QString message) {
     urobots::qt_helpers::messagebox::Critical(message);
 }
 
+
+void ToolboxWidget::ToggleTreeOpenState() {
+    if (!definitions_) {
+        return;
+    }
+
+    int num_opened = 0;
+    int num_closed = 0;
+    for (auto d : definitions_->GetDefinitions()) {
+        auto index = proxy_.mapFromSource(definitions_->GetIndex(d.get()));
+        if (ui.treeView->isExpanded(index)) {
+            ++num_opened;
+        }
+        else {
+            ++num_closed;
+        }
+
+    }
+
+    bool close = num_opened > num_closed;
+    if (num_opened == num_closed) {
+        close = toggle_closes_;
+        toggle_closes_ = !toggle_closes_;
+    }
+    
+    if (close) {
+        ui.treeView->collapseAll();
+    }
+    else {
+        ui.treeView->expandAll();
+    }    
+}
 

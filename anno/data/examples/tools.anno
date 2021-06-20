@@ -1,0 +1,39 @@
+{
+    "definitions": {
+        "files_root_dir": "images/tools",
+        "marker_types": {
+            "Tools": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Category 0"
+                    }
+                ],
+                "value_type": "tool"
+            }
+        }
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "Tools",
+                    "value": "1728.47 897.783 661.139 862.644 1374.86 819.183 1691.32 630.091"
+                },
+                {
+                    "category": 0,
+                    "type": "Tools",
+                    "value": "470.104 163.927 780.004 538.172 496.366 909.79"
+                },
+                {
+                    "category": 0,
+                    "type": "Tools",
+                    "value": "816.019 306.712 1698.05 303.525"
+                }
+            ],
+            "name": "mig-15.png"
+        }
+    ]
+}

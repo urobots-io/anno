@@ -9,7 +9,6 @@ CONFIG += c++11
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += ANNO_EXCLUDE_WINDOWS_CODE
 
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER = stdafx.h
@@ -33,17 +32,23 @@ SOURCES += \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
     FileTreeElement.cpp \
     ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
+    ImagePropertiesTableModel.cpp \
+    ImagePropertiesWidget.cpp \
     LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
     MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
-    ModifyLabelTextFileModelCommand.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
+    ModifyLabelTextFileModelCommand.cpp OrientedCircleLabel.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
     PointLabel.cpp PolygonLabel.cpp PolylineLabel.cpp ProjectDefinitionsDialog.cpp ProjectSettingsWidget.cpp \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
     RestDatasetFilesystem.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
+    StartupDialog.cpp \
     stdafx.cpp Serialization.cpp \
-    SourcePicturesWidget.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
+    SourcePicturesWidget.cpp ToolLabel.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
-HEADERS += \    
+HEADERS += \
+    ImagePropertiesTableModel.h \
+    ImagePropertiesWidget.h \
+    StartupDialog.h \
     AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
     ColorTransformer.h \
     CreateLabelFileModelCommand.h CustomProperty.h CustomPropertyTableItemDelegate.h CustomPropertyTableModel.h \
@@ -53,19 +58,21 @@ HEADERS += \
     ImageModel.h ImageSettingsWidget.h implement_q_property.h Label.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
     LabelDefinitionsTreeModel.h LabelFactory.h LabelHandle.h LabelPropertiesWidget.h LabelType.h LocalFilesystem.h \
     MainWindow.h messagebox.h ModifyLabelCategoryFileModelCommand.h ModifyLabelGeometryFileModelCommand.h \
-    ModifyLabelTextFileModelCommand.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
+    ModifyLabelTextFileModelCommand.h OrientedCircleLabel.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
     PointCloudDisplayWidget.h PointLabel.h PolygonLabel.h PolylineLabel.h ProjectDefinitionsDialog.h ProjectSettingsWidget.h \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
     ScriptPainter.h settings.h SharedPropertyDefinition.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
     stdafx.h Serialization.h \
-    ToolboxProxyModel.h ToolboxWidget.h win_helpers.h WorldInfo.h \
+    ToolboxProxyModel.h ToolboxWidget.h ToolLabel.h win_helpers.h WorldInfo.h \
     triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h
 
 FORMS += \
     AboutDialog.ui Desktop3dWindow.ui \
     ErrorsListDialog.ui ImageSettingsWidget.ui LabelDefinitionPropertiesWidget.ui \
+    ImagePropertiesWidget.ui \
     LabelPropertiesWidget.ui MainWindow.ui ProjectDefinitionsDialog.ui \
-    ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui
+    ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui \
+    StartupDialog.ui
 
 RESOURCES += MainWindow.qrc
 
@@ -74,3 +81,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+# Windows libs
+win32  {
+    LIBS += Ole32.lib
+    LIBS += User32.lib
+}

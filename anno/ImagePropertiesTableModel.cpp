@@ -1,0 +1,73 @@
+#include "stdafx.h"
+#include "ImagePropertiesTableModel.h"
+
+ImagePropertiesTableModel::ImagePropertiesTableModel(const ImagePropertiesList& properties, QObject *parent)
+    : QAbstractTableModel(parent)
+    , properties_(properties)
+{
+}
+
+ImagePropertiesTableModel::~ImagePropertiesTableModel()
+{
+}
+
+int ImagePropertiesTableModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent)
+
+    return properties_.size();
+}
+
+int ImagePropertiesTableModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent)
+
+    // Only 2 columns: name and value
+    return 2;
+}
+
+QVariant ImagePropertiesTableModel::data(const QModelIndex &index, int role) const {
+    int row = index.row();
+    if (row >= properties_.size())
+        return QVariant();
+
+    int column = index.column();
+    switch (column) {
+    case 0:
+        if (role == Qt::DisplayRole) {
+            return properties_[row].name;
+        }
+        else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
+        break;
+
+    case 1:
+        if (role == Qt::DisplayRole) {
+            return properties_[row].value;
+        }         
+        break;
+
+
+    default:
+        break;
+    }
+
+    return QVariant();
+}
+
+Qt::ItemFlags ImagePropertiesTableModel::flags(const QModelIndex &index) const {
+    Q_UNUSED(index);
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsSelectable;
+    return flags;
+}
+
+QVariant ImagePropertiesTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
+    if (role == Qt::DisplayRole) {
+        if (orientation == Qt::Horizontal) {
+            if (section == 0) return tr("Name");
+            else if (section == 1) return tr("Value");
+        }
+        else if (orientation == Qt::Vertical) {
+        }
+    }
+
+    return QVariant();
+}
+

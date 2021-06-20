@@ -1,4 +1,5 @@
 #include "PolylineLabel.h"
+#include "geometry.h"
 using namespace std;
 
 PolylineLabel::PolylineLabel(const WorldInfo * wi) {
@@ -24,10 +25,10 @@ QStringList PolylineLabel::ToStringsList() {
 void PolylineLabel::FromStringsList(QStringList const & value) {
     Label::FromStringsList(value);
     state_ = State::ready;
-    UpdateAABB();
+    UpdateInternalData();
 }
 
-void PolylineLabel::OnPaint(const PaintInfo & pi) {
+void PolylineLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
     pi.painter->setPen(GetOutlinePen(pi));
 
     vector<QPointF> points;
@@ -137,7 +138,7 @@ PolylineLabel::ExtraActionType PolylineLabel::DetectExtraAction(const WorldInfo 
         edge2.setAngle(edge.angle() + 90);
         edge2.setP1(edge2.p1() + edge2.p1() - edge2.p2());
 
-        if (QLineF::BoundedIntersection == edge.intersects(edge2, nullptr)) {
+        if (QLineF::BoundedIntersection == geometry::Intersection(edge, edge2)) {
             index = int(i);
             return ExtraActionType::CreateHandle;
         }
@@ -155,10 +156,10 @@ QTransform PolylineLabel::GetTransform(bool scale, bool rotate) {
 }
 
 void PolylineLabel::HandlePositionChanged(LabelHandle *, QPointF) {
-    UpdateAABB();
+    UpdateInternalData();
 }
 
-void PolylineLabel::UpdateAABB() {
+void PolylineLabel::UpdateInternalData() {
     if (handles_.size()) {
         auto p0 = handles_[0]->GetPosition();
         auto p1 = p0;

@@ -1,5 +1,6 @@
 #pragma once
 #include "FileTreeItemInfo.h"
+#include <vector>
 
 struct FilesystemInterface {
     /// Returns path of the root folder. Returns empty string if root folder is not local.

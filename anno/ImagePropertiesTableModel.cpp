@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ImagePropertiesTableModel.h"
 
-ImagePropertiesTableModel::ImagePropertiesTableModel(const ImageProperties& properties, QObject *parent)
+ImagePropertiesTableModel::ImagePropertiesTableModel(const ImagePropertiesList& properties, QObject *parent)
     : QAbstractTableModel(parent)
     , properties_(properties)
 {

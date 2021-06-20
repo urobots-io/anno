@@ -12,7 +12,7 @@ public:
     ~ImagePropertiesWidget();
 
 public slots:
-    void setProperties(const ImageProperties&);
+    void setProperties(const ImagePropertiesList&);
 
 private:
     Ui::ImagePropertiesWidget ui;

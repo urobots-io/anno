@@ -17,4 +17,4 @@ struct ImageProperty {
     QVariant value;
 };
 
-typedef QVector<ImageProperty> ImageProperties;
+typedef QVector<ImageProperty> ImagePropertiesList;

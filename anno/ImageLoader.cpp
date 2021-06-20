@@ -54,7 +54,7 @@ public:
 #endif
 
 namespace {
-void GetProperties(const QImage& image, const QByteArray& buffer, ImageProperties &props) {
+void GetProperties(const QImage& image, const QByteArray& buffer, ImagePropertiesList &props) {
     props.push_back({ "Size", QString("%0 bytes").arg(buffer.size()) });
     props.push_back({ "Width", QString("%0 pix").arg(image.width()) });
     props.push_back({ "Height", QString("%0 pix").arg(image.height()) });
@@ -78,16 +78,19 @@ void ImageLoader::run() {
                 image_ok = false;
             }
 
-            props.push_back({ "Size", QString("%0 bytes").arg(buffer.size()) });
-            props.push_back({ "Width", QString("%0 pix").arg(image_.cols) });
-            props.push_back({ "Height", QString("%0 pix").arg(image_.rows) });
+            properties_.push_back({ "Size", QString("%0 bytes").arg(buffer.size()) });
+            properties_.push_back({ "Width", QString("%0 pix").arg(image_.cols) });
+            properties_.push_back({ "Height", QString("%0 pix").arg(image_.rows) });
         
             MemStream ms(buffer);
             Imf::InputFile input(ms);
             auto header = input.header();
             for (auto i = header.begin(); i != header.end(); ++i) {
                 if (auto text = dynamic_cast<Imf::StringAttribute*>(&i.attribute())) {
-                    properties_[QString::fromLatin1(i.name())] = QString::fromLatin1(text->value().c_str());
+                    properties_.push_back({
+                        QString::fromLatin1(i.name()),
+                        QString::fromLatin1(text->value().c_str())
+                        });
                 }                                
             }
         }    

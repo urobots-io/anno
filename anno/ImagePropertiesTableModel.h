@@ -7,7 +7,7 @@ class ImagePropertiesTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    ImagePropertiesTableModel(const ImageProperties& properties, QObject *parent);
+    ImagePropertiesTableModel(const ImagePropertiesList& properties, QObject *parent);
     ~ImagePropertiesTableModel();
 
     int rowCount(const QModelIndex &parent) const override;
@@ -18,5 +18,5 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    ImageProperties properties_;
+    ImagePropertiesList properties_;
 };

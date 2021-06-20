@@ -13,7 +13,7 @@ ImagePropertiesWidget::~ImagePropertiesWidget()
 {
 }
 
-void ImagePropertiesWidget::setProperties(const ImageProperties& props) {
+void ImagePropertiesWidget::setProperties(const ImagePropertiesList& props) {
     delete ui.tableView->model();
     ui.tableView->setModel(new ImagePropertiesTableModel(props, this));
 }

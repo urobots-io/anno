@@ -129,6 +129,9 @@ protected:
     /// delete all handles
     void DeleteHandles();
 
+    /// remove a handle
+    void DeleteHandle(std::shared_ptr<LabelHandle>);
+
 protected:
     friend class ProxyLabel;
 

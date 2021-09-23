@@ -33,6 +33,16 @@ void Label::SetComputeVisualisationData(bool value) {
     compute_visualisation_data_ = value; 
 }
 
+void Label::DeleteHandle(std::shared_ptr<LabelHandle> handle) {
+    if (handle) {
+        auto it = std::find(handles_.begin(), handles_.end(), handle);
+        if (it != handles_.end()) {
+            handles_.erase(it);
+        }
+        handle->ClearParent();
+    }
+}
+
 void Label::DeleteHandles() {
     for (auto h : handles_) {
         h->ClearParent();

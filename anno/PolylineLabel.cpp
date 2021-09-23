@@ -80,21 +80,18 @@ void PolylineLabel::CancelExtraAction() {
 }
 
 bool PolylineLabel::HasExtraAction(const WorldInfo & wi, QString & description) {
-    int index;
-    auto result = DetectExtraAction(wi, index);
-    switch (result) {
+    auto result = DetectExtraAction(wi);
+    switch (result.type) {
     default: break;
     case ExtraActionType::CreateHandle: description = "+ vertex"; break;
     case ExtraActionType::DeleteHandle: description = "- vertex"; break;
     }
-    return result != ExtraActionType::Nothing;
+    return result.type != ExtraActionType::Nothing;
 }
 
 bool PolylineLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
-    int index;    
-    auto result = DetectExtraAction(wi, index);
-
-    switch (result) {
+    auto result = DetectExtraAction(wi);
+    switch (result.type) {
     default:
         return false;
 
@@ -103,7 +100,7 @@ bool PolylineLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
         data = ToStringsList();
         auto point = make_shared<LabelHandle>(this);
         point->SetPosition(wi.position);
-        handles_.insert(handles_.begin() + index + 1, point);
+        handles_.insert(handles_.begin() + result.index + 1, point);
     }
     break;
 
@@ -111,9 +108,7 @@ bool PolylineLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
         data = ToStringsList();
         if (handles_.size() > 2)
         {
-            auto point = handles_.at(index);                      
-            handles_.erase(std::find(handles_.begin(), handles_.end(), point));
-            point->ClearParent();
+            DeleteHandle(handles_.at(result.index));
         }
     break;   
     }
@@ -121,14 +116,17 @@ bool PolylineLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
     return true;
 }
 
-PolylineLabel::ExtraActionType PolylineLabel::DetectExtraAction(const WorldInfo & wi, int & index) const {   
+PolylineLabel::ExtraAction PolylineLabel::DetectExtraAction(const WorldInfo & wi) const {   
+    ExtraAction result;
+
     // check handles
     for (size_t i = 0; i < handles_.size(); ++i) {
         auto p0 = handles_[i]->GetPosition();
         // calculate distance to p0
         if ((p0 - wi.position).manhattanLength() < 10 / wi.world_scale) {
-            index = int(i);
-            return ExtraActionType::DeleteHandle;
+            result.index = int(i);
+            result.type = ExtraActionType::DeleteHandle;
+            return result;
         }
     }
 
@@ -145,12 +143,13 @@ PolylineLabel::ExtraActionType PolylineLabel::DetectExtraAction(const WorldInfo 
         edge2.setP1(edge2.p1() + edge2.p1() - edge2.p2());
 
         if (QLineF::BoundedIntersection == geometry::Intersection(edge, edge2)) {
-            index = int(i);
-            return ExtraActionType::CreateHandle;
+            result.index = int(i);
+            result.type = ExtraActionType::CreateHandle;
+            return result;
         }
     }    
 
-    return ExtraActionType::Nothing;
+    return result;
 }
 
 QTransform PolylineLabel::GetTransform(bool scale, bool rotate) {
@@ -185,8 +184,7 @@ void PolylineLabel::UpdateInternalData() {
 
 bool PolylineLabel::HitTest(const WorldInfo & wi) const {
     if (aabb_.contains(wi.position)) {
-        int index;
-        return DetectExtraAction(wi, index) != ExtraActionType::Nothing;
+        return DetectExtraAction(wi).type != ExtraActionType::Nothing;
     }
     return false;
 }

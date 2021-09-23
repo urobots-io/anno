@@ -70,7 +70,7 @@ std::vector<float> GetChannelValues(cv::Mat &m, int x, int y) {
     case CV_8U: return GetChannelValuesForType<uint8_t, N>(m, x, y);
     case CV_8S: return GetChannelValuesForType<int8_t, N>(m, x, y);
     case CV_16U: return GetChannelValuesForType<uint16_t, N>(m, x, y);
-    case CV_16S: return GetChannelValuesForType<uint16_t, N>(m, x, y);
+    case CV_16S: return GetChannelValuesForType<int16_t, N>(m, x, y);
     case CV_32S: return GetChannelValuesForType<int32_t, N>(m, x, y);
     case CV_32F: return GetChannelValuesForType<float, N>(m, x, y);
     case CV_64F: return GetChannelValuesForType<double, N>(m, x, y);

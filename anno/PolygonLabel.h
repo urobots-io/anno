@@ -51,7 +51,13 @@ private:
 
 	typedef std::vector<std::shared_ptr<LabelHandle>> Handles;
 
-	ExtraActionType DetectExtraAction(const WorldInfo & wi, int & index, Handles *&contour);
+    struct ExtraAction {
+        ExtraActionType type = ExtraActionType::Nothing;
+        int index = 0;
+        std::shared_ptr<Handles> contour;
+    };
+
+	ExtraAction DetectExtraAction(const WorldInfo & wi);
 
 	void RenderHandles(const PaintInfo &, const Handles &, QPointF *candidate);
 
@@ -65,8 +71,7 @@ private:
 
 	State state_;
 	
-    // TODO: use shared_ptr to Handles
-	std::list<Handles*> contours_;
+	std::list<std::shared_ptr<Handles>> contours_;
 
 	QPointF next_point_;
 

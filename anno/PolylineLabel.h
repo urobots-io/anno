@@ -44,7 +44,12 @@ protected:
 
     typedef std::vector<LabelHandle*> Handles;
 
-    ExtraActionType DetectExtraAction(const WorldInfo & wi, int & index) const;    
+    struct ExtraAction {
+        int index = 0;
+        ExtraActionType type = ExtraActionType::Nothing;
+    };
+
+    ExtraAction DetectExtraAction(const WorldInfo & wi) const;    
 
     virtual void UpdateInternalData();
 

@@ -47,7 +47,7 @@ protected:
     void InitShaders();  
     void CreateBuffers();
 
-    void CreateAxis(QVector3D origin, QVector3D size, QVector3D selection_size);
+    void CreateAxis(const QVector3D &origin, const QVector3D &size, const QVector3D &selection_size);
 
     void SetupProgramWithMVP(bool selected_vertex = false);
 

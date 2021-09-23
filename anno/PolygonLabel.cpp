@@ -14,7 +14,7 @@ PolygonLabel::PolygonLabel(const WorldInfo * wi) {
     if (wi) {
         state_ = State::creation;
         next_point_ = wi->position;
-        contours_.push_back(new Handles);
+        contours_.push_back(make_shared<Handles>());
         OnCreateClick(*wi, true);
     }
     else {
@@ -23,32 +23,28 @@ PolygonLabel::PolygonLabel(const WorldInfo * wi) {
 }
 
 PolygonLabel::~PolygonLabel() {
-	for (auto c : contours_)
-		delete c;
 }
 
 QStringList PolygonLabel::ToStringsList() {
 	QStringList result;
-	for (auto c : contours_)
-		result << Label::ToString(*c);
+    for (auto c : contours_) {
+        result << Label::ToString(*c);
+    }
 	return result;
 }
 
 void PolygonLabel::FromStringsList(QStringList const & list) {
-    qDeleteAll(contours_);
     contours_.clear();
-
     DeleteHandles();
 
 	for (auto s : list) {
-		auto c = new Handles();
+		auto c = make_shared<Handles>();
 		contours_.push_back(c);
 		Label::FromString(s, *c);
         handles_.insert(handles_.end(), c->begin(), c->end());
 	}
 
     Triangulate();
-
     state_ = State::ready;
 }
 
@@ -105,8 +101,7 @@ bool PolygonLabel::IsCreationFinished() const {
 }
 
 bool PolygonLabel::IsNearStartPoint(const WorldInfo & wi) const {
-	const Handles *h = *contours_.rbegin();
-
+	auto h = *contours_.rbegin();
 	if (h->size()) {
 		auto start_pos = h->at(0)->GetPosition();
 		if ((start_pos - wi.position).manhattanLength() < distance_to_finish_creation_ / wi.world_scale) { 
@@ -153,11 +148,9 @@ void PolygonLabel::CancelExtraAction() {
 	auto contour = *contours_.rbegin();
 	if (contour != contours_.front()) {
 		for (auto p : *contour) {            
-			handles_.erase(std::find(handles_.begin(), handles_.end(), p));
-            p->ClearParent();
+			DeleteHandle(p);
 		}		
-		contours_.erase(std::find(contours_.begin(), contours_.end(), contour));
-        delete contour;
+		contours_.pop_back();
 	}
 
 	Triangulate();
@@ -186,24 +179,19 @@ double PolygonLabel::Area() const {
 }
 
 bool PolygonLabel::HasExtraAction(const WorldInfo & wi, QString & description) {
-	int index;
-	Handles *contour;
-	auto result = DetectExtraAction(wi, index, contour);
-	switch (result) {
+	auto result = DetectExtraAction(wi);
+	switch (result.type) {
 	default: break;
 	case ExtraActionType::CreateHandle: description = "+ vertex"; break;
 	case ExtraActionType::DeleteHandle: description = "- vertex"; break;
 	case ExtraActionType::CutHole: description = "+ hole"; break;
 	}
-	return result != ExtraActionType::Nothing;
+	return result.type != ExtraActionType::Nothing;
 }
 
 bool PolygonLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
-	int index;
-	Handles *contour;
-	auto result = DetectExtraAction(wi, index, contour);
-	
-	switch (result) {
+	auto result = DetectExtraAction(wi);
+	switch (result.type) {
 	default: 
 		return false;
 	
@@ -213,7 +201,7 @@ bool PolygonLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
 
 		auto point = make_shared<LabelHandle>(this);
 		point->SetPosition(wi.position);
-		contour->insert(contour->begin() + index + 1, point);
+		result.contour->insert(result.contour->begin() + result.index + 1, point);
 		handles_.push_back(point);
 	}
 		break;
@@ -222,20 +210,20 @@ bool PolygonLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
 	{
         data = ToStringsList();
 
-		if (contour != contours_.front() || contour->size() > 2) {
-			auto point = contour->at(index);			
-			contour->erase(contour->begin() + index);
-			handles_.erase(std::find(handles_.begin(), handles_.end(), point));
-            point->ClearParent();
-
-			if (contour != contours_.front()) {
-				if (contour->size() <= 2) {
-					for (auto p : *contour) {						
-						handles_.erase(std::find(handles_.begin(), handles_.end(), p));
-                        p->ClearParent();
-					}					
-					contours_.erase(std::find(contours_.begin(), contours_.end(), contour));
-                    delete contour;
+		if (result.contour != contours_.front() || result.contour->size() > 2) {
+			auto point = result.contour->at(result.index);			
+			result.contour->erase(result.contour->begin() + result.index);
+            DeleteHandle(point);
+			
+			if (result.contour != contours_.front()) {
+				if (result.contour->size() <= 2) {
+					for (auto p : *result.contour) {						
+						DeleteHandle(p);
+					}
+                    auto it = std::find(contours_.begin(), contours_.end(), result.contour);
+                    if (it != contours_.end()) {
+                        contours_.erase(it);
+                    }
 				}
 			}
 		}
@@ -248,12 +236,12 @@ bool PolygonLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
 
 		state_ = State::cutting_hole;
 
+        
 		auto point = make_shared<LabelHandle>(this);
 		point->SetPosition(wi.position);
-		
 		handles_.push_back(point);
 
-		contour = new Handles;
+		auto contour = make_shared<Handles>();
 		contours_.push_back(contour);
 		contour->push_back(point);
 
@@ -267,7 +255,9 @@ bool PolygonLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
 	return true;
 }
 
-PolygonLabel::ExtraActionType PolygonLabel::DetectExtraAction(const WorldInfo & wi, int & index, Handles *& contour) {
+PolygonLabel::ExtraAction PolygonLabel::DetectExtraAction(const WorldInfo & wi) {
+    ExtraAction result;
+
 	// check handles
 	for (auto c : contours_) {
         for (int i = 0; i < int(c->size()); ++i) {
@@ -275,9 +265,10 @@ PolygonLabel::ExtraActionType PolygonLabel::DetectExtraAction(const WorldInfo & 
 
 			// calculate distance to p0
 			if ((p0 - wi.position).manhattanLength() < 10 / wi.world_scale) {
-				index = i;
-				contour = c;
-				return ExtraActionType::DeleteHandle;
+				result.index = i;
+				result.contour = c;
+				result.type = ExtraActionType::DeleteHandle;
+                return result;
 			}
 		}
 	}
@@ -296,19 +287,20 @@ PolygonLabel::ExtraActionType PolygonLabel::DetectExtraAction(const WorldInfo & 
 			edge2.setP1(edge2.p1() + edge2.p1() - edge2.p2());
 
             if (QLineF::BoundedIntersection == geometry::Intersection(edge, edge2)) {
-				index = i;
-				contour = c;
-				return ExtraActionType::CreateHandle;
+				result.index = i;
+                result.contour = c;
+                result.type = ExtraActionType::CreateHandle;
+                return result;
 			}
 		}
 	}
 
 	// check area
 	if (HitTest(wi)) {
-		return ExtraActionType::CutHole;
+		result.type = ExtraActionType::CutHole;
 	}
 
-	return ExtraActionType::Nothing;
+	return result;
 }
 
 void PolygonLabel::HandlePositionChanged(LabelHandle *, QPointF) {

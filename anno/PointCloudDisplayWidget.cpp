@@ -140,7 +140,7 @@ void PointCloudDisplayWidget::CreateBuffers() {
     selection_buffer_.create();    
 }
 
-void PointCloudDisplayWidget::CreateAxis(QVector3D origin, QVector3D size, QVector3D selection_size) {
+void PointCloudDisplayWidget::CreateAxis(const QVector3D &origin, const QVector3D &size, const QVector3D &selection_size) {
     ColoredVertexData vertices[] = {
         { origin, QVector3D(1.0f, 0.0f, 0.0f), {}},
         { origin + QVector3D(size.x(), 0, 0), QVector3D(1.0f, 0.0f, 0.0f), {} },
@@ -155,30 +155,27 @@ void PointCloudDisplayWidget::CreateAxis(QVector3D origin, QVector3D size, QVect
     axis_buffer_.bind();
     axis_buffer_.allocate(vertices, sizeof(vertices));    
 
-    size = selection_size;
-
     ColoredVertexData cross_vertices[] = {
-        { QVector3D(-size.x(), 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), {} },
-        { QVector3D(size.x(), 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), {} },
+        { QVector3D(-selection_size.x(), 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), {} },
+        { QVector3D(selection_size.x(), 0.0f, 0.0f), QVector3D(1.0f, 0.0f, 0.0f), {} },
 
-        { QVector3D(0.0f, -size.y(), 0.0f), QVector3D(0.0f, 1.0f, 0.0f), {} },
-        { QVector3D(0.0f, size.y(), 0.0f), QVector3D(0.0f, 1.0f, 0.0f), {} },
+        { QVector3D(0.0f, -selection_size.y(), 0.0f), QVector3D(0.0f, 1.0f, 0.0f), {} },
+        { QVector3D(0.0f, selection_size.y(), 0.0f), QVector3D(0.0f, 1.0f, 0.0f), {} },
 
-        { QVector3D(0.0f, 0.0f, -size.z()), QVector3D(0.0f, 0.0f, 1.0f), {} },
-        { QVector3D(0.0f, 0.0f, size.z()), QVector3D(0.0f, 0.0f, 1.0f), {} }
+        { QVector3D(0.0f, 0.0f, -selection_size.z()), QVector3D(0.0f, 0.0f, 1.0f), {} },
+        { QVector3D(0.0f, 0.0f, selection_size.z()), QVector3D(0.0f, 0.0f, 1.0f), {} }
     };
 
     selection_buffer_.bind();
     selection_buffer_.allocate(cross_vertices, sizeof(cross_vertices));
 
-    origin = QVector3D(0, 0, 0);
     ColoredVertexData rotation_axis_vertices[] = {
-        { origin, QVector3D(1.0f, 0.0f, 0.0f), {} },
-        { origin + QVector3D((image_scale_.x() > 0 ? 1 : -1), 0, 0), QVector3D(1.0f, 0.0f, 0.0f), {} },
-        { origin, QVector3D(0.0f, 1.0f, 0.0f), {} },
-        { origin + QVector3D(0, (image_scale_.y() > 0 ? 1 : -1), 0), QVector3D(0.0f, 1.0f, 0.0f), {} },
-        { origin, QVector3D(0.0f, 0.0f, 1.0f), {} },
-        { origin + QVector3D(0, 0, (image_scale_.z() > 0 ? 1 : -1)), QVector3D(0.0f, 0.0f, 1.0f), {} }
+        { QVector3D(0, 0, 0), QVector3D(1.0f, 0.0f, 0.0f), {} },
+        { QVector3D((image_scale_.x() > 0 ? 1 : -1), 0, 0), QVector3D(1.0f, 0.0f, 0.0f), {} },
+        { QVector3D(0, 0, 0), QVector3D(0.0f, 1.0f, 0.0f), {} },
+        { QVector3D(0, (image_scale_.y() > 0 ? 1 : -1), 0), QVector3D(0.0f, 1.0f, 0.0f), {} },
+        { QVector3D(0, 0, 0), QVector3D(0.0f, 0.0f, 1.0f), {} },
+        { QVector3D(0, 0, (image_scale_.z() > 0 ? 1 : -1)), QVector3D(0.0f, 0.0f, 1.0f), {} }
     };
     rotation_axis_buffer_.bind();
     rotation_axis_buffer_.allocate(rotation_axis_vertices, sizeof(rotation_axis_vertices));
@@ -323,7 +320,7 @@ inline QVector3D IndexToColor(size_t index) {
 }
 #endif
 
-inline int ColorToIndex(QVector3D color) {
+inline int ColorToIndex(const QVector3D& color) {
     return
         (int(color.x() * 255) << 16) +
         (int(color.y() * 255) << 8) +
@@ -497,7 +494,7 @@ void PointCloudDisplayWidget::SetupImage(QString filename, std::shared_ptr<Files
     }
     
     image_buffer_.bind();
-    image_buffer_.allocate(&vertices[0], sizeof(ColoredVertexData) * int(vertices.size()));
+    image_buffer_.allocate(&vertices[0], int(sizeof(ColoredVertexData) * vertices.size()));
 
     update();
 #endif

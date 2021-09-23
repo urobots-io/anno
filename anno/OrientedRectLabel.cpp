@@ -148,7 +148,7 @@ void OrientedRectLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	
 	pi.painter->setPen(GetOutlinePen(pi));
 	pi.painter->drawPolygon(corners, 4);	
-	pi.painter->drawLine(corners[4], corners[5]);
+	pi.painter->drawLine(corners[5], corners[4]);
 	pi.painter->drawLine(corners[5], corners[6]);
 	pi.painter->drawLine(corners[5], corners[7]);
 

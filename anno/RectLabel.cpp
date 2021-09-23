@@ -50,6 +50,10 @@ RectLabel::RectLabel(const WorldInfo * wi)
 }
 
 void RectLabel::InitStamp() {
+    if (!category_) {
+        return;
+    }
+
     auto jw = category_->definition->stamp_parameters["width"];
     auto jh = category_->definition->stamp_parameters["height"];
         
@@ -83,7 +87,7 @@ void RectLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
 }
 
 void RectLabel::UpdateSharedProperties() {
-    if (width_.PullUpdate() + height_.PullUpdate()) {
+    if (width_.PullUpdate() + height_.PullUpdate() > 0) {
         UpdateHandlesPositions();
     }
 }

@@ -878,8 +878,9 @@ void DesktopWidget::wheelEvent(QWheelEvent *event) {
             if (QApplication::keyboardModifiers() & Qt::AltModifier)
                 delta /= 8;
         }
-        else
-            delta = numDegrees / 2;
+        else {
+            delta = numDegrees * 0.5;
+        }
 
         if (cursor_mode_ == CursorMode::creation_start) {
             mouse_angle_ += delta;

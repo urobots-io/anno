@@ -52,7 +52,7 @@ public:
 	// end: qt widget events
 
 	/// Model to control background image properties
-    ImageModel *GetBackgroundImage() { return &image_; }
+    ImageModel &GetBackgroundImage() { return image_; }
 
     /// Abort creation of object if any
     void AbortCreation();

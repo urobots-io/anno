@@ -152,12 +152,12 @@ void PolygonLabel::CancelExtraAction() {
 	// delete last contour
 	auto contour = *contours_.rbegin();
 	if (contour != contours_.front()) {
-		for (auto p : *contour) {
+		for (auto p : *contour) {            
+			handles_.erase(std::find(handles_.begin(), handles_.end(), p));
             p->ClearParent();
-			handles_.erase(std::find(handles_.begin(), handles_.end(), p));            
-		}
-		delete contour;
+		}		
 		contours_.erase(std::find(contours_.begin(), contours_.end(), contour));
+        delete contour;
 	}
 
 	Triangulate();
@@ -223,19 +223,19 @@ bool PolygonLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
         data = ToStringsList();
 
 		if (contour != contours_.front() || contour->size() > 2) {
-			auto point = contour->at(index);
-			point->ClearParent();
+			auto point = contour->at(index);			
 			contour->erase(contour->begin() + index);
 			handles_.erase(std::find(handles_.begin(), handles_.end(), point));
+            point->ClearParent();
 
 			if (contour != contours_.front()) {
 				if (contour->size() <= 2) {
-					for (auto p : *contour) {
-						p->ClearParent();
+					for (auto p : *contour) {						
 						handles_.erase(std::find(handles_.begin(), handles_.end(), p));
-					}
-					delete contour;
+                        p->ClearParent();
+					}					
 					contours_.erase(std::find(contours_.begin(), contours_.end(), contour));
+                    delete contour;
 				}
 			}
 		}

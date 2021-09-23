@@ -34,6 +34,10 @@ OrientedRectLabel::OrientedRectLabel(const WorldInfo * wi) {
 }
 
 void OrientedRectLabel::InitStamp() {
+    if (!category_) {
+        return;
+    }
+
     auto jw = category_->definition->stamp_parameters["width"];
     auto jh = category_->definition->stamp_parameters["height"];
     
@@ -145,7 +149,6 @@ void OrientedRectLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	pi.painter->setPen(GetOutlinePen(pi));
 	pi.painter->drawPolygon(corners, 4);	
 	pi.painter->drawLine(corners[4], corners[5]);
-
 	pi.painter->drawLine(corners[5], corners[6]);
 	pi.painter->drawLine(corners[5], corners[7]);
 
@@ -284,7 +287,7 @@ bool OrientedRectLabel::MoveBy(QPointF offset) {
 }
 
 void OrientedRectLabel::UpdateSharedProperties() {
-    if (angle_.PullUpdate() + width_.PullUpdate() + height_.PullUpdate()) {
+    if (angle_.PullUpdate() + width_.PullUpdate() + height_.PullUpdate() > 0) {
         UpdateHandlesPositions();
     }
 }

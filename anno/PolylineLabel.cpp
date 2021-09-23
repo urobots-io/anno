@@ -111,9 +111,9 @@ bool PolylineLabel::StartExtraAction(const WorldInfo & wi, QStringList & data) {
         data = ToStringsList();
         if (handles_.size() > 2)
         {
-            auto point = handles_.at(index);
-            point->ClearParent();            
+            auto point = handles_.at(index);                      
             handles_.erase(std::find(handles_.begin(), handles_.end(), point));
+            point->ClearParent();
         }
     break;   
     }

@@ -137,9 +137,14 @@ Qt::ItemFlags SourcePicturesTreeModel::flags(const QModelIndex &index) const {
     }
 
     auto item = static_cast<FileTreeElement*>(index.internalPointer());
-    return (item && item->is_folder ? Qt::ItemIsDropEnabled : Qt::NoItemFlags) 
-        | QAbstractItemModel::flags(index)
-        | ((item->parent && item->parent != root_) ? Qt::ItemIsEditable : Qt::NoItemFlags);
+    if (item) {
+        return (item->is_folder ? Qt::ItemIsDropEnabled : Qt::NoItemFlags)
+            | QAbstractItemModel::flags(index)
+            | ((item->parent && item->parent != root_) ? Qt::ItemIsEditable : Qt::NoItemFlags);
+    }
+    else {
+        return Qt::NoItemFlags;
+    }    
 }
 
 QVariant SourcePicturesTreeModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -217,7 +222,7 @@ int SourcePicturesTreeModel::rowCount(const QModelIndex & parent) const {
         return 1; // we do not know how many items we have
     }
     
-    return int(item->children.size());
+    return item ? int(item->children.size()) : 0;
 }
 
 int SourcePicturesTreeModel::columnCount(const QModelIndex & parent) const {

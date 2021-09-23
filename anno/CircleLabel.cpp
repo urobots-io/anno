@@ -19,7 +19,11 @@ CircleLabel::CircleLabel(const WorldInfo * wi)
     handles_.push_back(make_shared<LabelHandle>(position1, this));    
 }
 
-void CircleLabel::InitStamp() {    
+void CircleLabel::InitStamp() {  
+    if (!category_) {
+        return;
+    }
+
     auto jval = category_->definition->stamp_parameters["radius"];
     double radius = jval.isDouble() ? jval.toDouble() : default_dimension_;
 

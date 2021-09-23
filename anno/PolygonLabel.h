@@ -65,6 +65,7 @@ private:
 
 	State state_;
 	
+    // TODO: use shared_ptr to Handles
 	std::list<Handles*> contours_;
 
 	QPointF next_point_;

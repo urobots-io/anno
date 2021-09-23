@@ -107,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui.project_settings->Init(&model_);
 
     // image settings
-    ui.image_settings->Init(ui.desktop->GetBackgroundImage());
+    ui.image_settings->Init(&ui.desktop->GetBackgroundImage());
 
     ui.mouse_pos_label->setWidthHint(120);
     ui.color_value_label->setWidthHint(120);
@@ -197,10 +197,7 @@ void MainWindow::OnDesktopMousePosChanged(QPointF value) {
     int ix = static_cast<int>(value.x() + 0.5);
     int iy = static_cast<int>(value.y() + 0.5);
 
-	vector<float> pixel_values;
-	if (auto image = ui.desktop->GetBackgroundImage()) {
-		pixel_values = image->GetBackgroundPixelValues(ix, iy);
-	}
+	vector<float> pixel_values = ui.desktop->GetBackgroundImage().GetBackgroundPixelValues(ix, iy);
 
     ui.color_widget->SetColor(pixel_values);
 

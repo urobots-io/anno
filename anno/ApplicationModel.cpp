@@ -652,15 +652,15 @@ std::shared_ptr<FileModel> ApplicationModel::GetFirstFileModel() {
 }
 
 std::shared_ptr<ImageConverter> ApplicationModel::GetImageConverter() {
-    if (!files_loader_.empty()) {
-        auto converter_type = files_loader_["type"].toString();
-        /*
+    /*
+    if (!files_loader_.empty()) {        
         For possible use in the future:
+        auto converter_type = files_loader_["type"].toString();                
         if (converter_type == "MyType") {
             return std::make_shared<MyTypeConverter>(files_loader_["params"].toObject());
-        }
-        */
+        }        
     }
+    */
     return {};
 }
 

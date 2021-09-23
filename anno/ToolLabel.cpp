@@ -58,13 +58,12 @@ void ToolLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions* pf) {
 
 QPen ToolLabel::GetHelperPen(const PaintInfo & pi) const {
     Q_UNUSED(pi)
-    QColor color(category_->color);
-    int line_width = -1;
+    QColor color(category_->color);    
     auto style = Qt::DotLine;
     QPen pen(style);
     pen.setColor(color);
-    pen.setWidth(abs(line_width));
-    pen.setCosmetic(line_width < 0);
+    pen.setWidth(1);
+    pen.setCosmetic(true);
     return pen;
 }
 

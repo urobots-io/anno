@@ -29,6 +29,9 @@ OrientedCircleLabel::OrientedCircleLabel(const WorldInfo *wi)
 }
 
 void OrientedCircleLabel::InitStamp() {
+    if (!category_) {
+        return;
+    }
     auto jrad = category_->definition->stamp_parameters["radius"];    
     double radius = jrad.isDouble() ? jrad.toDouble() : default_dimension_;
 
@@ -207,7 +210,7 @@ bool OrientedCircleLabel::MoveBy(QPointF offset) {
 }
 
 void OrientedCircleLabel::UpdateSharedProperties() {
-    if (angle_.PullUpdate() + radius_.PullUpdate()) {
+    if (angle_.PullUpdate() + radius_.PullUpdate() > 0) {
         UpdateHandlesPositions();
     }
 }

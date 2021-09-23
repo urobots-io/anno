@@ -228,8 +228,7 @@ void SourcePicturesWidget::OnRevealInExplorer() {
         return;
     }
 
-#ifdef Q_OS_WIN
-    QString error;
+#ifdef Q_OS_WIN    
     CoInitialize(0);
     auto wname = QFileInfo(local_filename).absoluteFilePath().replace("/", "\\").toStdWString();
     auto pidl = ILCreateFromPath(wname.c_str());

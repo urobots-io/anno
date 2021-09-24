@@ -102,7 +102,7 @@ void OrientedRectLabel::UpdateHandlesPositions() {
 	}
 }
 
-void OrientedRectLabel::HandlePositionChanged(LabelHandle* h, QPointF offset) {
+void OrientedRectLabel::HandlePositionChanged(LabelHandle* h, const QPointF & offset) {
 	if (handles_.size() < 1 + MAX_HANDLES) return;
 
 	if (h == handles_[0].get()) {
@@ -232,7 +232,7 @@ bool OrientedRectLabel::StartExtraAction(const WorldInfo & wi, QStringList & dat
 	return false; 
 }
 
-QStringList OrientedRectLabel::ToStringsList() {
+QStringList OrientedRectLabel::ToStringsList() const {
 	auto center = handles_[0]->GetPosition();
 
 	QString string = 
@@ -280,7 +280,7 @@ bool OrientedRectLabel::Rotate(double angle) {
     return true;
 }
 
-bool OrientedRectLabel::MoveBy(QPointF offset) {
+bool OrientedRectLabel::MoveBy(const QPointF & offset) {
 	handles_[0]->SetPosition(handles_[0]->GetPosition() + offset);
 	UpdateHandlesPositions();
 	return true;

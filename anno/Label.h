@@ -40,10 +40,10 @@ public:
     virtual void CenterTo(QPointF position, double angle) { Q_UNUSED(position) Q_UNUSED(angle) }
 
 	/// serialize label data into strings
-	virtual QStringList ToStringsList();
+	virtual QStringList ToStringsList() const;
 
 	/// deserialize label data from string
-	virtual void FromStringsList(QStringList const &);
+	virtual void FromStringsList(const QStringList &);
 
 	/// make a copy, todo(ap) - use CopyFrom function instead (?)
 	virtual Label *Clone() = 0;
@@ -82,13 +82,13 @@ public:
 	virtual bool IsCreationFinished() const { return true; }
 
 	/// notification called by handle 
-    virtual void HandlePositionChanged(LabelHandle*, QPointF offset) { Q_UNUSED(offset) }
+    virtual void HandlePositionChanged(LabelHandle*, const QPointF & offset) { Q_UNUSED(offset) }
 
     /// rotate label - returns true if rotation was done
     virtual bool Rotate(double angle) { Q_UNUSED(angle) return false; }
 
 	/// offset the label - returns true if move was done
-    virtual bool MoveBy(QPointF offset) { Q_UNUSED(offset) return false; }
+    virtual bool MoveBy(const QPointF & offset) { Q_UNUSED(offset) return false; }
 
 	/// shall be called for labels to display on gui
     virtual void SetComputeVisualisationData(bool value);
@@ -106,7 +106,7 @@ public:
 	QPen GetOutlinePen(const PaintInfo &) const;
 
     /// copy from another label
-    void CopyFrom(Label *);
+    void CopyFrom(const Label &);
 
     /// Update content from the database
     virtual void UpdateSharedProperties() {}
@@ -124,7 +124,7 @@ protected:
 	static QString ToString(const std::vector<std::shared_ptr<LabelHandle>> & handles);
 
 	/// load handles from string, add them into <handles>
-    void FromString(QString const & string, std::vector<std::shared_ptr<LabelHandle>> & handles);
+    void FromString(const QString & string, std::vector<std::shared_ptr<LabelHandle>> & handles);
 
     /// delete all handles
     void DeleteHandles();
@@ -162,7 +162,7 @@ class CloneableLabel : public Label {
 public:
     Label *Clone() override {
         auto clone = new T(nullptr);
-        clone->CopyFrom(this);
+        clone->CopyFrom(*this);
         return clone;
     }
 };

@@ -28,8 +28,9 @@ QColor LabelCategory::GetStandardColor(int index) {
 }
 
 
-LabelDefinition::LabelDefinition(QObject *parent) 
-    : QObject(parent) {
+LabelDefinition::LabelDefinition(LabelType type, QObject *parent)
+: QObject(parent)
+, value_type(type) {
 }
 
 LabelDefinition::~LabelDefinition() {

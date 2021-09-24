@@ -37,7 +37,8 @@
 #define K_CATEGORY_COLOR "color"
 
 std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & def_json, QStringList& errors) {
-    auto def = std::make_shared<LabelDefinition>();
+    auto value_type = LabelTypeFromString(def_json[K_DEFINITION_VALUE_TYPE].toString());
+    auto def = std::make_shared<LabelDefinition>(value_type);
 
     if (def_json.contains(K_DEFINITION_DESCRIPTION)) {
         def->set_description(def_json[K_DEFINITION_DESCRIPTION].toString());
@@ -45,8 +46,7 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
     else if (def_json.contains(K_DEFINITION_NAME)) {
         // backward compatibility - transform name into description
         def->set_description(def_json[K_DEFINITION_NAME].toString());
-    }
-    def->value_type = LabelTypeFromString(def_json[K_DEFINITION_VALUE_TYPE].toString());
+    }    
 
     if (def_json.contains(K_DEFINITION_LINE_WIDTH))
         def->line_width = def_json[K_DEFINITION_LINE_WIDTH].toInt();

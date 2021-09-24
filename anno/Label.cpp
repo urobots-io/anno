@@ -58,7 +58,7 @@ QString Label::ToString(const std::vector<std::shared_ptr<LabelHandle>> & handle
 	return values.join(' ');
 }
 
-void Label::FromString(QString const & string, std::vector<std::shared_ptr<LabelHandle>>& handles) {
+void Label::FromString(const QString & string, std::vector<std::shared_ptr<LabelHandle>>& handles) {
 	QTextStream stream(&(QString&)string);
 	while (!stream.atEnd()) {
 		float x, y;
@@ -69,7 +69,7 @@ void Label::FromString(QString const & string, std::vector<std::shared_ptr<Label
 	}
 }
 
-QStringList Label::ToStringsList() {
+QStringList Label::ToStringsList() const {
 	return QStringList() << ToString(handles_);
 }
 
@@ -108,10 +108,10 @@ QPen Label::GetOutlinePen(const PaintInfo & pi) const {
 	return pen;	
 }
 
-void Label::CopyFrom(Label * other) {    
-    text_ = other->text_;
-    FromStringsList(other->ToStringsList());
-    SetCategory(other->category_);
+void Label::CopyFrom(const Label & other) {    
+    text_ = other.text_;
+    FromStringsList(other.ToStringsList());
+    SetCategory(other.category_);
 }
 
 QVariant Label::Read(const CustomPropertyDefinition & prop_def) const {

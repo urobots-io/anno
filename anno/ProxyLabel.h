@@ -17,7 +17,7 @@ public:
         client_->CenterTo(position, angle); 
     }
 
-    QStringList ToStringsList() override { 
+    QStringList ToStringsList() const override { 
         return client_->ToStringsList(); 
     }
 
@@ -77,7 +77,7 @@ public:
         return client_->IsCreationFinished(); 
     }
      
-    void HandlePositionChanged(LabelHandle* h, QPointF offset) override { 
+    void HandlePositionChanged(LabelHandle* h, const QPointF & offset) override { 
         client_->HandlePositionChanged(h, offset); 
     }
     
@@ -85,7 +85,7 @@ public:
         return client_->Rotate(angle); 
     }
 
-    bool MoveBy(QPointF offset) override { 
+    bool MoveBy(const QPointF & offset) override { 
         return client_->MoveBy(offset); 
     }
 

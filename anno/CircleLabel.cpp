@@ -97,7 +97,7 @@ void CircleLabel::OnCreateClick(const WorldInfo &, bool is_down) {
     if (is_down) creation_completed_ = true;
 }
 
-void CircleLabel::HandlePositionChanged(LabelHandle* h, QPointF offset) {
+void CircleLabel::HandlePositionChanged(LabelHandle* h, const QPointF & offset) {
     if (handles_.size() != 2) {
         return;
     }
@@ -114,7 +114,7 @@ void CircleLabel::HandlePositionChanged(LabelHandle* h, QPointF offset) {
     }
 }
 
-QStringList CircleLabel::ToStringsList() {
+QStringList CircleLabel::ToStringsList() const {
 	auto center = handles_[0]->GetPosition();
 	QStringList values;
 	values << QString("%0 %1 ").arg(center.x()).arg(center.y());
@@ -151,7 +151,7 @@ QTransform CircleLabel::GetTransform(bool scale, bool rotate) {
         .scale(scale ? radius : 1., scale ? radius : 1.);
 }
 
-bool CircleLabel::MoveBy(QPointF offset) {
+bool CircleLabel::MoveBy(const QPointF & offset) {
 	CenterTo(handles_[0]->GetPosition() + offset, 0);
 	return true;
 }

@@ -13,13 +13,13 @@ public:
 
 	bool OnCreateMove(const WorldInfo &) override;
 
-	bool MoveBy(QPointF position) override;
+	bool MoveBy(const QPointF & position) override;
 
 	void OnCreateClick(const WorldInfo &, bool) override;
 
 	void CancelExtraAction() override;
     
-	void HandlePositionChanged(LabelHandle* h, QPointF offset) override;
+	void HandlePositionChanged(LabelHandle* h, const QPointF & offset) override;
 
 	void SetComputeVisualisationData(bool value) override;
 
@@ -31,9 +31,9 @@ public:
 
 	bool StartExtraAction(const WorldInfo &, QStringList & data) override;
 	
-	QStringList ToStringsList() override;
+	QStringList ToStringsList() const override;
 
-	void FromStringsList(QStringList const &) override;
+	void FromStringsList(const QStringList &) override;
 
     QTransform GetTransform(bool scale, bool rotate) override;
 

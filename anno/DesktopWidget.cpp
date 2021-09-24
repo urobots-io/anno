@@ -668,7 +668,7 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
                     auto missing_shared_indexes = def->GetMissingIndexes(model_->GetExistingSharedIndexes(def));
                     if (missing_shared_indexes.count(index) && def->AllowedForFile(file_.get(), index)) {
                         // Create first instance of a shared label with this index in the project
-                        def->shared_labels[index]->CopyFrom(stamp_label_.get());
+                        def->shared_labels[index]->CopyFrom(*stamp_label_.get());
                         auto label = std::make_shared<ProxyLabel>(def->shared_labels[index]);
                         label->SetSharedLabelIndex(index);
                         label->ConnectSharedProperties(true, true);

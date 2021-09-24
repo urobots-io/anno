@@ -37,14 +37,14 @@ class LabelDefinition : public QObject
     Q_OBJECT
 
 public:
-    LabelDefinition(QObject *parent = nullptr);
+    LabelDefinition(LabelType type, QObject *parent = nullptr);
     ~LabelDefinition();
 
     /// type name (key in the file)
     QString type_name;
 
     /// value type
-    LabelType value_type;
+    const LabelType value_type;
 
     /// categories
 	std::vector<std::shared_ptr<LabelCategory>> categories;

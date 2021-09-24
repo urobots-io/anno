@@ -117,7 +117,7 @@ QTransform OrientedCircleLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y()).rotate(rotate ? geometry::Rad2Deg(angle_.get()) : 0);
 }
 
-QStringList OrientedCircleLabel::ToStringsList() {
+QStringList OrientedCircleLabel::ToStringsList() const {
     auto center = handles_[0]->GetPosition();
     QString string =
         QString::number(center.x()) % " " %
@@ -147,7 +147,7 @@ void OrientedCircleLabel::FromStringsList(QStringList const & values) {
     creation_completed_ = true;
 }
 
-void OrientedCircleLabel::HandlePositionChanged(LabelHandle* h, QPointF offset) {
+void OrientedCircleLabel::HandlePositionChanged(LabelHandle* h, const QPointF & offset) {
     Q_UNUSED(offset)
     if (handles_.size() < 4) 
         return;
@@ -203,7 +203,7 @@ bool OrientedCircleLabel::Rotate(double angle) {
     return true;
 }
 
-bool OrientedCircleLabel::MoveBy(QPointF offset) {
+bool OrientedCircleLabel::MoveBy(const QPointF & offset) {
 	handles_[0]->SetPosition(handles_[0]->GetPosition() + offset);
 	UpdateHandlesPositions();
 	return true;

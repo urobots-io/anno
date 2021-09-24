@@ -138,14 +138,14 @@ QTransform RectLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y()).scale(scale ? width_.get() : 1., scale ? height_.get() : 1.);
 }
 
-bool RectLabel::MoveBy(QPointF offset) {
+bool RectLabel::MoveBy(const QPointF & offset) {
     handles_[0]->SetPosition(handles_[0]->GetPosition() + offset, false);
     handles_[1]->SetPosition(handles_[1]->GetPosition() + offset, false);
     UpdateHandlesPositions();
     return true;
 }
 
-void RectLabel::HandlePositionChanged(LabelHandle *h, QPointF offset) {
+void RectLabel::HandlePositionChanged(LabelHandle *h, const QPointF & offset) {
     int index = -1;
     for (int i = 0; i < int(handles_.size()); ++i) {
         if (handles_[i].get() == h) {
@@ -213,7 +213,7 @@ void RectLabel::HandlePositionChanged(LabelHandle *h, QPointF offset) {
     UpdateHandlesPositions();
 }
 
-QStringList RectLabel::ToStringsList() {
+QStringList RectLabel::ToStringsList() const {
     return QStringList() << ToString({ handles_[0], handles_[1] });
 }
 

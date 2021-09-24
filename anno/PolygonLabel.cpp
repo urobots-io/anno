@@ -25,7 +25,7 @@ PolygonLabel::PolygonLabel(const WorldInfo * wi) {
 PolygonLabel::~PolygonLabel() {
 }
 
-QStringList PolygonLabel::ToStringsList() {
+QStringList PolygonLabel::ToStringsList() const {
 	QStringList result;
     for (auto c : contours_) {
         result << Label::ToString(*c);
@@ -116,7 +116,7 @@ bool PolygonLabel::OnCreateMove(const WorldInfo & wi) {
 	return IsNearStartPoint(wi);
 }
 
-bool PolygonLabel::MoveBy(QPointF offset) {
+bool PolygonLabel::MoveBy(const QPointF & offset) {
     for (auto h : handles_) {
         h->SetPosition(h->GetPosition() + offset, false);
     }
@@ -303,7 +303,7 @@ PolygonLabel::ExtraAction PolygonLabel::DetectExtraAction(const WorldInfo & wi) 
 	return result;
 }
 
-void PolygonLabel::HandlePositionChanged(LabelHandle *, QPointF) {
+void PolygonLabel::HandlePositionChanged(LabelHandle *, const QPointF &) {
 	Triangulate();
 }
 

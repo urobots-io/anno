@@ -218,9 +218,8 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
         }        
     }
 
-    auto def = std::make_shared<LabelDefinition>();
-    def->type_name = name;
-    def->value_type = value_type;
+    auto def = std::make_shared<LabelDefinition>(value_type);
+    def->type_name = name;    
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
     auto cat = std::make_shared<LabelCategory>();

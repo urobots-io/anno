@@ -22,7 +22,7 @@ PolylineLabel::PolylineLabel(const WorldInfo * wi) {
 PolylineLabel::~PolylineLabel() {
 }
 
-QStringList PolylineLabel::ToStringsList() {
+QStringList PolylineLabel::ToStringsList() const {
     QStringList result;
     result << Label::ToString(handles_);
     return result;
@@ -56,7 +56,7 @@ bool PolylineLabel::OnCreateMove(const WorldInfo & wi) {
     return false;
 }
 
-bool PolylineLabel::MoveBy(QPointF offset) {
+bool PolylineLabel::MoveBy(const QPointF & offset) {
     for (auto h : handles_) {
         h->SetPosition(h->GetPosition() + offset, false);
     } 
@@ -160,7 +160,7 @@ QTransform PolylineLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y());
 }
 
-void PolylineLabel::HandlePositionChanged(LabelHandle *, QPointF) {
+void PolylineLabel::HandlePositionChanged(LabelHandle *, const QPointF &) {
     UpdateInternalData();
 }
 

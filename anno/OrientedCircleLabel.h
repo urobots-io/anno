@@ -26,15 +26,15 @@ public:
 
     QTransform GetTransform(bool scale, bool rotate) override;
 
-    QStringList ToStringsList() override;
+    QStringList ToStringsList() const override;
 
-    void FromStringsList(QStringList const &) override;
+    void FromStringsList(const QStringList &) override;
 
-    void HandlePositionChanged(LabelHandle* h, QPointF offset) override;
+    void HandlePositionChanged(LabelHandle* h, const QPointF & offset) override;
 
     bool Rotate(double angle) override;
 	
-	bool MoveBy(QPointF offset) override;
+	bool MoveBy(const QPointF & offset) override;
     
     void UpdateSharedProperties() override;
 

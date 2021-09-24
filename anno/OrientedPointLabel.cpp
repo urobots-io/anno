@@ -60,7 +60,7 @@ QTransform OrientedPointLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y()).rotate(rotate ? geometry::Rad2Deg(angle_.get()) : 0);
 }
 
-QStringList OrientedPointLabel::ToStringsList() {
+QStringList OrientedPointLabel::ToStringsList() const {
     auto center = handles_[0]->GetPosition();
     QString string =
         QString::number(center.x()) % " " %
@@ -84,7 +84,7 @@ void OrientedPointLabel::FromStringsList(QStringList const & values) {
     UpdateHandlesPositions();
 }
 
-void OrientedPointLabel::HandlePositionChanged(LabelHandle* h, QPointF offset) {
+void OrientedPointLabel::HandlePositionChanged(LabelHandle* h, const QPointF & offset) {
     Q_UNUSED(offset)
     if (handles_.size() < 3) 
         return;
@@ -132,7 +132,7 @@ bool OrientedPointLabel::Rotate(double angle) {
     return true;
 }
 
-bool OrientedPointLabel::MoveBy(QPointF offset) {
+bool OrientedPointLabel::MoveBy(const QPointF & offset) {
 	handles_[0]->SetPosition(handles_[0]->GetPosition() + offset);
 	UpdateHandlesPositions();
 	return true;

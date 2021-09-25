@@ -1,36 +1,18 @@
 /// this is a definition of the label type in the project
 #pragma once
 #include "CustomProperty.h"
+#include "LabelCategory.h"
 #include "LabelType.h"
 #include "SharedPropertyDefinition.h"
 #include <QColor>
 #include <QJsonObject>
 #include <QObject>
-#include <QString>
 #include <memory>
 #include <set>
 
 class FileModel;
 class Label;
-class LabelDefinition;
 class LabelProperty;
-
-class LabelCategory : public QObject {
-public:
-    /// parent definition
-    LabelDefinition *definition;
-
-    /// id of the category
-	int value;
-
-    /// human readable name
-	QString name;
-	
-    /// color
-	QColor color;
-
-    static QColor GetStandardColor(int index);
-};
 
 class LabelDefinition : public QObject
 {

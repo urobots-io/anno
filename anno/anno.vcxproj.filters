@@ -465,6 +465,9 @@
     <ClCompile Include="ImagePropertiesWidget.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="LabelCategory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -655,6 +658,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_ImagePropertiesWidget.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelCategory.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

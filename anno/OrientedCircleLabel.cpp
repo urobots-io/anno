@@ -29,17 +29,17 @@ OrientedCircleLabel::OrientedCircleLabel(const WorldInfo *wi)
 }
 
 void OrientedCircleLabel::InitStamp() {
-    if (!category_) {
+    auto def = GetDefinition();    
+    if (!def) {
         return;
     }
-    auto jrad = category_->definition->stamp_parameters["radius"];    
+
+    auto jrad = def->stamp_parameters["radius"];    
     double radius = jrad.isDouble() ? jrad.toDouble() : default_dimension_;
 
-    auto jangle = category_->definition->stamp_parameters["angle"];
+    auto jangle = def->stamp_parameters["angle"];
     double angle = jangle.isDouble() ? jangle.toDouble() : 0;
 
-    assert(category_);
-    auto def = category_->definition;
     radius_.set(def->GetSharedPropertyValue("radius", radius));
     radius_.set(def->GetSharedPropertyValue("angle", angle));
 
@@ -47,14 +47,16 @@ void OrientedCircleLabel::InitStamp() {
     handles_[1]->SetPosition(QPointF(radius, 0), false);
 }
 
-
 void OrientedCircleLabel::OnNewDefinition() {
     UpdateHandlesPositions();
 }
 
 void OrientedCircleLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
-    assert(category_);
-    auto def = category_->definition;
+    auto def = GetDefinition();    
+    if (!def) {
+        return;
+    }
+    
     if (connect) {
         def->ConnectProperty(angle_, "angle", inject_my_values);
         def->ConnectProperty(radius_, "radius", inject_my_values);
@@ -171,7 +173,8 @@ void OrientedCircleLabel::HandlePositionChanged(LabelHandle* h, const QPointF & 
 }
 
 void OrientedCircleLabel::UpdateHandlesPositions() {
-    if (!category_ || handles_.empty())
+    auto def = GetDefinition();
+    if (!def || handles_.empty())
         return;
 
     auto h = handles_.front();
@@ -180,7 +183,7 @@ void OrientedCircleLabel::UpdateHandlesPositions() {
     QTransform t;
     t.rotate(geometry::Rad2Deg(angle_.get()));
     
-    const auto &axis_array = category_->definition->axis_length;
+    const auto &axis_array = def->axis_length;
     int axis_x = axis_array.size() > 0 ? axis_array[0] : axis_length;
     int axis_y = axis_array.size() > 1 ? axis_array[1] : axis_length;
 

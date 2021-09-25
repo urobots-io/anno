@@ -241,8 +241,12 @@ void DesktopWidget::set_category_for_creation(std::shared_ptr<LabelCategory> val
 
     stamp_label_.reset();
 
-    if (category_for_creation_ && category_for_creation_->definition->is_stamp) {
-        CreateStampLabel();
+    if (category_for_creation_) {
+        if (auto def = category_for_creation_->GetDefinition()) {
+            if (def->is_stamp) {
+                CreateStampLabel();
+            }
+        }        
     }
 
     if (cursor_mode_ == CursorMode::creation_start) {
@@ -279,16 +283,19 @@ void DesktopWidget::set_is_creation_mode(bool value) {
 }
 
 void DesktopWidget::CreateStampLabel() {
-    if (!category_for_creation_ || !category_for_creation_->definition)
+    if (!category_for_creation_)
         return;
 
-    auto def = category_for_creation_->definition;
+    auto def = category_for_creation_->GetDefinition();
+    if (!def)
+        return;
+
     if (def->is_shared()) {
         auto missing_shared_indexes = def->GetMissingIndexes(model_->GetExistingSharedIndexes(def));
         if (missing_shared_indexes.size()) {
             // create stamp for first missing index
             if (auto label = LabelFactory::CreateLabel(def->value_type)) {
-                label->SetCategory(category_for_creation_.get());
+                label->SetCategory(category_for_creation_);
                 label->InitStamp();
                 label->SetSharedLabelIndex(-1);
                 stamp_label_ = label;
@@ -297,7 +304,7 @@ void DesktopWidget::CreateStampLabel() {
     }
     else {
         if (auto label = LabelFactory::CreateLabel(def->value_type)) {
-            label->SetCategory(category_for_creation_.get());
+            label->SetCategory(category_for_creation_);
             label->InitStamp();
             stamp_label_ = label;
         }
@@ -386,24 +393,25 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
         }
 
         if (cursor_mode_ == CursorMode::creation_start && stamp_label_.get() && file_.get()) {
-            auto def = stamp_label_->GetCategory()->definition;
-            if (def->is_shared()) {
-                // check if stamp label can be placed
-                if (stamp_label_->GetSharedLabelIndex() == -1) {
-                    auto missing_shared_indexes = def->GetMissingIndexes(model_->GetExistingSharedIndexes(def));
-                    for (auto index : missing_shared_indexes) {
-                        if (def->AllowedForFile(file_.get(), index)) {
-                            stamp_label_->SetSharedLabelIndex(index);
-                            break;
+            if (auto def = stamp_label_->GetDefinition()) {
+                if (def->is_shared()) {
+                    // check if stamp label can be placed
+                    if (stamp_label_->GetSharedLabelIndex() == -1) {
+                        auto missing_shared_indexes = def->GetMissingIndexes(model_->GetExistingSharedIndexes(def));
+                        for (auto index : missing_shared_indexes) {
+                            if (def->AllowedForFile(file_.get(), index)) {
+                                stamp_label_->SetSharedLabelIndex(index);
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            if (!def->is_shared() || stamp_label_->GetSharedLabelIndex() != -1) {
-                xp.Info().is_selected = true;
-                stamp_label_->CenterTo(mouse_pos_, geometry::Deg2Rad(mouse_angle_));
-                xp.RenderLabel(js_engine_, stamp_label_.get());
+                if (!def->is_shared() || stamp_label_->GetSharedLabelIndex() != -1) {
+                    xp.Info().is_selected = true;
+                    stamp_label_->CenterTo(mouse_pos_, geometry::Deg2Rad(mouse_angle_));
+                    xp.RenderLabel(js_engine_, stamp_label_.get());
+                }
             }
         }
     }
@@ -513,10 +521,16 @@ void DesktopWidget::RenderCreationCross(QPainter & painter) {
         RenderCross(painter, is_creation_to_be_completed_ ? 10 : 20, selected_label_->GetCategory()->color);
     }
     else {
-        int size = std::max(width(), height());
+        if (!category_for_creation_) 
+            return;
 
+        auto def = category_for_creation_->GetDefinition();
+        if (!def)
+            return;
+
+        int size = std::max(width(), height());
         bool draw_with_angle = false;
-        switch (category_for_creation_->definition->value_type) {
+        switch (def->value_type) {
         default:
         case LabelType::circle:
         case LabelType::point:
@@ -662,41 +676,43 @@ void DesktopWidget::mousePressEvent(QMouseEvent *event) {
 
         case CursorMode::creation_start:
             if (stamp_label_.get()) {
-                auto def = stamp_label_->GetCategory()->definition;
-                if (def->is_shared()) {          
-                    auto index = stamp_label_->GetSharedLabelIndex();
-                    auto missing_shared_indexes = def->GetMissingIndexes(model_->GetExistingSharedIndexes(def));
-                    if (missing_shared_indexes.count(index) && def->AllowedForFile(file_.get(), index)) {
-                        // Create first instance of a shared label with this index in the project
-                        def->shared_labels[index]->CopyFrom(*stamp_label_.get());
-                        auto label = std::make_shared<ProxyLabel>(def->shared_labels[index]);
-                        label->SetSharedLabelIndex(index);
-                        label->ConnectSharedProperties(true, true);
-                        set_selected_label(file_->CreateLabel(std::shared_ptr<Label>(label)));
-                        missing_shared_indexes.erase(index);
-                    }  
+                if (auto def = stamp_label_->GetDefinition()) {
+                    if (def->is_shared()) {
+                        auto index = stamp_label_->GetSharedLabelIndex();
+                        auto missing_shared_indexes = def->GetMissingIndexes(model_->GetExistingSharedIndexes(def));
+                        if (missing_shared_indexes.count(index) && def->AllowedForFile(file_.get(), index)) {
+                            // Create first instance of a shared label with this index in the project
+                            def->shared_labels[index]->CopyFrom(*stamp_label_.get());
+                            auto label = std::make_shared<ProxyLabel>(def->shared_labels[index]);
+                            label->SetSharedLabelIndex(index);
+                            label->ConnectSharedProperties(true, true);
+                            set_selected_label(file_->CreateLabel(std::shared_ptr<Label>(label)));
+                            missing_shared_indexes.erase(index);
+                        }
 
-                    // Invalidate shared label index - label will be hidden,
-                    // if it is not possible to create any more shared labels for this
-                    // label.
-                    stamp_label_->SetSharedLabelIndex(-1);
+                        // Invalidate shared label index - label will be hidden,
+                        // if it is not possible to create any more shared labels for this
+                        // label.
+                        stamp_label_->SetSharedLabelIndex(-1);
+                    }
+                    else if (def->AllowedForFile(file_.get())) {
+                        auto stamp_clone = stamp_label_->Clone();
+                        stamp_clone->ConnectSharedProperties(true, true);
+                        set_selected_label(file_->CreateLabel(std::shared_ptr<Label>(stamp_clone)));
+                    }
                 }
-                else if (def->AllowedForFile(file_.get())) {
-                    auto stamp_clone = stamp_label_->Clone();
-                    stamp_clone->ConnectSharedProperties(true, true);
-                    set_selected_label(file_->CreateLabel(std::shared_ptr<Label>(stamp_clone)));
-                }                
             }
-            else if (category_for_creation_) {
-                auto wi = GetWorldInfo();
-                auto def = category_for_creation_->definition;
-                if (!def->is_shared() && def->AllowedForFile(file_.get())) {
-                    if (auto label = LabelFactory::CreateLabel(def->value_type, &wi)) {
-                        label->SetCategory(category_for_creation_.get());
-                        label->SetComputeVisualisationData(true);
-                        is_creation_to_be_completed_ = false;
-                        set_selected_label(file_->CreateLabel(label));
-                        SetCursorMode(CursorMode::creation_in_progress);
+            else if (category_for_creation_) {                
+                if (auto def = category_for_creation_->GetDefinition()) {
+                    auto wi = GetWorldInfo();
+                    if (!def->is_shared() && def->AllowedForFile(file_.get())) {
+                        if (auto label = LabelFactory::CreateLabel(def->value_type, &wi)) {
+                            label->SetCategory(category_for_creation_);
+                            label->SetComputeVisualisationData(true);
+                            is_creation_to_be_completed_ = false;
+                            set_selected_label(file_->CreateLabel(label));
+                            SetCursorMode(CursorMode::creation_in_progress);
+                        }
                     }
                 }
             }
@@ -966,12 +982,12 @@ void DesktopWidget::SetCategoryValueForSelectedLabel(int category_value) {
     if (!selected_label_)
         return;
 
-    auto def = selected_label_->GetCategory()->definition;
-    if (def->GetCategory(category_value)) {
-        file_->ModifyLabelCategory(selected_label_, category_value);
+    if (auto def = selected_label_->GetDefinition()) {
+        if (def->GetCategory(category_value)) {
+            file_->ModifyLabelCategory(selected_label_, category_value);
+        }
+        update();
     }
-
-    update();
 }
 
 void DesktopWidget::keyPressEvent(QKeyEvent * event) {
@@ -1031,9 +1047,10 @@ void DesktopWidget::focusOutEvent(QFocusEvent*) {
 void DesktopWidget::ChangeCurrentCategory(int category_value) {
     if (cursor_mode_ == CursorMode::creation_start && stamp_label_.get() && category_for_creation_) {
         // Change category for creation, it will also update stamp category
-        auto def = category_for_creation_->definition;
-        if (auto lci = def->GetCategory(category_value)) {
-            set_category_for_creation(lci);
+        if (auto def = category_for_creation_->GetDefinition()) {
+            if (auto lci = def->GetCategory(category_value)) {
+                set_category_for_creation(lci);
+            }
         }
     }
     else {

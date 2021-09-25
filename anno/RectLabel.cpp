@@ -50,18 +50,16 @@ RectLabel::RectLabel(const WorldInfo * wi)
 }
 
 void RectLabel::InitStamp() {
-    if (!category_) {
+    auto def = GetDefinition();
+    if (!def) {
         return;
     }
 
-    auto jw = category_->definition->stamp_parameters["width"];
-    auto jh = category_->definition->stamp_parameters["height"];
+    auto jw = def->stamp_parameters["width"];
+    auto jh = def->stamp_parameters["height"];
         
     double width = jw.isDouble() ? jw.toDouble() : default_dimension_;
     double height = jh.isDouble() ? jh.toDouble() : default_dimension_;
-
-    assert(category_);
-    auto def = category_->definition;
 
     width_.set(def->GetSharedPropertyValue("width", width));
     height_.set(def->GetSharedPropertyValue("height", height));
@@ -74,11 +72,11 @@ LabelProperty *RectLabel::GetProperty(QString property_name) {
 }
 
 void RectLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
-    assert(category_);
-    auto def = category_->definition;
     if (connect) {
-        def->ConnectProperty(width_, "width", inject_my_values);
-        def->ConnectProperty(height_, "height", inject_my_values);
+        if (auto def = GetDefinition()) {
+            def->ConnectProperty(width_, "width", inject_my_values);
+            def->ConnectProperty(height_, "height", inject_my_values);
+        }
     }
     else {
         width_.Disconnect();

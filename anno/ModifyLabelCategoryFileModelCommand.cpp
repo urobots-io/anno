@@ -23,8 +23,18 @@ void ModifyLabelCategoryFileModelCommand::redo() {
     file_->NotifyUpdate(label_);
 }
 
-void ModifyLabelCategoryFileModelCommand::ExchangeData() {
-    auto current_category = label_->GetCategory()->value;    
-    label_->SetCategory(label_->GetCategory()->definition->GetCategory(category_).get());
-    category_ = current_category;
+void ModifyLabelCategoryFileModelCommand::ExchangeData() {    
+    auto category = label_->GetCategory();
+    auto definition = label_->GetDefinition();
+    if (!category || !definition) {
+        return;
+    }
+    
+    auto new_category = definition->GetCategory(category_);
+    if (!new_category) {
+        return;
+    }
+
+    category_ = category->value;
+    label_->SetCategory(new_category);        
 }

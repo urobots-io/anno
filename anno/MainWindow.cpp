@@ -481,9 +481,13 @@ void MainWindow::OnDesktopWorldScaleChanged(double value) {
 }
 
 void MainWindow::OnToolboxDoubleClick(std::shared_ptr<LabelCategory> category) {
-    if (category && category->definition->is_shared()) {
-        if (auto file = ui.desktop->GetFile()) {
-            file->CreateDefaultSharedLabel(category.get());
+    if (category) {
+        if (auto def = category->GetDefinition()) {
+            if (def->is_shared()) {
+                if (auto file = ui.desktop->GetFile()) {
+                    file->CreateDefaultSharedLabel(category);
+                }
+            }
         }
     }
 }

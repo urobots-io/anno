@@ -44,10 +44,10 @@ public:
     std::shared_ptr<Label> GetHandleOwner(std::shared_ptr<LabelHandle> handle);
 
     /// Create label of the shared category
-    void CreateDefaultSharedLabel(LabelCategory * category);
+    void CreateDefaultSharedLabel(std::shared_ptr<LabelCategory> category);
     
     /// Return shared indexes which are present on this file
-    std::set<int> GetExistingSharedIndexes(LabelDefinition *def);
+    std::set<int> GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> def);
 
 public slots:
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified);

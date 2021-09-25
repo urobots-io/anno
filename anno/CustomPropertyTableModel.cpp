@@ -20,9 +20,13 @@ CustomPropertyTableModel::~CustomPropertyTableModel()
 }
 
 int CustomPropertyTableModel::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent)
-
-    return label_ ? int(label_->GetCategory()->definition->custom_properties.size()) : 0;
+    Q_UNUSED(parent);
+    if (label_) {
+        if (auto def = label_->GetDefinition()) {
+            return int(def->custom_properties.size());
+        }
+    }
+    return 0;
 }
 
 int CustomPropertyTableModel::columnCount(const QModelIndex &parent) const {
@@ -35,9 +39,11 @@ int CustomPropertyTableModel::columnCount(const QModelIndex &parent) const {
 CustomPropertyDefinition CustomPropertyTableModel::GetProperty(const QModelIndex &index) const {
     int row = index.row();
     if (label_ && row >= 0) {
-        auto &props_list = label_->GetCategory()->definition->custom_properties;
-        if (row < int(props_list.size())) {
-            return props_list[row];
+        if (auto def = label_->GetDefinition()) {
+            auto &props_list = def->custom_properties;
+            if (row < int(props_list.size())) {
+                return props_list[row];
+            }
         }
     }
     return {};
@@ -46,7 +52,10 @@ CustomPropertyDefinition CustomPropertyTableModel::GetProperty(const QModelIndex
 QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) const {
     if (!label_) return QVariant();
 
-    auto &props_list = label_->GetCategory()->definition->custom_properties;
+    auto def = label_->GetDefinition();
+    if (!def) return QVariant();
+
+    auto &props_list = def->custom_properties;
     int row = index.row();
     if (row >= int(props_list.size()))
         return QVariant();

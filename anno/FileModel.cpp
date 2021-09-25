@@ -34,8 +34,8 @@ void FileModel::Delete(std::shared_ptr<LabelDefinition> marker, std::shared_ptr<
     bool file_updated = false;
     for (auto i = labels_.begin(); i != labels_.end();) {
         auto label_category = (*i)->GetCategory();
-        auto label_marker = label_category->definition;
-        if ((category && label_category == category.get()) || (marker && label_marker == marker.get())) {
+        auto label_marker = label_category->GetDefinition();
+        if ((category && label_category == category) || (marker && label_marker == marker)) {
             file_updated = true;
             i = labels_.erase(i);
         }
@@ -116,13 +116,13 @@ std::shared_ptr<Label> FileModel::GetOwner(std::shared_ptr<Label> label) {
     if (!label)
         return nullptr;
 
-    auto def = label->GetCategory()->definition;
+    auto def = label->GetDefinition();
     if (!def->is_shared())
         return label;
 
     // find proxy of this label
     for (auto l : labels_) {
-        if (l->GetCategory()->definition == def && l->GetSharedLabelIndex() == label->GetSharedLabelIndex()) {
+        if (l->GetDefinition() == def && l->GetSharedLabelIndex() == label->GetSharedLabelIndex()) {
             return l;
         }
     }
@@ -139,29 +139,33 @@ std::shared_ptr<Label> FileModel::GetHandleOwner(std::shared_ptr<LabelHandle> ha
         return nullptr;
     }
 
-    auto def = label_ptr->GetCategory()->definition;
-    if (!def->is_shared()) {
-        // this is needed, because there is currently a mix between shared_ptr to Label everywhere
-        // and pointer to Label in Handle class.
-        for (auto l : labels_) {
-            if (l.get() == label_ptr) {
-                return l;
+    if (auto def = label_ptr->GetDefinition()) {
+        if (!def->is_shared()) {
+            // this is needed, because there is currently a mix between shared_ptr to Label everywhere
+            // and pointer to Label in Handle class.
+            for (auto l : labels_) {
+                if (l.get() == label_ptr) {
+                    return l;
+                }
             }
         }
-    }
 
-    // find proxy of this label
-    for (auto l : labels_) {
-        if (l->GetCategory()->definition == def && l->GetSharedLabelIndex() == label_ptr->GetSharedLabelIndex()) {
-            return l;
+        // find proxy of this label
+        for (auto l : labels_) {
+            if (l->GetDefinition() == def && l->GetSharedLabelIndex() == label_ptr->GetSharedLabelIndex()) {
+                return l;
+            }
         }
     }
 
     return{};
 }
 
-void FileModel::CreateDefaultSharedLabel(LabelCategory * category) {
-    auto def = category->definition;
+void FileModel::CreateDefaultSharedLabel(shared_ptr<LabelCategory> category) {
+    auto def = category->GetDefinition();
+    assert(def);
+    if (!def)
+        return;
 
     assert(def->is_shared());
     if (!def->is_shared())
@@ -182,13 +186,13 @@ void FileModel::CreateDefaultSharedLabel(LabelCategory * category) {
     }
 }
 
-set<int> FileModel::GetExistingSharedIndexes(LabelDefinition *def) {
+set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> def) {
     assert(def->is_shared());
 
     set<int> result;    
     if (def->is_shared()) {
         for (auto label : labels_) {
-            if (label->GetCategory()->definition == def) {
+            if (label->GetDefinition() == def) {
                 result.insert(label->GetSharedLabelIndex());
             }
         }

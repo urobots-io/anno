@@ -17,9 +17,9 @@ Label::~Label() {
     DeleteHandles();
 }
 
-void Label::SetCategory(LabelCategory *category) {
-    auto old_definition = category_ ? category_->definition : nullptr;
-    auto new_definition = category ? category->definition : nullptr;
+void Label::SetCategory(shared_ptr<LabelCategory> category) {
+    auto old_definition = category_ ? category_->GetDefinition() : nullptr;
+    auto new_definition = category ? category->GetDefinition() : nullptr;
 
     assert(category);
     category_ = category;
@@ -27,6 +27,21 @@ void Label::SetCategory(LabelCategory *category) {
     if (old_definition != new_definition) {
         OnNewDefinition();
     }
+}
+
+shared_ptr<LabelCategory> Label::GetCategory() const {
+    assert(category_);
+    return category_;
+}
+
+shared_ptr<LabelDefinition> Label::GetDefinition() const {
+    assert(category_);
+    if (category_) {
+        auto definition = category_->GetDefinition();
+        assert(definition);
+        return definition;
+    }
+    return {};
 }
 
 void Label::SetComputeVisualisationData(bool value) { 
@@ -78,18 +93,17 @@ void Label::FromStringsList(QStringList const & str) {
 	FromString(str[0], handles_);
 }
 
-LabelCategory* Label::GetCategory() const {
-    assert(category_);
-    return category_; 
-}
-
 void Label::SetText(const QString& text) {
 	text_ = text;
 }
 
 QPen Label::GetOutlinePen(const PaintInfo & pi) const {
+    auto def = GetDefinition();
+    if (!def)
+        return {};
+
 	QColor color(category_->color);
-	int line_width = category_->definition->line_width;
+	int line_width = def->line_width;
 	
 	auto style = Qt::SolidLine;
 

@@ -13,8 +13,11 @@ protected:
 public:	
 	virtual ~Label();
 
-    void SetCategory(LabelCategory *category);
-    LabelCategory* GetCategory() const;
+    void SetCategory(std::shared_ptr<LabelCategory> category);
+    std::shared_ptr<LabelCategory> GetCategory() const;
+
+    /// Returns definition of the category, helper function
+    std::shared_ptr<LabelDefinition> GetDefinition() const;
 
     /// Create geometry for stamp label
     virtual void InitStamp() {}
@@ -139,7 +142,7 @@ protected:
 	std::vector<std::shared_ptr<LabelHandle>> handles_;
 
 	/// label category
-	LabelCategory* category_ = nullptr;
+	std::shared_ptr<LabelCategory> category_;
 
     /// additional label information, editable by the user
 	QString text_;

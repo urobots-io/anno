@@ -106,21 +106,23 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
             }
 
             bool value_valid = true;
-            for (auto c : category->definition->categories) {
-                if (c->value == value) {
-                    messagebox::Critical(tr("Value %0 is already used by category %1").arg(value).arg(c->name));
-                    value_valid = false;
+            if (auto def = category->GetDefinition()) {
+                for (auto c : def->categories) {
+                    if (c->value == value) {
+                        messagebox::Critical(tr("Value %0 is already used by category %1").arg(value).arg(c->name));
+                        value_valid = false;
+                        break;
+                    }
+                }
+
+                if (value_valid) {
+                    category->value = value;
+                    emit def->Changed();
+                    if (category_) {
+                        UpdateCategoryData();
+                    }
                     break;
                 }
-            }
-
-            if (value_valid) {
-                category->value = value;
-                emit category->definition->Changed();
-                if (category_) {
-                    UpdateCategoryData();
-                }
-                break;
             }
         }
     }
@@ -131,7 +133,9 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryColor() {
         auto color = QColorDialog::getColor(category->color, this, tr("Caregory Color"));
         if (color.isValid()) {
             category->color = color;
-            emit category->definition->Changed();
+            if (auto def = category->GetDefinition()) {
+                emit def->Changed();
+            }
             if (category_) {
                 UpdateCategoryData();
             }

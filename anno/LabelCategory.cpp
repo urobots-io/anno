@@ -1,7 +1,9 @@
 #include "LabelCategory.h"
 
-LabelCategory::LabelCategory(LabelDefinition* definition, int value, const QString & name, const QColor & color)
-    : definition(definition)
+using namespace std;
+
+LabelCategory::LabelCategory(shared_ptr<LabelDefinition> definition, int value, const QString & name, const QColor & color)
+    : definition_(definition)
     , value(value)
     , name(name)
     , color(color)

@@ -12,11 +12,10 @@ class LabelDefinition;
 
 class LabelCategory : public QObject {
 public:
-    LabelCategory(LabelDefinition* definition, int value, const QString & name, const QColor & color);
-        
-    /// parent definition
-    LabelDefinition* definition;
+    LabelCategory(std::shared_ptr<LabelDefinition> definition, int value, const QString & name, const QColor & color);
 
+    std::shared_ptr<LabelDefinition> GetDefinition() const { return definition_.lock(); };
+            
     /// id of the category
     int value;
 
@@ -27,4 +26,8 @@ public:
     QColor color;
 
     static QColor GetStandardColor(int index);
+
+private:
+    /// parent definition
+    std::weak_ptr<LabelDefinition> definition_;
 };

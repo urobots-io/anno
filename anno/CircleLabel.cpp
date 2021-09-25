@@ -20,15 +20,14 @@ CircleLabel::CircleLabel(const WorldInfo * wi)
 }
 
 void CircleLabel::InitStamp() {  
-    if (!category_) {
+    auto def = GetDefinition();
+    if (!def) {
         return;
     }
 
-    auto jval = category_->definition->stamp_parameters["radius"];
+    auto jval = def->stamp_parameters["radius"];
     double radius = jval.isDouble() ? jval.toDouble() : default_dimension_;
 
-    assert(category_);
-    auto def = category_->definition;
     radius_.set(def->GetSharedPropertyValue("radius", radius));
     
     handles_[0]->SetPosition(QPointF(0, 0), false);
@@ -36,10 +35,10 @@ void CircleLabel::InitStamp() {
 }
 
 void CircleLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
-    assert(category_);
-    auto def = category_->definition;
     if (connect) {
-        def->ConnectProperty(radius_, "radius", inject_my_values);
+        if (auto def = GetDefinition()) {
+            def->ConnectProperty(radius_, "radius", inject_my_values);
+        }
     }
     else {        
         radius_.Disconnect();

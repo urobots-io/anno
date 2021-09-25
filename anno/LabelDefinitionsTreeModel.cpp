@@ -172,7 +172,7 @@ QModelIndex LabelDefinitionsTreeModel::parent(const QModelIndex & index) const {
         }
 
         if (auto category = dynamic_cast<LabelCategory*>(internal_pointer)) {
-            return GetIndex(category->definition);
+            return GetIndex(category->GetDefinition().get());
         }
     }
     return QModelIndex();
@@ -222,7 +222,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     def->type_name = name;    
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
-    auto cat = std::make_shared<LabelCategory>(def.get(), 0, "Category 0", Qt::red);
+    auto cat = std::make_shared<LabelCategory>(def, 0, "Category 0", Qt::red);
     def->categories.push_back(cat);
     
     int pos = int(definitions_.size()) + 1;
@@ -246,7 +246,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
         value = std::max(value, c->value + 1);
     }
 
-    auto cat = std::make_shared<LabelCategory>(def.get(), 
+    auto cat = std::make_shared<LabelCategory>(def, 
         value, 
         QString("Category %0").arg(value), 
         LabelCategory::GetStandardColor(value));
@@ -280,7 +280,7 @@ void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelDefinition> marker) 
 }
 
 void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelCategory> category) {
-    auto marker = category->definition;
+    auto marker = category->GetDefinition().get();
     auto parent = GetIndex(marker);
     if (!parent.isValid()) {
         return;

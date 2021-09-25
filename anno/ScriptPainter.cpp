@@ -49,16 +49,17 @@ SharedPropertyDefinitionGadget ScriptPainter::PropertyDefinition(QString propert
 }
 
 void ScriptPainter::RenderLabel(QJSEngine & engine, Label *label) {
-    auto cat = label->GetCategory();
-	auto script = cat->definition->get_rendering_script();
+    auto definition = label->GetDefinition();
+	auto script = definition ? definition->get_rendering_script() : QString();
     if (!script.isEmpty()) {
         this->label = label;
 
+        auto cat = label->GetCategory();
         engine.globalObject().setProperty("text", label->GetText());
         engine.globalObject().setProperty("shared_index", label->GetSharedLabelIndex());
         engine.globalObject().setProperty("category", cat->value);
         engine.globalObject().setProperty("category_name", cat->name);
-        engine.globalObject().setProperty("marker_type", cat->definition->type_name);
+        engine.globalObject().setProperty("marker_type", definition->type_name);
 
         auto result = engine.evaluate(script);
         if (result.isError()) {

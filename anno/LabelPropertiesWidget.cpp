@@ -75,7 +75,9 @@ void LabelPropertiesWidget::OnSelectedLabelChanged(std::shared_ptr<FileModel> fi
     }
     else {
         auto cat = label->GetCategory();
-        ui.type_name_lineEdit->setText(cat->definition->type_name);
+        if (auto def = cat->GetDefinition()) {
+            ui.type_name_lineEdit->setText(def->type_name);
+        }
         ui.category_lineEdit->setText(cat->name);
         ui.text_lineEdit->setText(label->GetText());
 

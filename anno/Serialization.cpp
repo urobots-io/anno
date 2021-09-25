@@ -121,7 +121,7 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
     for (int i = 0; i < categories.size(); ++i) {
         auto json = categories[i].toObject();
         auto value = json[K_CATEGORY_ID].toInt();
-        auto category = std::make_shared<LabelCategory>(def.get(),
+        auto category = std::make_shared<LabelCategory>(def,
             value,
             json[K_CATEGORY_NAME].toString(),
             LabelCategory::GetStandardColor(value));
@@ -148,7 +148,7 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
             shared_label->SetSharedLabelIndex(i);
 
             // use first category
-            shared_label->SetCategory(def->categories[0].get());
+            shared_label->SetCategory(def->categories[0]);
 
             // connect to the database
             shared_label->ConnectSharedProperties(true, false);

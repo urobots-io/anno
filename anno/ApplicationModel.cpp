@@ -154,7 +154,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
     for (auto & file : file_models_) {
         for (auto & label : file.second->labels_) {
             auto old_category = label->GetCategory();
-            auto old_definition = old_category->definition;
+            auto old_definition = old_category->GetDefinition();
 
             auto new_definition = std::find_if(definitions.begin(), definitions.end(),
                 [&](std::shared_ptr<LabelDefinition> & def) {
@@ -227,7 +227,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
 
     // apply new labels
     for (auto a : assignments) {
-        a.first->SetCategory(a.second.get());
+        a.first->SetCategory(a.second);
     }
 
     // reconnect all labels to the database
@@ -343,7 +343,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             }
         
             label->SetText(marker[K_MARKER_TEXT].toString(""));
-            label->SetCategory(definition->GetCategory(category).get());
+            label->SetCategory(definition->GetCategory(category));
             label->ConnectSharedProperties(true, false);
 
             if (marker.contains(K_MARKER_CUSTOM_PROPERTIES)) {
@@ -433,7 +433,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
         for (auto label : i.second->labels_) {
             QJsonObject marker;
             marker.insert(K_MARKER_CATEGORY, QJsonValue::fromVariant(label->GetCategory()->value));
-            marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetCategory()->definition->type_name));
+            marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetDefinition()->type_name));
 
             // Save text only if not empty
             auto text = label->GetText();
@@ -635,7 +635,7 @@ void ApplicationModel::OnFileModifiedChanged(bool value) {
     }
 }
 
-std::set<int> ApplicationModel::GetExistingSharedIndexes(LabelDefinition *def) {
+std::set<int> ApplicationModel::GetExistingSharedIndexes(shared_ptr<LabelDefinition> def) {
     std::set<int> result;
     for (auto i : file_models_) {
         auto file_set = i.second->GetExistingSharedIndexes(def);

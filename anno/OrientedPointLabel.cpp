@@ -27,9 +27,10 @@ void OrientedPointLabel::OnNewDefinition() {
 }
 
 void OrientedPointLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
-    assert(category_);
     if (connect) {
-        category_->definition->ConnectProperty(angle_, "angle", inject_my_values);
+        if (auto def = GetDefinition()) {
+            def->ConnectProperty(angle_, "angle", inject_my_values);
+        }
     }
     else {
         angle_.Disconnect();
@@ -102,7 +103,8 @@ void OrientedPointLabel::HandlePositionChanged(LabelHandle* h, const QPointF & o
 }
 
 void OrientedPointLabel::UpdateHandlesPositions() {
-    if (!category_ || handles_.empty())
+    auto def = GetDefinition();
+    if (!def || handles_.empty())
         return;
 
     auto h = handles_.front();
@@ -111,7 +113,7 @@ void OrientedPointLabel::UpdateHandlesPositions() {
     QTransform t;
     t.rotate(geometry::Rad2Deg(angle_.get()));
     
-    const auto &axis_array = category_->definition->axis_length;
+    const auto &axis_array = def->axis_length;
     int axis_x = axis_array.size() > 0 ? axis_array[0] : axis_length;
     int axis_y = axis_array.size() > 1 ? axis_array[1] : axis_length;
 

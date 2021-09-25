@@ -35,6 +35,6 @@ void ModifyLabelCategoryFileModelCommand::ExchangeData() {
         return;
     }
 
-    category_ = category->value;
+    category_ = category->get_value();
     label_->SetCategory(new_category);        
 }

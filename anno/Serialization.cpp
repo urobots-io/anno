@@ -121,16 +121,18 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
     for (int i = 0; i < categories.size(); ++i) {
         auto json = categories[i].toObject();
         auto value = json[K_CATEGORY_ID].toInt();
-        auto category = std::make_shared<LabelCategory>(def,
+        auto category = LabelDefinition::CreateCategory(
+            def,
             value,
             json[K_CATEGORY_NAME].toString(),
             LabelCategory::GetStandardColor(value));
         
         auto jcolor = json[K_CATEGORY_COLOR];
-        if (!jcolor.isNull())
-            category->color.setNamedColor(jcolor.toString());
-
-        def->categories.push_back(category);
+        if (!jcolor.isNull()) {
+            QColor color;
+            color.setNamedColor(jcolor.toString());
+            category->set_color(color);
+        }       
     }
 
     if (categories.size()) {
@@ -176,10 +178,9 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
 
     for (auto c : def->categories) {
         QJsonObject json;
-        json.insert(K_CATEGORY_NAME, c->name);
-        json.insert(K_CATEGORY_ID, c->value);
-        json.insert(K_CATEGORY_COLOR, c->color.name());
-
+        json.insert(K_CATEGORY_NAME, c->get_name());
+        json.insert(K_CATEGORY_ID, c->get_value());
+        json.insert(K_CATEGORY_COLOR, c->get_color().name());
         categories.push_back(json);
     }
 

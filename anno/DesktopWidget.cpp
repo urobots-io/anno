@@ -502,14 +502,14 @@ void DesktopWidget::RenderHoveredHandle(QPainter & painter) {
     auto color = QColor(Qt::white);
     if (file_ && hovered_handle_) {
         if (auto label = file_->GetHandleOwner(hovered_handle_)) {
-            color = label->GetCategory()->color;
+            color = label->GetCategory()->get_color();
         }
     }
     RenderCross(painter, 15, color);
 }
 
 void DesktopWidget::RenderMovingCross(QPainter & painter) {
-    RenderCross(painter, 15, selected_label_ ? selected_label_->GetCategory()->color : QColor(Qt::white));
+    RenderCross(painter, 15, selected_label_ ? selected_label_->GetCategory()->get_color() : QColor(Qt::white));
 }
 
 void DesktopWidget::RenderSelectCross(QPainter & painter) {
@@ -518,7 +518,7 @@ void DesktopWidget::RenderSelectCross(QPainter & painter) {
 
 void DesktopWidget::RenderCreationCross(QPainter & painter) {
     if (cursor_mode_ == CursorMode::creation_in_progress) {
-        RenderCross(painter, is_creation_to_be_completed_ ? 10 : 20, selected_label_->GetCategory()->color);
+        RenderCross(painter, is_creation_to_be_completed_ ? 10 : 20, selected_label_->GetCategory()->get_color());
     }
     else {
         if (!category_for_creation_) 
@@ -549,7 +549,7 @@ void DesktopWidget::RenderCreationCross(QPainter & painter) {
         if (draw_with_angle)
             painter.setTransform(QTransform().rotate(mouse_angle_), true);
 
-        RenderCross(painter, size, category_for_creation_->color);
+        RenderCross(painter, size, category_for_creation_->get_color());
 
         if (draw_with_angle) {
             QPen pen(Qt::SolidLine);

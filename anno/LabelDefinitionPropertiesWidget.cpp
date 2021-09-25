@@ -50,10 +50,9 @@ void LabelDefinitionPropertiesWidget::OnRenderingScriptTextChanged() {
 
 void LabelDefinitionPropertiesWidget::UpdateCategoryData() {
     QPixmap pixmap(10, 10);
-    pixmap.fill(category_->color);
+    pixmap.fill(category_->get_color());
     ui.category_color_label->setPixmap(pixmap);
-
-    ui.category_value_lineEdit->setText(QString("%0").arg(category_->value));
+    ui.category_value_lineEdit->setText(QString("%0").arg(category_->get_value()));
 }
 
 void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> def, std::shared_ptr<LabelCategory> category) {
@@ -92,7 +91,7 @@ void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> de
 
 void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
     if (auto category = category_) {
-        auto value = category->value;
+        auto value = category->get_value();
         while (true) {
             bool ok;
             value = QInputDialog::getInt(
@@ -101,22 +100,24 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
                 value,
                 -99999, 99999, 1, &ok);
 
-            if (!ok || value == category->value) {
+            if (!ok || value == category->get_value()) {
                 return;
             }
 
             bool value_valid = true;
             if (auto def = category->GetDefinition()) {
                 for (auto c : def->categories) {
-                    if (c->value == value) {
-                        messagebox::Critical(tr("Value %0 is already used by category %1").arg(value).arg(c->name));
+                    if (c->get_value() == value) {
+                        messagebox::Critical(tr("Value %0 is already used by category %1")
+                            .arg(value)
+                            .arg(c->get_name()));
                         value_valid = false;
                         break;
                     }
                 }
 
                 if (value_valid) {
-                    category->value = value;
+                    category->set_value(value);
                     emit def->Changed();
                     if (category_) {
                         UpdateCategoryData();
@@ -130,9 +131,9 @@ void LabelDefinitionPropertiesWidget::OnChangeCategoryValue() {
 
 void LabelDefinitionPropertiesWidget::OnChangeCategoryColor() {
     if (auto category = category_) {
-        auto color = QColorDialog::getColor(category->color, this, tr("Caregory Color"));
+        auto color = QColorDialog::getColor(category->get_color(), this, tr("Category Color"));
         if (color.isValid()) {
-            category->color = color;
+            category->set_color(color);
             if (auto def = category->GetDefinition()) {
                 emit def->Changed();
             }

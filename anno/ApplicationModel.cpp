@@ -166,9 +166,9 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
                 break;
             }
 
-            if (!(*new_definition)->GetCategory(old_category->value)) {
+            if (!(*new_definition)->GetCategory(old_category->get_value())) {
                 errors << tr("Missing category \"%0\" of definition: \"%1\"")
-                    .arg(old_category->value)
+                    .arg(old_category->get_value())
                     .arg(old_definition->type_name);
                 break;
             }
@@ -217,7 +217,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
                 }
             }
 
-            assignments[label.get()] = (*new_definition)->GetCategory(old_category->value);
+            assignments[label.get()] = (*new_definition)->GetCategory(old_category->get_value());
         }
     }
 
@@ -432,7 +432,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
         QJsonArray file_markers;
         for (auto label : i.second->labels_) {
             QJsonObject marker;
-            marker.insert(K_MARKER_CATEGORY, QJsonValue::fromVariant(label->GetCategory()->value));
+            marker.insert(K_MARKER_CATEGORY, QJsonValue::fromVariant(label->GetCategory()->get_value()));
             marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetDefinition()->type_name));
 
             // Save text only if not empty

@@ -67,14 +67,14 @@ QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) co
 
     auto item = GetItem(index);
     if (role == Qt::DisplayRole) {
-        if (item.second) return item.second->name;
+        if (item.second) return item.second->get_name();
         else if (item.first) {
             return item.first->type_name;
         }
         else return tr("Select");
     }
     else if (role == Qt::EditRole) {
-        if (item.second) return item.second->name;
+        if (item.second) return item.second->get_name();
         else if (item.first) return item.first->type_name;
         else return QString();
     }
@@ -82,7 +82,7 @@ QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) co
         if (item.second) {
             int size = 14;
             QPixmap pixmap(size, size);
-            pixmap.fill(item.second->color);
+            pixmap.fill(item.second->get_color());
             return pixmap;
         }
         else if (!item.first) {
@@ -97,7 +97,7 @@ bool LabelDefinitionsTreeModel::setData(const QModelIndex &index, const QVariant
 
     if (role == Qt::EditRole) {
         if (item.second) {
-            item.second->name = value.toString();
+            item.second->set_name(value.toString());
             DefinitionChanged();
             return true;
         }
@@ -222,9 +222,8 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     def->type_name = name;    
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
-    auto cat = std::make_shared<LabelCategory>(def, 0, "Category 0", Qt::red);
-    def->categories.push_back(cat);
-    
+    LabelDefinition::CreateCategory(def, 0, "Category 0", Qt::red);
+        
     int pos = int(definitions_.size()) + 1;
     beginInsertRows(QModelIndex(), pos, pos);    
     definitions_.push_back(def);    
@@ -243,17 +242,16 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
 
     int value = 0;
     for (auto c : def->categories) {
-        value = std::max(value, c->value + 1);
+        value = std::max(value, c->get_value() + 1);
     }
 
-    auto cat = std::make_shared<LabelCategory>(def, 
-        value, 
-        QString("Category %0").arg(value), 
-        LabelCategory::GetStandardColor(value));
-    
     int pos = int(def->categories.size());
     beginInsertRows(index, pos, pos);
-    def->categories.push_back(cat);
+    auto cat = LabelDefinition::CreateCategory(
+        def,
+        value,
+        QString("Category %0").arg(value),
+        LabelCategory::GetStandardColor(value));
     endInsertRows();
 
     emit Changed();

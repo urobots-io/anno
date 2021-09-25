@@ -19,9 +19,15 @@ LabelDefinition::LabelDefinition(LabelType type, QObject *parent)
 LabelDefinition::~LabelDefinition() {
 }
 
+std::shared_ptr<LabelCategory> LabelDefinition::CreateCategory(std::shared_ptr<LabelDefinition> definition, int value, const QString & name, const QColor & color) {
+    auto cat = shared_ptr<LabelCategory>(new LabelCategory(definition, value, name, color));
+    definition->categories.push_back(cat);
+    return cat;
+}
+
 std::shared_ptr<LabelCategory> LabelDefinition::GetCategory(int value) const {
     for (auto c : categories) {
-        if (c->value == value) {
+        if (c->get_value() == value) {
             return c;
         }
     }

@@ -58,7 +58,7 @@ void ToolLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions* pf) {
 
 QPen ToolLabel::GetHelperPen(const PaintInfo & pi) const {
     Q_UNUSED(pi)
-    QColor color(category_->color);    
+    auto color = category_->get_color();
     auto style = Qt::DotLine;
     QPen pen(style);
     pen.setColor(color);
@@ -79,7 +79,7 @@ void ToolLabel::Paint2(const PaintInfo & pi, PaintExtraFunctions* pf) {
 
     auto v = (p1 - p0);
     auto distance = sqrt(v.x() * v.x() + v.y() * v.y());
-    pf->AddHint(QString("%0 px").arg(distance), (p0 + p1) * 0.5, category_->color);
+    pf->AddHint(QString("%0 px").arg(distance), (p0 + p1) * 0.5, category_->get_color());
 }
 
 void ToolLabel::Paint3(const PaintInfo & pi, PaintExtraFunctions* pf) {
@@ -95,7 +95,7 @@ void ToolLabel::Paint3(const PaintInfo & pi, PaintExtraFunctions* pf) {
     pi.painter->drawLine(line1);
 
     auto angle = FixAngle(line0.angleTo(line1));
-    pf->AddHint(QString("%0%1").arg(angle).arg(QChar(176)), p1, category_->color);
+    pf->AddHint(QString("%0%1").arg(angle).arg(QChar(176)), p1, category_->get_color());
 }
 
 void ToolLabel::Paint4(const PaintInfo & pi, PaintExtraFunctions* pf) {
@@ -128,7 +128,7 @@ void ToolLabel::Paint4(const PaintInfo & pi, PaintExtraFunctions* pf) {
 
     if (intersection != QLineF::NoIntersection) {
         auto angle = FixAngle(line0.angleTo(line1));
-        pf->AddHint(QString("%0%1").arg(angle).arg(QChar(176)), point, category_->color);
+        pf->AddHint(QString("%0%1").arg(angle).arg(QChar(176)), point, category_->get_color());
     }
 }
 

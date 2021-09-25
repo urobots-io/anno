@@ -52,7 +52,7 @@ void PolygonLabel::OnPaint(const PaintInfo & pi, PaintExtraFunctions*) {
 	if (triangles_.size()) {
 		pi.painter->setPen(Qt::transparent);
 		
-		auto color = category_->color;
+		auto color = category_->get_color();
 		color.setAlpha(50);
 		pi.painter->setBrush(QBrush(color));
 

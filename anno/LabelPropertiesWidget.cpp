@@ -78,7 +78,7 @@ void LabelPropertiesWidget::OnSelectedLabelChanged(std::shared_ptr<FileModel> fi
         if (auto def = cat->GetDefinition()) {
             ui.type_name_lineEdit->setText(def->type_name);
         }
-        ui.category_lineEdit->setText(cat->name);
+        ui.category_lineEdit->setText(cat->get_name());
         ui.text_lineEdit->setText(label->GetText());
 
         if (label->IsProxyLabel()) {

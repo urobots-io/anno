@@ -22,6 +22,8 @@ public:
     LabelDefinition(LabelType type, QObject *parent = nullptr);
     ~LabelDefinition();
 
+    static std::shared_ptr<LabelCategory> CreateCategory(std::shared_ptr<LabelDefinition>, int value, const QString & name, const QColor & color);
+
     /// type name (key in the file)
     QString type_name;
 

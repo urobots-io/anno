@@ -12,6 +12,8 @@ class LabelDefinition;
 
 class LabelCategory : public QObject {
 public:
+    LabelCategory(LabelDefinition* definition, int value, const QString & name, const QColor & color);
+        
     /// parent definition
     LabelDefinition* definition;
 

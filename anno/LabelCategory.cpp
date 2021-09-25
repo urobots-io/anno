@@ -1,5 +1,13 @@
 #include "LabelCategory.h"
 
+LabelCategory::LabelCategory(LabelDefinition* definition, int value, const QString & name, const QColor & color)
+    : definition(definition)
+    , value(value)
+    , name(name)
+    , color(color)
+{
+}
+
 QColor LabelCategory::GetStandardColor(int index) {
     switch (index % 10) {
     default:

@@ -222,13 +222,9 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     def->type_name = name;    
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
-    auto cat = std::make_shared<LabelCategory>();
+    auto cat = std::make_shared<LabelCategory>(def.get(), 0, "Category 0", Qt::red);
     def->categories.push_back(cat);
-    cat->color = Qt::red;
-    cat->name = "Category 0";
-    cat->value = 0;
-    cat->definition = def.get();    
-
+    
     int pos = int(definitions_.size()) + 1;
     beginInsertRows(QModelIndex(), pos, pos);    
     definitions_.push_back(def);    
@@ -250,12 +246,11 @@ QModelIndex LabelDefinitionsTreeModel::CreateCategory(const QModelIndex & index)
         value = std::max(value, c->value + 1);
     }
 
-    auto cat = std::make_shared<LabelCategory>();
-    cat->color = LabelCategory::GetStandardColor(value);
-    cat->name = QString("Category %0").arg(value);
-    cat->value = value;
-    cat->definition = def.get();    
-
+    auto cat = std::make_shared<LabelCategory>(def.get(), 
+        value, 
+        QString("Category %0").arg(value), 
+        LabelCategory::GetStandardColor(value));
+    
     int pos = int(def->categories.size());
     beginInsertRows(index, pos, pos);
     def->categories.push_back(cat);

@@ -31,7 +31,7 @@ SOURCES += \
     CustomPropertyTableItemDelegate.cpp CustomPropertyTableModel.cpp DeleteAllLabelsFileModelCommand.cpp \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
     FileTreeElement.cpp \
-    ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
+    ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelCategory.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
     ImagePropertiesTableModel.cpp \
     ImagePropertiesWidget.cpp \
     LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
@@ -55,7 +55,7 @@ HEADERS += \
     DeleteAllLabelsFileModelCommand.h DeleteLabelFileModelCommand.h Desktop3dWindow.h DesktopWidget.h ElidedLabelWidget.h ErrorsListDialog.h \
     FileModel.h FilesystemInterface.h FileTreeItemInfo.h geometry.h Highlighter.h ImageConverter.h ImageData.h ImageLoader.h \
     FileTreeElement.h \
-    ImageModel.h ImageSettingsWidget.h implement_q_property.h Label.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
+    ImageModel.h ImageSettingsWidget.h implement_q_property.h Label.h LabelCategory.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
     LabelDefinitionsTreeModel.h LabelFactory.h LabelHandle.h LabelPropertiesWidget.h LabelType.h LocalFilesystem.h \
     MainWindow.h messagebox.h ModifyLabelCategoryFileModelCommand.h ModifyLabelGeometryFileModelCommand.h \
     ModifyLabelTextFileModelCommand.h OrientedCircleLabel.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \

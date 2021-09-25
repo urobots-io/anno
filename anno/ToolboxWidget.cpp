@@ -88,7 +88,7 @@ void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelInd
     auto cat = definitions_->GetCategory(index);
 #ifdef _DEBUG
     if (def) qDebug(QString("Selected Type %0").arg(def->type_name).toLatin1());
-    if (cat) qDebug(QString("Selected Category %0").arg(cat->name).toLatin1());
+    if (cat) qDebug(QString("Selected Category %0").arg(cat->get_name()).toLatin1());
 #endif
     emit SelectionChanged(def, cat);
 }

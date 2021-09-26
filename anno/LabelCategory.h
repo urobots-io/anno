@@ -1,4 +1,5 @@
 #include "implement_q_property.h"
+#include <QColor>
 #include <QObject>
 #include <QString>
 #include <memory>

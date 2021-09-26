@@ -1,6 +1,6 @@
 #include "triangulate.h"
 #include <math.h>
-
+#include <memory.h>
 
 node_t qs[QSIZE];		/* Query structure */
 trap_t tr[TRSIZE];		/* Trapezoid structure */

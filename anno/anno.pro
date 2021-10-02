@@ -34,6 +34,7 @@ SOURCES += \
     ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelCategory.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
     ImagePropertiesTableModel.cpp \
     ImagePropertiesWidget.cpp \
+    LabelDefinitionPropertiesDialog.cpp \
     LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
     MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
     ModifyLabelTextFileModelCommand.cpp OrientedCircleLabel.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
@@ -48,6 +49,7 @@ SOURCES += \
 HEADERS += \
     ImagePropertiesTableModel.h \
     ImagePropertiesWidget.h \
+    LabelDefinitionPropertiesDialog.h \
     StartupDialog.h \
     AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
     ColorTransformer.h \
@@ -70,6 +72,7 @@ FORMS += \
     AboutDialog.ui Desktop3dWindow.ui \
     ErrorsListDialog.ui ImageSettingsWidget.ui LabelDefinitionPropertiesWidget.ui \
     ImagePropertiesWidget.ui \
+    LabelDefinitionPropertiesDialog.ui \
     LabelPropertiesWidget.ui MainWindow.ui ProjectDefinitionsDialog.ui \
     ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui \
     StartupDialog.ui

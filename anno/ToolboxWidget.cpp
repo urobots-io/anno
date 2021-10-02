@@ -6,7 +6,9 @@
 
 #include "ToolboxWidget.h"
 #include "messagebox.h"
+#include <QDebug>
 #include <QMenu>
+#include <LabelDefinitionPropertiesDialog.h>
 
 ToolboxWidget::ToolboxWidget(QWidget *parent)
 	: QWidget(parent)
@@ -21,6 +23,8 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
         &ToolboxWidget::OnCurrentChanged);
     connect(&proxy_, &QAbstractItemModel::rowsInserted, this, &ToolboxWidget::OnRowsAdded);
     connect(ui.add_marker_type_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowAddMarkerMenu);
+    connect(ui.properties_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowLabelDefinitionProperties);
+    ui.properties_pushButton->setEnabled(false);
 
     connect(ui.toggle_tree_state_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ToggleTreeOpenState);
 
@@ -83,14 +87,29 @@ void ToolboxWidget::SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeMode
 
 void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous) {
     Q_UNUSED(previous);
+    if (!current.isValid()) {
+        return;
+    }
+
     auto index = proxy_.mapToSource(current);
     auto def = definitions_->GetDefinition(index);
     auto cat = definitions_->GetCategory(index);
+
 #ifdef _DEBUG
-    if (def) qDebug(QString("Selected Type %0").arg(def->type_name).toLatin1());
-    if (cat) qDebug(QString("Selected Category %0").arg(cat->get_name()).toLatin1());
+    if (def) qDebug() << "Selected Definition: " << def->type_name;
+    if (cat) qDebug() << "Selected Category: " << cat->get_name();
 #endif
+
+    bool enabled = def && !cat;
+    ui.properties_pushButton->setEnabled(enabled);
+    qDebug() << enabled;
+
     emit SelectionChanged(def, cat);
+}
+
+void ToolboxWidget::ShowLabelDefinitionProperties() {
+    LabelDefinitionPropertiesDialog dialog(this);
+    dialog.exec();
 }
 
 void ToolboxWidget::SetFile(std::shared_ptr<FileModel> file) {

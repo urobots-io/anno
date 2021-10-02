@@ -40,6 +40,7 @@ private slots:
     void DeleteCategory();
     void DeleteCategoryFromImages();
     void ToggleTreeOpenState();
+    void ShowLabelDefinitionProperties();
 
 private:
     template<class T>

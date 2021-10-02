@@ -97,7 +97,7 @@ public slots:
     void SetWorldScaleAndUpdate(double value, bool is_num_steps = true);
 
     void FitBackgroundToView();
-    void OnImageScriptChanged(QString);
+    void OnProjectScriptChanged(QString);
 
     void OnLabelDefinitionsChanged(std::shared_ptr<LabelDefinitionsTreeModel>);
 

@@ -23,7 +23,8 @@
 #define K_FILES_ROOT_DIR "files_root_dir"
 #define K_MARKER_TYPES "marker_types"
 #define K_USER_DATA "user_data"
-#define K_IMAGE_SCRIPT "image_script"
+#define K_IMAGE_SCRIPT "image_script" // deprecated
+#define K_PROJECT_SCRIPT "project_script"
 #define K_FILES "files"
 
 #define K_FILE_NAME "name"
@@ -257,7 +258,12 @@ void ApplicationModel::ApplyBasicDefinitions(QJsonObject & definitions) {
     user_data_ = definitions[K_USER_DATA].toObject();
     pictures_path_original_ = definitions[K_FILES_ROOT_DIR].toString();
     files_loader_ = definitions[K_FILES_LOADER].toObject();
-    set_image_script(ArrayToString(definitions[K_IMAGE_SCRIPT]));
+    QString project_script = ArrayToString(definitions[K_PROJECT_SCRIPT]);
+    if (project_script.isEmpty()) {
+        // try deprecated script name
+        project_script = ArrayToString(definitions[K_IMAGE_SCRIPT]);
+    }
+    set_project_script(project_script);
 }
 
 bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filename, QStringList & errors) {
@@ -375,8 +381,8 @@ QJsonObject ApplicationModel::GenerateHeader() {
         header.insert(K_USER_DATA, user_data_);
     }
 
-    if (image_script_.length()) {
-        header.insert(K_IMAGE_SCRIPT, ToJsonArray(image_script_));
+    if (project_script_.length()) {
+        header.insert(K_PROJECT_SCRIPT, ToJsonArray(project_script_));
     }
 
     QJsonObject types;
@@ -507,10 +513,10 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
     return true;
 }
 
-void ApplicationModel::set_image_script(QString value) {
-    if (image_script_ != value) {
-        image_script_ = value;
-        image_script_changed(value);
+void ApplicationModel::set_project_script(QString value) {
+    if (project_script_ != value) {
+        project_script_ = value;
+        project_script_changed(value);
     }
 }
 

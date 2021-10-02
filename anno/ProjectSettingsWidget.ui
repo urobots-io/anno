@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Image Rendering Script:</string>
+      <string>Project Script:</string>
      </property>
     </widget>
    </item>

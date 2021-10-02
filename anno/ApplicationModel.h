@@ -16,7 +16,7 @@ public:
 
     Q_PROPERTY(bool is_modified READ get_is_modified WRITE set_is_modified NOTIFY is_modified_changed);    
     Q_PROPERTY(QString project_filename READ get_project_filename WRITE set_project_filename NOTIFY project_filename_changed);	    
-    Q_PROPERTY(QString image_script READ get_image_script WRITE set_image_script NOTIFY image_script_changed);
+    Q_PROPERTY(QString project_script READ get_project_script WRITE set_project_script NOTIFY project_script_changed);
     Q_PROPERTY(std::shared_ptr<LabelDefinitionsTreeModel> label_definitions READ get_label_definitions WRITE set_label_definitions NOTIFY label_definitions_changed);
     Q_PROPERTY(std::shared_ptr<FilesystemInterface> filesystem READ get_filesystem WRITE set_filesystem NOTIFY filesystem_changed);
     
@@ -57,7 +57,7 @@ public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);
 
-    DECLARE_Q_PROPERTY_WRITE(QString, image_script);
+    DECLARE_Q_PROPERTY_WRITE(QString, project_script);
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified); 
 
 private:
@@ -68,7 +68,7 @@ private:
     std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonObject & types, QStringList& errors);
         
 signals:
-    void image_script_changed(QString);
+    void project_script_changed(QString);
     void is_modified_changed(bool);
 	void project_filename_changed(QString);		
 	void pictures_path_changed(QString);	
@@ -94,11 +94,11 @@ private:
     QJsonObject user_data_;
     QJsonObject files_loader_;
 
-    QString image_script_;
+    QString project_script_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(is_modified);
-    IMPLEMENT_Q_PROPERTY_READ(image_script);
+    IMPLEMENT_Q_PROPERTY_READ(project_script);
 	IMPLEMENT_Q_PROPERTY_READ(project_filename);
 	IMPLEMENT_Q_PROPERTY_READ(label_definitions);
     IMPLEMENT_Q_PROPERTY_READ(filesystem);

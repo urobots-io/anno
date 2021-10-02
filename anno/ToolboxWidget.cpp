@@ -108,7 +108,15 @@ void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelInd
 }
 
 void ToolboxWidget::ShowLabelDefinitionProperties() {
-    LabelDefinitionPropertiesDialog dialog(this);
+    auto current = ui.treeView->selectionModel()->currentIndex();
+    if (!current.isValid()) {
+        return;
+    }
+
+    auto index = proxy_.mapToSource(current);
+    auto def = definitions_->GetDefinition(index);
+
+    LabelDefinitionPropertiesDialog dialog(def, definitions_, this);
     dialog.exec();
 }
 

@@ -1,14 +1,15 @@
 #include "LabelDefinitionPropertiesDialog.h"
-#include "ui_LabelDefinitionPropertiesDialog.h"
 
-LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::LabelDefinitionPropertiesDialog)
+using namespace std;
+
+LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<LabelDefinition> definition, shared_ptr<LabelDefinitionsTreeModel> definitions, QWidget *parent)
+: QDialog(parent)
+, definition_(definition)
+, definitions_(definitions)
 {
-    ui->setupUi(this);
+    ui.setupUi(this);
 }
 
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
 {
-    delete ui;
 }

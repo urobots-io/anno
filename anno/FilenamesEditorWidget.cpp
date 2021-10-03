@@ -2,7 +2,7 @@
 
 FilenamesEditorWidget::FilenamesEditorWidget(QWidget *parent) : QPlainTextEdit(parent)
 {
-    lineNumberArea = new LineNumberArea(this);
+    line_number_area_ = new LineNumberArea(this);
 
     connect(this, &FilenamesEditorWidget::blockCountChanged, this, &FilenamesEditorWidget::updateLineNumberAreaWidth);
     connect(this, &FilenamesEditorWidget::updateRequest, this, &FilenamesEditorWidget::updateLineNumberArea);
@@ -12,8 +12,12 @@ FilenamesEditorWidget::FilenamesEditorWidget(QWidget *parent) : QPlainTextEdit(p
     highlightCurrentLine();
 }
 
-int FilenamesEditorWidget::lineNumberAreaWidth()
-{
+void FilenamesEditorWidget::setMaxFilenames(int value) {
+    max_filenames_ = value;
+    line_number_area_->repaint();
+}
+
+int FilenamesEditorWidget::lineNumberAreaWidth() {
     int digits = 1;
     int max = qMax(1, blockCount());
     while (max >= 10) {
@@ -26,32 +30,28 @@ int FilenamesEditorWidget::lineNumberAreaWidth()
     return space;
 }
 
-void FilenamesEditorWidget::updateLineNumberAreaWidth(int /* newBlockCount */)
-{
+void FilenamesEditorWidget::updateLineNumberAreaWidth(int /* newBlockCount */) {
     setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
-void FilenamesEditorWidget::updateLineNumberArea(const QRect &rect, int dy)
-{
+void FilenamesEditorWidget::updateLineNumberArea(const QRect &rect, int dy) {
     if (dy)
-        lineNumberArea->scroll(0, dy);
+        line_number_area_->scroll(0, dy);
     else
-        lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
+        line_number_area_->update(0, rect.y(), line_number_area_->width(), rect.height());
 
     if (rect.contains(viewport()->rect()))
         updateLineNumberAreaWidth(0);
 }
 
-void FilenamesEditorWidget::resizeEvent(QResizeEvent *e)
-{
+void FilenamesEditorWidget::resizeEvent(QResizeEvent *e) {
     QPlainTextEdit::resizeEvent(e);
 
     QRect cr = contentsRect();
-    lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+    line_number_area_->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
-void FilenamesEditorWidget::highlightCurrentLine()
-{
+void FilenamesEditorWidget::highlightCurrentLine() {
     QList<QTextEdit::ExtraSelection> extraSelections;
 
     if (!isReadOnly()) {
@@ -69,9 +69,8 @@ void FilenamesEditorWidget::highlightCurrentLine()
     setExtraSelections(extraSelections);
 }
 
-void FilenamesEditorWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
-{
-    QPainter painter(lineNumberArea);
+void FilenamesEditorWidget::lineNumberAreaPaintEvent(QPaintEvent *event) {
+    QPainter painter(line_number_area_);
     painter.fillRect(event->rect(), Qt::lightGray);
 
     QTextBlock block = firstVisibleBlock();
@@ -97,9 +96,13 @@ void FilenamesEditorWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
         
         if (block.isVisible() && bottom >= event->rect().top()) {
             if (!blockEmpty) {
+                if (stringNumber > max_filenames_) {
+                    painter.fillRect(0, top, line_number_area_->width(), fontMetrics().height(), Qt::red);
+                }
+
                 QString number = QString::number(stringNumber);
                 painter.setPen(Qt::black);
-                painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
+                painter.drawText(0, top, line_number_area_->width(), fontMetrics().height(),
                     Qt::AlignRight, number);
             }
         }

@@ -19,27 +19,31 @@ private slots:
     void highlightCurrentLine();
     void updateLineNumberArea(const QRect &rect, int dy);
 
+public slots:
+    void setMaxFilenames(int);
+
 private:
-    QWidget *lineNumberArea;
+    QWidget *line_number_area_;
+    int max_filenames_ = 0;
 };
 
 class LineNumberArea : public QWidget
 {
 public:
-    LineNumberArea(FilenamesEditorWidget *editor) : QWidget(editor), editor(editor)
+    LineNumberArea(FilenamesEditorWidget *editor) : QWidget(editor), editor_(editor)
     {}
 
     QSize sizeHint() const override
     {
-        return QSize(editor->lineNumberAreaWidth(), 0);
+        return QSize(editor_->lineNumberAreaWidth(), 0);
     }
 
 protected:
     void paintEvent(QPaintEvent *event) override
     {
-        editor->lineNumberAreaPaintEvent(event);
+        editor_->lineNumberAreaPaintEvent(event);
     }
 
 private:
-    FilenamesEditorWidget *editor;
+    FilenamesEditorWidget *editor_;
 };

@@ -127,7 +127,17 @@
         </widget>
        </item>
        <item>
-        <widget class="FilenamesEditorWidget" name="plainTextEdit"/>
+        <widget class="FilenamesEditorWidget" name="plainTextEdit">
+         <property name="font">
+          <font>
+           <family>Courier New</family>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

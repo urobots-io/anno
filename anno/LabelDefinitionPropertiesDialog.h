@@ -14,6 +14,9 @@ public:
     explicit LabelDefinitionPropertiesDialog(std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelDefinitionsTreeModel>, QWidget *parent = nullptr);
     ~LabelDefinitionPropertiesDialog();
 
+private slots:
+    void onSharedLabelsCountChanged(int);
+
 private:
     Ui::LabelDefinitionPropertiesDialog ui;
     std::shared_ptr<LabelDefinition> definition_;

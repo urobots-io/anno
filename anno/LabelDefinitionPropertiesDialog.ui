@@ -23,7 +23,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_general">
       <attribute name="title">
@@ -38,14 +38,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="listView">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>200</height>
-          </size>
-         </property>
-        </widget>
+        <widget class="QTableView" name="properties_tableView"/>
        </item>
        <item>
         <widget class="QLabel" name="label_5">
@@ -55,7 +48,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableView" name="tableView_3"/>
+        <widget class="QTableView" name="shared_properties_tableView"/>
        </item>
       </layout>
      </widget>

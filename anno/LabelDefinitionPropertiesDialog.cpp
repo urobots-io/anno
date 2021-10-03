@@ -5,6 +5,7 @@
 // 2020-2021 (c) urobots GmbH, https://urobots.io
 
 #include "LabelDefinitionPropertiesDialog.h"
+#include "PropertyTableItemDelegate.h"
 
 using namespace std;
 
@@ -14,6 +15,14 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
 , definitions_(definitions)
 {
     ui.setupUi(this);
+
+    // Main properties page.
+    auto props = new LDProperties(this);
+    props->set_type_name(definition_->type_name);
+    props->set_description(definition_->get_description());
+    props->set_line_width(definition_->line_width);
+    props->set_value_type(LDProperties::LabelType(int(definition_->value_type)));
+    PropertyTableItemDelegate::SetupTableView(ui.properties_tableView, props);
 
     // Init shared instances page.
     auto shared_count = int(definition_->shared_labels.size());

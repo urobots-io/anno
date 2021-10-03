@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
+    <width>512</width>
     <height>447</height>
    </rect>
   </property>
@@ -25,7 +25,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_general">
+     <widget class="QWidget" name="general_tab">
       <attribute name="title">
        <string>General</string>
       </attribute>
@@ -52,7 +52,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_shared">
+     <widget class="QWidget" name="shared_tab">
       <attribute name="title">
        <string>Shared Labels</string>
       </attribute>
@@ -134,7 +134,31 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_user">
+     <widget class="QWidget" name="stamp_tab">
+      <attribute name="title">
+       <string>Stamp</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>Is stamp</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Stamp parameters:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableView" name="tableView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="user_tab">
       <attribute name="title">
        <string>User Data</string>
       </attribute>

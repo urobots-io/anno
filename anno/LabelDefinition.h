@@ -40,7 +40,7 @@ public:
 
     /// Coordinate axis length, using for OrientedPointLabel.
     /// If value is 0 axis handle will not be rendered.
-    std::vector<int>axis_length;
+    std::vector<int> axis_length;
 
     /// creation using stamps
     bool is_stamp = false;

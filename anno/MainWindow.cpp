@@ -185,7 +185,7 @@ void MainWindow::OnDeleteRequest(std::shared_ptr<LabelDefinition> definition, st
 
 void MainWindow::OnDesktopCreationModeChanged(bool value) {
     if (!value) {
-        ui.toolbox->CleanupSelection();
+        ui.toolbox->DismissCreation();
     }
 }
 
@@ -360,7 +360,7 @@ void MainWindow::OpenProject(const QString & full_file_name) {
 #if _DEBUG
         // select first file
         if (auto file = model_.GetFirstFileModel()) {
-            emit ui.files_tree->FileModelSelected(file);
+            //emit ui.files_tree->FileModelSelected(file);
         }
 #endif
     }

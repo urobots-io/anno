@@ -13,3 +13,4 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
 {
 }
+

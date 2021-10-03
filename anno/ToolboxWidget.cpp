@@ -95,7 +95,7 @@ void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelInd
     auto def = definitions_->GetDefinition(index);
     auto cat = definitions_->GetCategory(index);
 
-#ifdef _DEBUG
+#if _DEBUG
     if (def) qDebug() << "Selected Definition: " << def->type_name;
     if (cat) qDebug() << "Selected Category: " << cat->get_name();
 #endif
@@ -126,6 +126,19 @@ void ToolboxWidget::SetFile(std::shared_ptr<FileModel> file) {
 
 void ToolboxWidget::EnableFileFilter(bool value) {
     proxy_.EnableFileFilter(value);
+}
+
+void ToolboxWidget::DismissCreation() {
+    auto current = ui.treeView->selectionModel()->currentIndex();
+    if (current.isValid()) {
+        auto index = proxy_.mapToSource(current);
+        auto def = definitions_->GetDefinition(index);
+        if (def) {
+            // creation is already dismissed
+            return;
+        }
+    }
+    CleanupSelection();
 }
 
 void ToolboxWidget::CleanupSelection() {

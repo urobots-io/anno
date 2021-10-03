@@ -126,7 +126,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_LabelDefinitionPropertiesWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-	<ClCompile Include="GeneratedFiles\Debug\moc_LabelDefinitionPropertiesDialog.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_LabelDefinitionPropertiesDialog.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_LabelDefinitionPropertiesDialog.cpp">
@@ -204,7 +204,7 @@
     <ClCompile Include="LabelDefinitionPropertiesWidget.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-	<ClCompile Include="LabelDefinitionPropertiesDialog.cpp">
+    <ClCompile Include="LabelDefinitionPropertiesDialog.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="MainWindow.cpp">
@@ -477,6 +477,21 @@
     <ClCompile Include="LabelCategory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_LabelCategory.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_LabelCategory.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="FilenamesEditorWidget.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_FilenamesEditorWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_FilenamesEditorWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -488,7 +503,7 @@
     <ClInclude Include="GeneratedFiles\ui_LabelDefinitionPropertiesWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-	<ClInclude Include="GeneratedFiles\ui_LabelDefinitionPropertiesDialog.h">
+    <ClInclude Include="GeneratedFiles\ui_LabelDefinitionPropertiesDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="LabelHandle.h">
@@ -688,7 +703,7 @@
     <CustomBuild Include="LabelDefinitionPropertiesWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-	<CustomBuild Include="LabelDefinitionPropertiesDialog.ui">
+    <CustomBuild Include="LabelDefinitionPropertiesDialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ApplicationModel.h">
@@ -784,7 +799,7 @@
     <CustomBuild Include="LabelDefinitionPropertiesWidget.h">
       <Filter>Header Files\UI</Filter>
     </CustomBuild>
-	<CustomBuild Include="LabelDefinitionPropertiesDialog.h">
+    <CustomBuild Include="LabelDefinitionPropertiesDialog.h">
       <Filter>Header Files\UI</Filter>
     </CustomBuild>
     <CustomBuild Include="LabelPropertiesWidget.h">
@@ -815,6 +830,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ImagePropertiesWidget.h">
+      <Filter>Header Files\UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LabelCategory.h">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FilenamesEditorWidget.h">
       <Filter>Header Files\UI</Filter>
     </CustomBuild>
   </ItemGroup>

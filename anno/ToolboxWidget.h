@@ -22,6 +22,7 @@ public slots:
     void SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeModel>);
     void SetFile(std::shared_ptr<FileModel>);
     void CleanupSelection();
+    void DismissCreation();
     void EnableFileFilter(bool);
     void ShowAddMarkerMenu();
     void AddMarkerType();

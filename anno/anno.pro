@@ -30,7 +30,7 @@ SOURCES += \
     AboutDialog.cpp ApplicationModel.cpp CircleLabel.cpp ColorDisplayWidget.cpp CreateLabelFileModelCommand.cpp \
     CustomPropertyTableItemDelegate.cpp CustomPropertyTableModel.cpp DeleteAllLabelsFileModelCommand.cpp \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
-    FileTreeElement.cpp \
+    FileTreeElement.cpp FilenamesEditorWidget.cpp \
     ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelCategory.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
     ImagePropertiesTableModel.cpp \
     ImagePropertiesWidget.cpp \
@@ -39,8 +39,9 @@ SOURCES += \
     MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
     ModifyLabelTextFileModelCommand.cpp OrientedCircleLabel.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
     PointLabel.cpp PolygonLabel.cpp PolylineLabel.cpp ProjectDefinitionsDialog.cpp ProjectSettingsWidget.cpp \
+    PropertyTableModel.cpp PropertyTableItemDelegate.cpp \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
-    RestDatasetFilesystem.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
+    RestDatasetFilesystem.cpp SharedPropertiesEditorTableModel.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
     StartupDialog.cpp \
     stdafx.cpp Serialization.cpp \
     SourcePicturesWidget.cpp ToolLabel.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     ColorTransformer.h \
     CreateLabelFileModelCommand.h CustomProperty.h CustomPropertyTableItemDelegate.h CustomPropertyTableModel.h \
     DeleteAllLabelsFileModelCommand.h DeleteLabelFileModelCommand.h Desktop3dWindow.h DesktopWidget.h ElidedLabelWidget.h ErrorsListDialog.h \
+    FilenamesEditorWidget.h \
     FileModel.h FilesystemInterface.h FileTreeItemInfo.h geometry.h Highlighter.h ImageConverter.h ImageData.h ImageLoader.h \
     FileTreeElement.h \
     ImageModel.h ImageSettingsWidget.h implement_q_property.h Label.h LabelCategory.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
@@ -63,7 +65,8 @@ HEADERS += \
     ModifyLabelTextFileModelCommand.h OrientedCircleLabel.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
     PointCloudDisplayWidget.h PointLabel.h PolygonLabel.h PolylineLabel.h ProjectDefinitionsDialog.h ProjectSettingsWidget.h \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
-    ScriptPainter.h settings.h SharedPropertyDefinition.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
+    PropertyTableModel.h PropertyTableItemDelegate.h \
+    ScriptPainter.h settings.h SharedPropertyDefinition.h SharedPropertiesEditorTableModel.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
     stdafx.h Serialization.h \
     ToolboxProxyModel.h ToolboxWidget.h ToolLabel.h win_helpers.h WorldInfo.h \
     triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h

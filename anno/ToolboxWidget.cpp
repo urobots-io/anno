@@ -277,7 +277,7 @@ void ToolboxWidget::DeleteCategoryFromImages() {
 }
 
 void ToolboxWidget::OnError(QString message) {
-    urobots::qt_helpers::messagebox::Critical(message);
+    messagebox::Critical(message);
 }
 
 

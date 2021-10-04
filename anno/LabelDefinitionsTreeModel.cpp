@@ -25,7 +25,7 @@ LabelDefinitionsTreeModel::~LabelDefinitionsTreeModel() {
 
 std::shared_ptr<LabelDefinition> LabelDefinitionsTreeModel::FindDefinition(QString type_name) const {
     for (auto def : definitions_) {
-        if (def->type_name == type_name) {
+        if (def->get_type_name() == type_name) {
             return def;
         }
     }
@@ -69,13 +69,13 @@ QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) co
     if (role == Qt::DisplayRole) {
         if (item.second) return item.second->get_name();
         else if (item.first) {
-            return item.first->type_name;
+            return item.first->get_type_name();
         }
         else return tr("Select");
     }
     else if (role == Qt::EditRole) {
         if (item.second) return item.second->get_name();
-        else if (item.first) return item.first->type_name;
+        else if (item.first) return item.first->get_type_name();
         else return QString();
     }
     else if (role == Qt::DecorationRole) {
@@ -104,19 +104,18 @@ bool LabelDefinitionsTreeModel::setData(const QModelIndex &index, const QVariant
         else if (item.first) {
             auto definition = item.first;
             auto new_name = value.toString();
-            if (definition->type_name == new_name) {
+            if (definition->get_type_name() == new_name) {
                 return true;
             }
 
             for (auto d : definitions_) {
-                if (d.get() != definition.get() && d->type_name == new_name) {
+                if (d.get() != definition.get() && d->get_type_name() == new_name) {
                     emit Error(tr("Cannot rename marker to %0, marker with this name already exists").arg(new_name));
                     return false;
                 }
             }
 
-            definition->type_name = value.toString();
-            DefinitionChanged();
+            definition->set_type_name(value.toString());
             return true;
         }
     }
@@ -211,7 +210,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     for (int i = 0; name.isEmpty(); ++i) {
         name = QString("%0 %1").arg(label_type_name).arg(i);
         for (auto d : definitions_) {
-            if (d->type_name == name) {
+            if (d->get_type_name() == name) {
                 name.clear();
                 break;
             }
@@ -219,7 +218,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     }
 
     auto def = std::make_shared<LabelDefinition>(value_type);
-    def->type_name = name;    
+    def->set_type_name(name);
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
     LabelDefinition::CreateCategory(def, 0, "Category 0", Qt::red);
@@ -305,12 +304,12 @@ QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefi
         return QModelIndex();
     }
 
-    QString name = marker->type_name + tr(" copy");
+    QString name = marker->get_type_name() + tr(" copy");
     int copy_index = 1;
     bool name_found = false;
     while (!name_found) {        
         for (auto d : definitions_) {
-            if (d->type_name == name) {
+            if (d->get_type_name() == name) {
                 name.clear();
                 break;
             }
@@ -318,13 +317,13 @@ QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefi
 
         name_found = !name.isEmpty();
         if (!name_found) {
-            name = marker->type_name + tr(" copy(%0)").arg(++copy_index);
+            name = marker->get_type_name() + tr(" copy(%0)").arg(++copy_index);
         }
     }
 
     QStringList errors;    
     if (auto new_marker = DeserializeLabelDefinition(Serialize(marker), errors)) {
-        new_marker->type_name = name;
+        new_marker->set_type_name(name);
 
         int pos = index.row() + 1;
         beginInsertRows(QModelIndex(), pos, pos);

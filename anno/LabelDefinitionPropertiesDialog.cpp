@@ -6,6 +6,7 @@
 
 #include "LabelDefinitionPropertiesDialog.h"
 #include "CustomPropertiesEditorTableModel.h"
+#include "messagebox.h"
 #include "PropertyTableItemDelegate.h"
 #include "SharedPropertiesEditorTableModel.h"
 #include "StampPropertiesEditorTableModel.h"
@@ -20,12 +21,12 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     ui.setupUi(this);
 
     // Main properties page.
-    auto props = new LDProperties(this);
-    props->set_type_name(definition_->type_name);
-    props->set_description(definition_->get_description());
-    props->set_line_width(definition_->line_width);
-    props->set_value_type(LDProperties::LabelType(int(definition_->value_type)));
-    PropertyTableItemDelegate::SetupTableView(ui.properties_tableView, props);
+    properties_ = new LDProperties(this);
+    properties_->set_type_name(definition_->get_type_name());
+    properties_->set_description(definition_->get_description());
+    properties_->set_line_width(definition_->get_line_width());
+    properties_->set_value_type(LDProperties::LabelType(int(definition_->value_type)));
+    PropertyTableItemDelegate::SetupTableView(ui.properties_tableView, properties_);
 
     auto shared = new SharedPropertiesEditorTableModel(definition_->shared_properties, definition_->value_type, this);
     ui.shared_properties_tableView->setModel(shared);
@@ -55,6 +56,10 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     ui.custom_properties_tableView->setModel(custom_properties);
 
     connect(ui.add_cp_pushButton, &QPushButton::clicked, custom_properties, &CustomPropertiesEditorTableModel::AddProperty);
+
+    // Button box
+    connect(ui.buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &QDialog::close);
+    connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &LabelDefinitionPropertiesDialog::ApplyAndClose);
 }
 
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
@@ -63,4 +68,25 @@ LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
 
 void LabelDefinitionPropertiesDialog::onSharedLabelsCountChanged(int count) {
     ui.shared_status_label->setText(count == 0 ? tr(" - labels are not shared") : QString());
+}
+
+void LabelDefinitionPropertiesDialog::ApplyAndClose() {
+    // Test changes to be done.
+    auto existind_definition = definitions_->FindDefinition(properties_->get_type_name());
+    if (existind_definition && existind_definition != definition_) {
+        messagebox::Critical(tr("Marker named %0 already exists. Please use another name.")
+                             .arg(properties_->get_type_name()));
+        return;
+    }
+
+    if (LabelType(properties_->get_value_type()) != definition_->value_type) {
+        messagebox::Critical(tr("Changing value type is not yet supported."));
+        return;
+    }
+
+    // Apply changes
+    definition_->set_type_name(properties_->get_type_name());
+    definition_->set_line_width(properties_->get_line_width());
+    definition_->set_description(properties_->get_description());
+    close();
 }

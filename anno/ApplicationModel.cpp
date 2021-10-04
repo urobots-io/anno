@@ -38,7 +38,6 @@
 #define K_MARKER_CHILDREN "children"
 #define K_MARKER_CUSTOM_PROPERTIES "custom_properties"
 
-using namespace urobots::qt_helpers;
 using namespace std;
 
 ApplicationModel::ApplicationModel(QObject *parent)
@@ -134,7 +133,7 @@ std::vector<std::shared_ptr<LabelDefinition>> ApplicationModel::LoadLabelDefinit
     for (auto key : types.keys()) {
         auto def = DeserializeLabelDefinition(types[key].toObject(), errors);        
         if (def) {
-            def->type_name = key;
+            def->set_type_name(key);
             definitions.push_back(def);
         }
     }
@@ -159,18 +158,18 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
 
             auto new_definition = std::find_if(definitions.begin(), definitions.end(),
                 [&](std::shared_ptr<LabelDefinition> & def) {
-                return def->type_name == old_definition->type_name;
+                return def->get_type_name() == old_definition->get_type_name();
             });
 
             if (new_definition == definitions.end()) {
-                errors << tr("Missing label definition: \"%0\"").arg(old_definition->type_name);
+                errors << tr("Missing label definition: \"%0\"").arg(old_definition->get_type_name());
                 break;
             }
 
             if (!(*new_definition)->GetCategory(old_category->get_value())) {
                 errors << tr("Missing category \"%0\" of definition: \"%1\"")
                     .arg(old_category->get_value())
-                    .arg(old_definition->type_name);
+                    .arg(old_definition->get_type_name());
                 break;
             }
 
@@ -178,7 +177,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
             auto value_type_new = (*new_definition)->value_type;
             if (value_type_old != value_type_new) {
                 errors << tr("Cannot change label type of \"%0\" from \"%1\" to \"%2\"")
-                    .arg(old_definition->type_name)                    
+                    .arg(old_definition->get_type_name())
                     .arg(LabelTypeToString(value_type_old))
                     .arg(LabelTypeToString(value_type_new));
                 break;
@@ -188,7 +187,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
             auto is_shared_new = (*new_definition)->is_shared();
             if (is_shared_new != is_shared_old) {
                 errors << tr("Cannot change shared type of \"%0\" from \"%1\" to \"%2\"")
-                    .arg(old_definition->type_name)                    
+                    .arg(old_definition->get_type_name())
                     .arg(is_shared_old)
                     .arg(is_shared_new);
                 break;
@@ -201,7 +200,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
                 auto shared_count_new = int((*new_definition)->shared_labels.size());
                 if (index >= shared_count_new) {
                     errors << tr("Cannot reduce shared_count type of \"%0\" from \"%1\" to \"%2\"")
-                        .arg(old_definition->type_name)
+                        .arg(old_definition->get_type_name())
                         .arg(shared_count_old)
                         .arg(shared_count_new);
                     break;
@@ -210,7 +209,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
                     auto proxy = dynamic_cast<ProxyLabel*>(label.get());
                     if (!proxy) {
                         errors << tr("Intenal error, cannot get cast to ProxyLabel label of \"%0\"")
-                            .arg(old_definition->type_name);
+                            .arg(old_definition->get_type_name());
                         break;
                     }
                     (*new_definition)->shared_labels[index] = proxy->GetProxyClient();
@@ -307,12 +306,12 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             }
 
             if (!definition->categories.size()) {
-                errors << tr("Definition \"%0\" has no categories").arg(definition->type_name);
+                errors << tr("Definition \"%0\" has no categories").arg(definition->get_type_name());
             }
 
             if (!definition->GetCategory(category)) {
                 errors << tr("Definition \"%0\" has no category \"%1\"")
-                    .arg(definition->type_name)
+                    .arg(definition->get_type_name())
                     .arg(category);
                 continue;
             }
@@ -320,7 +319,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             auto shared_index = marker[K_MARKER_SHARED_INDEX].toInt(0);
             if (definition->is_shared() && shared_index >= int(definition->shared_labels.size())) {
                 errors << tr("Definition \"%0\" shared count is less than label shared index \"%1\"")
-                    .arg(definition->type_name)
+                    .arg(definition->get_type_name())
                     .arg(shared_index);
                 continue;
             }
@@ -336,7 +335,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
                 if (!label) {
                     errors << tr("Failed to create label with type \"%0\" for definition \"%1\"")
                         .arg(LabelTypeToString(definition->value_type))
-                        .arg(definition->type_name);
+                        .arg(definition->get_type_name());
                     continue;
                 }
             }
@@ -388,7 +387,7 @@ QJsonObject ApplicationModel::GenerateHeader() {
     QJsonObject types;
 	if (label_definitions_) {
 		for (auto def : label_definitions_->GetDefinitions()) {
-            types.insert(def->type_name, Serialize(def));
+            types.insert(def->get_type_name(), Serialize(def));
 		}
 	}
     header.insert(K_MARKER_TYPES, types);
@@ -439,7 +438,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
         for (auto label : i.second->labels_) {
             QJsonObject marker;
             marker.insert(K_MARKER_CATEGORY, QJsonValue::fromVariant(label->GetCategory()->get_value()));
-            marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetDefinition()->type_name));
+            marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetDefinition()->get_type_name()));
 
             // Save text only if not empty
             auto text = label->GetText();

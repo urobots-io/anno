@@ -25,11 +25,16 @@ public:
 
     static std::shared_ptr<LabelCategory> CreateCategory(std::shared_ptr<LabelDefinition>, int value, const QString & name, const QColor & color);
 
-    Q_PROPERTY(QString description READ get_description WRITE set_description NOTIFY description_changed);
-    Q_PROPERTY(QString rendering_script READ get_rendering_script WRITE set_rendering_script NOTIFY rendering_script_changed);
-
     /// type name (key in the file)
-    QString type_name;
+    Q_PROPERTY(QString type_name READ get_type_name WRITE set_type_name NOTIFY type_name_changed);
+    /// description for humans
+    Q_PROPERTY(QString description READ get_description WRITE set_description NOTIFY description_changed);
+    /// custom rendering script
+    Q_PROPERTY(QString rendering_script READ get_rendering_script WRITE set_rendering_script NOTIFY rendering_script_changed);
+    /// rendering line width
+    Q_PROPERTY(int line_width READ get_line_width WRITE set_line_width NOTIFY line_width_changed);
+    /// creation using stamps
+    Q_PROPERTY(bool is_stamp READ get_is_stamp WRITE set_is_stamp NOTIFY is_stamp_changed);
 
     /// value type
     const LabelType value_type;
@@ -40,14 +45,10 @@ public:
     /// > 0 - width in picture pixels
     /// < 0 - width in screen pixels
     static const int default_line_width = -3;
-	int line_width = default_line_width;
 
     /// Coordinate axis length, using for OrientedPointLabel.
     /// If value is 0 axis handle will not be rendered.
     std::vector<int> axis_length;
-
-    /// creation using stamps
-    bool is_stamp = false;
 
     /// stamp parameters
     QJsonObject stamp_parameters;
@@ -78,12 +79,18 @@ public:
 
 public slots:    
     IMPLEMENT_Q_PROPERTY_WRITE(QString, description);
+    IMPLEMENT_Q_PROPERTY_WRITE(bool, is_stamp);
+    IMPLEMENT_Q_PROPERTY_WRITE(int, line_width);
     IMPLEMENT_Q_PROPERTY_WRITE(QString, rendering_script);
+    IMPLEMENT_Q_PROPERTY_WRITE(QString, type_name);
 
 signals:
     void Changed();
-    void rendering_script_changed(QString);
     void description_changed(QString);
+    void is_stamp_changed(bool);
+    void line_width_changed(int);
+    void rendering_script_changed(QString);
+    void type_name_changed(QString);
     
 private:
     LabelDefinition(const LabelDefinition &);
@@ -92,11 +99,17 @@ private:
     bool AllowedForFilename(QString filename, int shared_index = -1) const;
 
 private:    
-    QString rendering_script_;
     QString description_;
+    bool is_stamp_ = false;
+    int line_width_ = default_line_width;
+    QString rendering_script_;
+    QString type_name_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(description);
-    IMPLEMENT_Q_PROPERTY_READ(rendering_script);    
+    IMPLEMENT_Q_PROPERTY_READ(is_stamp);
+    IMPLEMENT_Q_PROPERTY_READ(line_width);
+    IMPLEMENT_Q_PROPERTY_READ(rendering_script);
+    IMPLEMENT_Q_PROPERTY_READ(type_name);
 };
 

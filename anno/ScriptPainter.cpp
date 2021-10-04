@@ -59,7 +59,7 @@ void ScriptPainter::RenderLabel(QJSEngine & engine, Label *label) {
         engine.globalObject().setProperty("shared_index", label->GetSharedLabelIndex());
         engine.globalObject().setProperty("category", cat->get_value());
         engine.globalObject().setProperty("category_name", cat->get_name());
-        engine.globalObject().setProperty("marker_type", definition->type_name);
+        engine.globalObject().setProperty("marker_type", definition->get_type_name());
 
         auto result = engine.evaluate(script);
         if (result.isError()) {

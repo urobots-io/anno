@@ -103,7 +103,7 @@ QPen Label::GetOutlinePen(const PaintInfo & pi) const {
         return {};
 
 	QColor color(category_->get_color());
-	int line_width = def->line_width;
+    int line_width = def->get_line_width();
 	
 	auto style = Qt::SolidLine;
 

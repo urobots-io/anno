@@ -49,10 +49,10 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
     }    
 
     if (def_json.contains(K_DEFINITION_LINE_WIDTH))
-        def->line_width = def_json[K_DEFINITION_LINE_WIDTH].toInt();
+        def->set_line_width(def_json[K_DEFINITION_LINE_WIDTH].toInt());
 
     if (def_json.contains(K_DEFINITION_IS_STAMP))
-        def->is_stamp = def_json[K_DEFINITION_IS_STAMP].toBool();
+        def->set_is_stamp(def_json[K_DEFINITION_IS_STAMP].toBool());
 
     int num_shared = 0;
     if (def_json.contains(K_DEFINITION_SHARED))
@@ -142,7 +142,7 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
             if (!shared_label) {
                 errors << QString("Failed to create label with type \"%0\" for definition \"%1\"")
                     .arg(LabelTypeToString(def->value_type))
-                    .arg(def->type_name);
+                    .arg(def->get_type_name());
                 return {};
             }
 
@@ -166,8 +166,8 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
     QJsonObject json;
     json.insert(K_DEFINITION_VALUE_TYPE, QJsonValue::fromVariant(LabelTypeToString(def->value_type)));
 
-    if (def->line_width != LabelDefinition::default_line_width) {
-        json.insert(K_DEFINITION_LINE_WIDTH, QJsonValue::fromVariant(def->line_width));
+    if (def->get_line_width() != LabelDefinition::default_line_width) {
+        json.insert(K_DEFINITION_LINE_WIDTH, QJsonValue::fromVariant(def->get_line_width()));
     }
 
     if (!def->get_description().isEmpty()) {
@@ -190,7 +190,7 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
         json.insert(K_DEFINITION_RENDERING_SCRIPT, ToJsonArray(def->get_rendering_script()));
     }
 
-    if (def->is_stamp) {
+    if (def->get_is_stamp()) {
         json.insert(K_DEFINITION_IS_STAMP, QJsonValue::fromVariant(true));
     }
 

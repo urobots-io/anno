@@ -243,7 +243,7 @@ void DesktopWidget::set_category_for_creation(std::shared_ptr<LabelCategory> val
 
     if (category_for_creation_) {
         if (auto def = category_for_creation_->GetDefinition()) {
-            if (def->is_stamp) {
+            if (def->get_is_stamp()) {
                 CreateStampLabel();
             }
         }        

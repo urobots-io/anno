@@ -16,6 +16,10 @@ LabelDefinition::LabelDefinition(LabelType type, QObject *parent)
 , value_type(type) {
     connect(this, &LabelDefinition::description_changed, this, &LabelDefinition::Changed);
     connect(this, &LabelDefinition::rendering_script_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::type_name_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::line_width_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::description_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::is_stamp_changed, this, &LabelDefinition::Changed);
 }
 
 LabelDefinition::~LabelDefinition() {

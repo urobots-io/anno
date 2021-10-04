@@ -67,11 +67,14 @@ public:
 
 private slots:
     void onSharedLabelsCountChanged(int);
+    void ApplyAndClose();
 
 private:
     Ui::LabelDefinitionPropertiesDialog ui;
     std::shared_ptr<LabelDefinition> definition_;
     std::shared_ptr<LabelDefinitionsTreeModel> definitions_;
+
+    LDProperties *properties_ = nullptr;
 };
 
 #endif // LABELDEFINITIONPROPERTIESDIALOG_H

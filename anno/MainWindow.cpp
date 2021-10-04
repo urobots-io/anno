@@ -170,7 +170,7 @@ void MainWindow::OnDeleteRequest(std::shared_ptr<LabelDefinition> definition, st
         return;
     }
 
-    message = message.arg(definition ? definition->type_name : category->get_name());
+    message = message.arg(definition ? definition->get_type_name() : category->get_name());
     message += tr("\nWarning: this operation cannot be undone, it clears the undo stack.");
 
     if (messagebox::Question(message, caption)) {

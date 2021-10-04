@@ -13,8 +13,6 @@
 #include <QMenu>
 #include <QMetaMethod>
 
-using namespace urobots::qt_helpers;
-
 LabelDefinitionPropertiesWidget::LabelDefinitionPropertiesWidget(QWidget *parent)
 : QWidget(parent)
 {
@@ -69,7 +67,6 @@ void LabelDefinitionPropertiesWidget::Select(std::shared_ptr<LabelDefinition> de
     }
     else if (definition_) {
         ui.stackedWidget->setCurrentWidget(ui.marker_page);
-
 
         ui.rendering_script_textEdit->blockSignals(true);
         ui.rendering_script_textEdit->setText(def ? def->get_rendering_script() : QString());

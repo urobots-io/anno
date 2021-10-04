@@ -5,6 +5,8 @@
 // 2020-2021 (c) urobots GmbH, https://urobots.io
 
 #include "FilenamesEditorWidget.h"
+#include <QPainter>
+#include <QTextBlock>
 
 FilenamesEditorWidget::FilenamesEditorWidget(QWidget *parent) : QPlainTextEdit(parent)
 {

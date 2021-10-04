@@ -6,6 +6,15 @@
 
 #include "PropertyTableItemDelegate.h"
 #include "PropertyTableModel.h"
+#include <QApplication>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDoubleSpinBox>
+#include <QHeaderView>
+#include <QLineEdit>
+#include <QMetaProperty>
+#include <QSpinBox>
+#include <QTableView>
 
 PropertyTableItemDelegate* PropertyTableItemDelegate::SetupTableView(QTableView *table_view, QObject *object, bool readonly) {
     auto item_delegate = new PropertyTableItemDelegate(table_view);
@@ -26,7 +35,7 @@ PropertyTableItemDelegate::PropertyTableItemDelegate(QObject * parent)
 
 void PropertyTableItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
     if (editor != last_editor_) {
-        __super::setEditorData(editor, index);
+        QStyledItemDelegate::setEditorData(editor, index);
     }
 }
 
@@ -60,7 +69,7 @@ void PropertyTableItemDelegate::paint(QPainter * painter, const QStyleOptionView
         QApplication::style()->drawControl(QStyle::CE_CheckBox, &cbOpt, painter);
     }
     else {
-        __super::paint(painter, option, index);
+        QStyledItemDelegate::paint(painter, option, index);
     }
 }
 
@@ -108,7 +117,7 @@ QWidget *PropertyTableItemDelegate::createEditor(QWidget *parent, const QStyleOp
         return combo;
     }
 
-    auto editor = __super::createEditor(parent, option, index);
+    auto editor = QStyledItemDelegate::createEditor(parent, option, index);
     if (auto spinbox = dynamic_cast<QSpinBox*>(editor)) {
         connect(spinbox, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertyTableItemDelegate::EditorValueChanged);
     } 

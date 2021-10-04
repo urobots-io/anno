@@ -5,6 +5,9 @@
 // 2020-2021 (c) urobots GmbH, https://urobots.io
 
 #include "PropertyTableModel.h"
+#include <QColor>
+#include <QDebug>
+#include <QMetaProperty>
 
 using namespace std;
 
@@ -71,12 +74,13 @@ int PropertyTableModel::rowCount(const QModelIndex &parent) const {
 }
 
 int PropertyTableModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return 2; // Name and Value
 }
 
 QMetaProperty PropertyTableModel::GetProperty(const QModelIndex &index) const {
     int row = index.row();
-    if (object_ && row >= 0 && row < property_names_.size()) {
+    if (object_ && row >= 0 && row < int(property_names_.size())) {
         int property_index = object_->metaObject()->indexOfProperty(property_names_[row].c_str());
         return object_->metaObject()->property(property_index);
     }
@@ -87,7 +91,7 @@ QVariant PropertyTableModel::data(const QModelIndex &index, int role) const {
     if (!object_) return QVariant();
 
     int row = index.row();
-    if (row >= property_names_.size())
+    if (row >= int(property_names_.size()))
         return QVariant();
 
     int column = index.column();
@@ -181,7 +185,7 @@ void PropertyTableModel::SubscribeForObjectChanges() {
         if (mp.hasNotifySignal()) {                        
             auto c = connect(object_, mp.notifySignal(), this, updateSlot);
             if (!c) {
-                OutputDebugString(QString("Failed to connect to %0 notification\n").arg(name.c_str()).toStdWString().c_str());
+                qDebug() << QString("Failed to connect to %0 notification\n").arg(name.c_str());
             }
         }
     }
@@ -193,12 +197,12 @@ void PropertyTableModel::OnObjectPropertyChanged() {
     auto sender_index = senderSignalIndex();    
 
     auto meta = object_->metaObject();
-    for (int i = 0; i < property_names_.size(); ++i) {
+    for (int i = 0; i < int(property_names_.size()); ++i) {
         auto index = meta->indexOfProperty(property_names_[i].c_str());
         auto p = meta->property(index);
         if (p.notifySignalIndex() == sender_index) {
             emit dataChanged(createIndex(i, 1), createIndex(i, 1));
-            OutputDebugString(QString("%0 changed\n").arg(p.name()).toStdWString().c_str());
+            qDebug() << QString("%0 changed\n").arg(p.name());
             emit object_property_changed(p.name());
             break;
         }

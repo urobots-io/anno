@@ -28,6 +28,7 @@ PRE_TARGETDEPS += git_rev
 
 SOURCES += \
     AboutDialog.cpp ApplicationModel.cpp CircleLabel.cpp ColorDisplayWidget.cpp CreateLabelFileModelCommand.cpp \
+    CustomPropertiesEditorTableModel.cpp \
     CustomPropertyTableItemDelegate.cpp CustomPropertyTableModel.cpp DeleteAllLabelsFileModelCommand.cpp \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
     FileTreeElement.cpp FilenamesEditorWidget.cpp \
@@ -43,7 +44,7 @@ SOURCES += \
     PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
     RestDatasetFilesystem.cpp SharedPropertiesEditorTableModel.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
     StartupDialog.cpp \
-    stdafx.cpp Serialization.cpp \
+    stdafx.cpp Serialization.cpp StampPropertiesEditorTableModel.cpp \
     SourcePicturesWidget.cpp ToolLabel.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
@@ -54,6 +55,7 @@ HEADERS += \
     StartupDialog.h \
     AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
     ColorTransformer.h \
+    CustomPropertiesEditorTableModel.h \
     CreateLabelFileModelCommand.h CustomProperty.h CustomPropertyTableItemDelegate.h CustomPropertyTableModel.h \
     DeleteAllLabelsFileModelCommand.h DeleteLabelFileModelCommand.h Desktop3dWindow.h DesktopWidget.h ElidedLabelWidget.h ErrorsListDialog.h \
     FilenamesEditorWidget.h \
@@ -67,7 +69,7 @@ HEADERS += \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
     PropertyTableModel.h PropertyTableItemDelegate.h \
     ScriptPainter.h settings.h SharedPropertyDefinition.h SharedPropertiesEditorTableModel.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
-    stdafx.h Serialization.h \
+    stdafx.h Serialization.h StampPropertiesEditorTableModel.h \
     ToolboxProxyModel.h ToolboxWidget.h ToolLabel.h win_helpers.h WorldInfo.h \
     triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h
 

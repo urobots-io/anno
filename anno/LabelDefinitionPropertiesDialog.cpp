@@ -5,8 +5,10 @@
 // 2020-2021 (c) urobots GmbH, https://urobots.io
 
 #include "LabelDefinitionPropertiesDialog.h"
+#include "CustomPropertiesEditorTableModel.h"
 #include "PropertyTableItemDelegate.h"
 #include "SharedPropertiesEditorTableModel.h"
+#include "StampPropertiesEditorTableModel.h"
 
 using namespace std;
 
@@ -43,6 +45,16 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
 
     connect(ui.spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &LabelDefinitionPropertiesDialog::onSharedLabelsCountChanged);
     connect(ui.spinBox, QOverload<int>::of(&QSpinBox::valueChanged), ui.plainTextEdit, &FilenamesEditorWidget::setMaxFilenames);
+
+    // Stamp page.
+    auto stamp_properties = new StampPropertiesEditorTableModel(definition_->stamp_parameters, definition_->value_type, this);
+    ui.stamp_parameters_tableView->setModel(stamp_properties);
+
+    // Custom properties page.
+    auto custom_properties = new CustomPropertiesEditorTableModel(definition_->custom_properties, this);
+    ui.custom_properties_tableView->setModel(custom_properties);
+
+    connect(ui.add_cp_pushButton, &QPushButton::clicked, custom_properties, &CustomPropertiesEditorTableModel::AddProperty);
 }
 
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()

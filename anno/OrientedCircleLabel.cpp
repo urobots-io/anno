@@ -10,6 +10,9 @@
 #include <QTextStream>
 #include <QVector2D>
 
+#define ANGLE "angle"
+#define RADIUS "radius"
+
 using namespace std;
 
 OrientedCircleLabel::OrientedCircleLabel(const WorldInfo *wi)
@@ -28,20 +31,24 @@ OrientedCircleLabel::OrientedCircleLabel(const WorldInfo *wi)
     }
 }
 
+QStringList OrientedCircleLabel::GetPropertiesList() const {
+    return { RADIUS, ANGLE };
+}
+
 void OrientedCircleLabel::InitStamp() {
     auto def = GetDefinition();    
     if (!def) {
         return;
     }
 
-    auto jrad = def->stamp_parameters["radius"];    
+    auto jrad = def->stamp_parameters[RADIUS];
     double radius = jrad.isDouble() ? jrad.toDouble() : default_dimension_;
 
-    auto jangle = def->stamp_parameters["angle"];
+    auto jangle = def->stamp_parameters[ANGLE];
     double angle = jangle.isDouble() ? jangle.toDouble() : 0;
 
-    radius_.set(def->GetSharedPropertyValue("radius", radius));
-    radius_.set(def->GetSharedPropertyValue("angle", angle));
+    radius_.set(def->GetSharedPropertyValue(RADIUS, radius));
+    radius_.set(def->GetSharedPropertyValue(ANGLE, angle));
 
     handles_[0]->SetPosition(QPointF(0, 0), false);
     handles_[1]->SetPosition(QPointF(radius, 0), false);
@@ -58,8 +65,8 @@ void OrientedCircleLabel::ConnectSharedProperties(bool connect, bool inject_my_v
     }
     
     if (connect) {
-        def->ConnectProperty(angle_, "angle", inject_my_values);
-        def->ConnectProperty(radius_, "radius", inject_my_values);
+        def->ConnectProperty(angle_, ANGLE, inject_my_values);
+        def->ConnectProperty(radius_, RADIUS, inject_my_values);
     }
     else {
         angle_.Disconnect();
@@ -68,8 +75,8 @@ void OrientedCircleLabel::ConnectSharedProperties(bool connect, bool inject_my_v
 }
 
 LabelProperty *OrientedCircleLabel::GetProperty(QString property_name) {
-    if (property_name == "angle") { return &angle_; }
-    if (property_name == "radius") { return &radius_; }
+    if (property_name == ANGLE) { return &angle_; }
+    if (property_name == RADIUS) { return &radius_; }
     return nullptr;
 }
 

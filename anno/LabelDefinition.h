@@ -74,7 +74,7 @@ public:
 
     bool AllowedForFile(FileModel*, int shared_index = -1) const;
 
-    std::shared_ptr<LabelCategory> GetCategory(int value) const;
+    std::shared_ptr<LabelCategory> GetCategory(int value) const;    
 
 public slots:    
     IMPLEMENT_Q_PROPERTY_WRITE(QString, description);

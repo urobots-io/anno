@@ -22,6 +22,9 @@ public:
     /// Create geometry for stamp label
     virtual void InitStamp() {}
 
+    /// Get list of all available properties.
+    virtual QStringList GetPropertiesList() const { return {}; }
+
     /// Connect / disconnect shared properties to the database
     /// If (connect && inject_my_values), then database will be overwritten with 
     /// new values.

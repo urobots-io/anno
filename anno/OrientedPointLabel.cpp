@@ -9,6 +9,8 @@
 #include <QStringBuilder>
 #include <QTextStream>
 
+#define ANGLE "angle"
+
 using namespace std;
 
 OrientedPointLabel::OrientedPointLabel(const WorldInfo *wi) {
@@ -26,10 +28,14 @@ void OrientedPointLabel::OnNewDefinition() {
     UpdateHandlesPositions();
 }
 
+QStringList OrientedPointLabel::GetPropertiesList() const {
+    return { ANGLE };
+}
+
 void OrientedPointLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     if (connect) {
         if (auto def = GetDefinition()) {
-            def->ConnectProperty(angle_, "angle", inject_my_values);
+            def->ConnectProperty(angle_, ANGLE, inject_my_values);
         }
     }
     else {
@@ -38,7 +44,7 @@ void OrientedPointLabel::ConnectSharedProperties(bool connect, bool inject_my_va
 }
 
 LabelProperty *OrientedPointLabel::GetProperty(QString property_name) {
-    if (property_name == "angle") { return &angle_; }
+    if (property_name == ANGLE) { return &angle_; }
     return nullptr;
 }
 

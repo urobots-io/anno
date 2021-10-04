@@ -17,7 +17,6 @@ StampPropertiesEditorTableModel::StampPropertiesEditorTableModel(QJsonObject pro
     auto label = LabelFactory::CreateLabel(type);
     for (auto name : label->GetPropertiesList()) {
         names_.push_back(name);
-        qDebug() << props[name];
         values_.push_back(props[name].toVariant().toString());        
     }
 }

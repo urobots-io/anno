@@ -14,6 +14,8 @@ using namespace std;
 LabelDefinition::LabelDefinition(LabelType type, QObject *parent)
 : QObject(parent)
 , value_type(type) {
+    connect(this, &LabelDefinition::description_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::rendering_script_changed, this, &LabelDefinition::Changed);
 }
 
 LabelDefinition::~LabelDefinition() {
@@ -32,16 +34,6 @@ std::shared_ptr<LabelCategory> LabelDefinition::GetCategory(int value) const {
         }
     }
     return {};
-}
-
-void LabelDefinition::set_rendering_script(const QString script) {
-    rendering_script_ = script;
-    emit Changed();
-}
-
-void LabelDefinition::set_description(const QString description) {
-    description_ = description;
-    emit Changed();
 }
 
 void LabelDefinition::ConnectProperty(LabelProperty& prop, const std::string & name, bool inject_my_value) const {

@@ -1,6 +1,7 @@
 /// this is a definition of the label type in the project
 #pragma once
 #include "CustomProperty.h"
+#include "implement_q_property.h"
 #include "LabelCategory.h"
 #include "LabelType.h"
 #include "SharedPropertyDefinition.h"
@@ -23,6 +24,9 @@ public:
     ~LabelDefinition();
 
     static std::shared_ptr<LabelCategory> CreateCategory(std::shared_ptr<LabelDefinition>, int value, const QString & name, const QColor & color);
+
+    Q_PROPERTY(QString description READ get_description WRITE set_description NOTIFY description_changed);
+    Q_PROPERTY(QString rendering_script READ get_rendering_script WRITE set_rendering_script NOTIFY rendering_script_changed);
 
     /// type name (key in the file)
     QString type_name;
@@ -61,14 +65,6 @@ public:
     /// custom label properties
     std::vector<CustomPropertyDefinition> custom_properties;
 	
-    /// custom source code to render the label
-    QString get_rendering_script() const { return rendering_script_; }
-    void set_rendering_script(const QString);
-
-    /// text for user
-    QString get_description() const { return description_; }
-    void set_description(const QString);
-
     bool is_shared() const { return shared_labels.size() > 0; }
 
     void ConnectProperty(LabelProperty&, const std::string & name, bool inject_my_value) const;
@@ -80,8 +76,14 @@ public:
 
     std::shared_ptr<LabelCategory> GetCategory(int value) const;
 
+public slots:    
+    IMPLEMENT_Q_PROPERTY_WRITE(QString, description);
+    IMPLEMENT_Q_PROPERTY_WRITE(QString, rendering_script);
+
 signals:
     void Changed();
+    void rendering_script_changed(QString);
+    void description_changed(QString);
     
 private:
     LabelDefinition(const LabelDefinition &);
@@ -92,5 +94,9 @@ private:
 private:    
     QString rendering_script_;
     QString description_;
+
+public:
+    IMPLEMENT_Q_PROPERTY_READ(description);
+    IMPLEMENT_Q_PROPERTY_READ(rendering_script);    
 };
 

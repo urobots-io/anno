@@ -19,6 +19,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
+    QJsonObject GetStampProperties() const;
+
 private:
     QStringList headers_;
     std::vector<QString> names_;

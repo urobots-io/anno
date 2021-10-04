@@ -50,6 +50,7 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     // Stamp page.
     auto stamp_properties = new StampPropertiesEditorTableModel(definition_->stamp_parameters, definition_->value_type, this);
     ui.stamp_parameters_tableView->setModel(stamp_properties);
+    ui.is_stamp_checkBox->setChecked(definition_->get_is_stamp());
 
     // Custom properties page.
     auto custom_properties = new CustomPropertiesEditorTableModel(definition_->custom_properties, this);
@@ -80,7 +81,7 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     }
 
     if (LabelType(properties_->get_value_type()) != definition_->value_type) {
-        messagebox::Critical(tr("Changing value type is not yet supported."));
+        messagebox::Critical(tr("Changing of the value type is not yet supported."));
         return;
     }
 
@@ -88,5 +89,11 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     definition_->set_type_name(properties_->get_type_name());
     definition_->set_line_width(properties_->get_line_width());
     definition_->set_description(properties_->get_description());
+    definition_->set_is_stamp(ui.is_stamp_checkBox->isChecked());
+
+    // Apply stamp properties
+    auto stamp_properties = (StampPropertiesEditorTableModel*)ui.stamp_parameters_tableView->model();
+    definition_->stamp_parameters = stamp_properties->GetStampProperties();
+
     close();
 }

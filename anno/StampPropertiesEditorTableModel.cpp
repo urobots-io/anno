@@ -95,3 +95,24 @@ QVariant StampPropertiesEditorTableModel::headerData(int section, Qt::Orientatio
     return QVariant();
 }
 
+QJsonObject StampPropertiesEditorTableModel::GetStampProperties() const {
+    QRegExp re_int("\\d*");
+    QRegExp re_double("\\d*\\.\\d*");
+    QJsonObject result;
+    for (size_t i = 0; i < names_.size(); ++i) {
+        auto value = values_[i].trimmed();
+        if (value.isEmpty())
+            continue;
+
+        if (re_int.exactMatch(value)) {
+            result.insert(names_[i], value.toInt());
+        }
+        else if (re_double.exactMatch(value)) {
+            result.insert(names_[i], value.toDouble());
+        }
+        else {
+            result.insert(names_[i], value);
+        }
+    }
+    return result;
+}

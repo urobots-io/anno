@@ -6,6 +6,7 @@
 
 #include "LabelDefinitionPropertiesDialog.h"
 #include "PropertyTableItemDelegate.h"
+#include "SharedPropertiesEditorTableModel.h"
 
 using namespace std;
 
@@ -23,6 +24,10 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     props->set_line_width(definition_->line_width);
     props->set_value_type(LDProperties::LabelType(int(definition_->value_type)));
     PropertyTableItemDelegate::SetupTableView(ui.properties_tableView, props);
+
+    auto shared = new SharedPropertiesEditorTableModel(definition_->shared_properties, definition_->value_type, this);
+    ui.shared_properties_tableView->setModel(shared);
+    ui.shared_properties_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     // Init shared instances page.
     auto shared_count = int(definition_->shared_labels.size());

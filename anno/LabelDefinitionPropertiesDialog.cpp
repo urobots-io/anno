@@ -85,15 +85,25 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
         return;
     }
 
-    // Apply changes
+    // Apply changes in main properties.
     definition_->set_type_name(properties_->get_type_name());
     definition_->set_line_width(properties_->get_line_width());
     definition_->set_description(properties_->get_description());
     definition_->set_is_stamp(ui.is_stamp_checkBox->isChecked());
 
-    // Apply stamp properties
+    // Apply stamp properties.
     auto stamp_properties = (StampPropertiesEditorTableModel*)ui.stamp_parameters_tableView->model();
     definition_->stamp_parameters = stamp_properties->GetStampProperties();
+
+    // Apply shared instances and filename filter.
+    vector<string> filename_filter;
+    for (auto s : ui.plainTextEdit->toPlainText().split('\n')) {
+        if (!s.trimmed().isEmpty()) {
+            filename_filter.push_back(s.toStdString());
+        }
+    }
+    definition_->filename_filter = filename_filter;
+
 
     close();
 }

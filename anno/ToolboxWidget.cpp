@@ -96,7 +96,7 @@ void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelInd
     auto cat = definitions_->GetCategory(index);
 
 #if _DEBUG
-    if (def) qDebug() << "Selected Definition: " << def->type_name;
+    if (def) qDebug() << "Selected Definition: " << def->get_type_name();
     if (cat) qDebug() << "Selected Category: " << cat->get_name();
 #endif
 

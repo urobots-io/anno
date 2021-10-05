@@ -85,6 +85,12 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
         return;
     }
 
+    // Test changes in shared properties:
+    // shared check -> Change from not_shared -> shared: question to remove already available labels.
+    // shared check -> Warn if sharing is to be removed.
+    // shared check -> Warn/Question if shared properties number decreased and some labels will be removed.
+    
+
     // Apply changes in main properties.
     definition_->set_type_name(properties_->get_type_name());
     definition_->set_line_width(properties_->get_line_width());
@@ -95,7 +101,7 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     auto stamp_properties = (StampPropertiesEditorTableModel*)ui.stamp_parameters_tableView->model();
     definition_->stamp_parameters = stamp_properties->GetStampProperties();
 
-    // Apply shared instances and filename filter.
+    // Apply filename filter.
     vector<string> filename_filter;
     for (auto s : ui.plainTextEdit->toPlainText().split('\n')) {
         if (!s.trimmed().isEmpty()) {
@@ -104,6 +110,7 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     }
     definition_->filename_filter = filename_filter;
 
+    // TODO: cleanup undo stack
 
     close();
 }

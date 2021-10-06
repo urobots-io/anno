@@ -85,10 +85,18 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
         return;
     }
 
-    // Test changes in shared properties:
+    // TODO: Test changes in shared properties:
     // shared check -> Change from not_shared -> shared: question to remove already available labels.
     // shared check -> Warn if sharing is to be removed.
     // shared check -> Warn/Question if shared properties number decreased and some labels will be removed.
+    auto new_shared_count = ui.spinBox->value();
+    auto old_shared_count = definition_->shared_labels.size();
+
+    if (old_shared_count != new_shared_count) {
+        // No changes are allowed yet, see TODO above
+        messagebox::Critical(tr("Changing of the shared count is not supported."));
+        return;
+    }
     
 
     // Apply changes in main properties.

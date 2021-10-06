@@ -70,7 +70,7 @@ void PropertyTableModel::set_suppress_object_properties(bool value) {
 
 int PropertyTableModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return property_names_.size();
+    return int(property_names_.size());
 }
 
 int PropertyTableModel::columnCount(const QModelIndex &parent) const {

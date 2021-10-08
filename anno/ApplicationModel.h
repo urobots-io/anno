@@ -35,8 +35,11 @@ public:
     QJsonObject GenerateHeader();
     bool ApplyHeader(QJsonObject, QStringList & errors);
 
-    /// Return shated indexes which are present in the document
+    /// Return shared indexes which are present in the document
     std::set<int> GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> def);
+
+    /// Returns count of existing labels for a definition
+    int GetLabelsCount(std::shared_ptr<LabelDefinition> def);
 
     /// Test function
     std::shared_ptr<FileModel> GetFirstFileModel();

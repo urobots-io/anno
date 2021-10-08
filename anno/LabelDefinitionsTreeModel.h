@@ -38,6 +38,7 @@ public:
     QModelIndex CloneDefinition(std::shared_ptr<LabelDefinition>);
 
     QModelIndex GetIndex(LabelDefinition*) const;
+    ApplicationModel *GetApplicationModel() const { return app_model_; }
 
 signals:
     void Changed();
@@ -51,4 +52,6 @@ private:
 
 private:
 	std::vector<std::shared_ptr<LabelDefinition>> definitions_;
+
+    ApplicationModel *app_model_;
 };

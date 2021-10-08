@@ -649,6 +649,18 @@ std::set<int> ApplicationModel::GetExistingSharedIndexes(shared_ptr<LabelDefinit
     return result;
 }
 
+int ApplicationModel::GetLabelsCount(std::shared_ptr<LabelDefinition> def) {
+    int result = 0;
+    for (auto i : file_models_) {
+        for (auto l: i.second->labels_) {
+            if (l->GetDefinition() == def) {
+                result++;
+            }
+        }
+    }
+    return result;
+}
+
 std::shared_ptr<FileModel> ApplicationModel::GetFirstFileModel() {
     if (file_models_.size()) {
         return file_models_.begin()->second;

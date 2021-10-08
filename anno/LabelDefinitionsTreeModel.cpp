@@ -10,7 +10,8 @@
 
 LabelDefinitionsTreeModel::LabelDefinitionsTreeModel(ApplicationModel *parent, const std::vector<std::shared_ptr<LabelDefinition>> & definitions)
     : QAbstractItemModel(parent)
-    , definitions_(definitions)    
+    , definitions_(definitions)
+    , app_model_(parent)
 {
     for (auto def : definitions) {
         connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);

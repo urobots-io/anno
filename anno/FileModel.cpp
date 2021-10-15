@@ -8,6 +8,7 @@
 #include "CreateLabelFileModelCommand.h"
 #include "DeleteAllLabelsFileModelCommand.h"
 #include "DeleteLabelFileModelCommand.h"
+#include "LabelFactory.h"
 #include "ModifyLabelCategoryFileModelCommand.h"
 #include "ModifyLabelGeometryFileModelCommand.h"
 #include "ModifyLabelTextFileModelCommand.h"
@@ -201,16 +202,57 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
 }
 
 void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels) {
-    auto old_number = def->shared_labels.size();
-    auto new_number = shared_labels.size();
+    auto old_number = int(def->shared_labels.size());
+    auto new_number = int(shared_labels.size());
     if (old_number && !new_number) {
         // sharing is disabled -> convert from shared to not shared
+        auto it = labels_.begin();
+        while (it != labels_.end()) {
+            auto l = *it;
+            if (l->GetDefinition() == def) {
+                it = labels_.erase(it);
+                auto new_label = LabelFactory::CreateLabel(def->value_type);
+                new_label->SetCategory(l->GetCategory());
+                new_label->FromStringsList(l->ToStringsList());
+                it = labels_.insert(it, new_label) + 1;
+            }
+            else {
+                ++it;
+            }
+        }
     }
     else if (new_number < old_number) {
         // shared count decreased - remove labels with shared index > new max index
+        auto it = labels_.begin();
+        while (it != labels_.end()) {
+            auto l = *it;
+            if (l->GetDefinition() == def && l->GetSharedLabelIndex() >= new_number) {
+                it = labels_.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
     }
     else if (!old_number && new_number) {
-        // sharing is enabled - try to convert from non-shared to shared if possible, delete rest of labels
+        // sharing is enabled - try to convert from non-shared to shared if possible, delete rest of labels.
+        int index = 0;
+        auto it = labels_.begin();
+        while (it != labels_.end()) {
+            auto l = *it;
+            if (l->GetDefinition() == def) {
+                it = labels_.erase(it);
+                if (index < new_number) {
+                    auto new_label = make_shared<ProxyLabel>(shared_labels[index]);
+                    new_label->FromStringsList(l->ToStringsList());
+                    it = labels_.insert(it, new_label) + 1;
+                    ++index;
+                }
+            }
+            else {
+                ++it;
+            }
+        }
     }
     else  {
         // --> new_number >= old_number

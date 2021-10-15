@@ -704,3 +704,33 @@ void ApplicationModel::Delete(std::shared_ptr<LabelCategory> category, bool dele
 
     label_definitions_->Delete(category);
 }
+
+void ApplicationModel::UpdateDefinitionSharedCount(std::shared_ptr<LabelDefinition> def, int new_shared_count) {
+    if (int(def->shared_labels.size()) == new_shared_count || def->categories.size() == 0) {
+        // nothing to update
+        return;
+    }
+
+    // Create new shared labels
+    vector<shared_ptr<Label>> shared_labels;
+    for (int i = 0; i < new_shared_count; ++i) {
+        auto shared_label = LabelFactory::CreateLabel(def->value_type);
+
+        // setup valid shared label index
+        shared_label->SetSharedLabelIndex(i);
+
+        // use first category
+        shared_label->SetCategory(def->categories[0]);
+
+        // connect to the database
+        shared_label->ConnectSharedProperties(true, false);
+
+        shared_labels.push_back(shared_label);
+    }
+
+    for (auto file: file_models_) {
+        file.second->UpdateDefinitionSharedLabels(def, shared_labels);
+    }
+
+    def->shared_labels = shared_labels;
+}

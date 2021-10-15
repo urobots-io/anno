@@ -56,6 +56,9 @@ public:
     /// Delete label category or its instances from all files
     void Delete(std::shared_ptr<LabelCategory>, bool delete_only_instances);
 
+    /// Change shared count of definition to a new number
+    void UpdateDefinitionSharedCount(std::shared_ptr<LabelDefinition> def, int new_shared_count);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);

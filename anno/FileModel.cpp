@@ -200,3 +200,20 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
     return result;
 }
 
+void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels) {
+    auto old_number = def->shared_labels.size();
+    auto new_number = shared_labels.size();
+    if (old_number && !new_number) {
+        // sharing is disabled -> convert from shared to not shared
+    }
+    else if (new_number < old_number) {
+        // shared count decreased - remove labels with shared index > new max index
+    }
+    else if (!old_number && new_number) {
+        // sharing is enabled - try to convert from non-shared to shared if possible, delete rest of labels
+    }
+    else  {
+        // --> new_number >= old_number
+        // shared count increased - do nothing
+    }
+}

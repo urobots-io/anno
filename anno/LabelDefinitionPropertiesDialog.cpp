@@ -158,7 +158,8 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     }
     definition_->filename_filter = filename_filter;
 
-    // TODO: cleanup undo stack
+    auto model = definitions_->GetApplicationModel();
+    model->UpdateDefinitionSharedCount(definition_, ui.spinBox->value());
 
     close();
 }

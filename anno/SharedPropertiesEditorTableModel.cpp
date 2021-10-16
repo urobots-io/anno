@@ -78,7 +78,7 @@ QVariant SharedPropertiesEditorTableModel::data(const QModelIndex &index, int ro
         break;
 
     case 2:
-        if (role == Qt::DisplayRole) {
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
             return QString::fromStdString(properties_[row].name);
         }
         break;
@@ -117,6 +117,10 @@ bool SharedPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
     }
     else if (column == 2 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         properties_[row].name = value.toString().toStdString();
+        if (!properties_[row].name.empty() && !shared_[property_names_[row]]){
+            shared_[property_names_[row]] = true;
+            emit dataChanged(createIndex(row, 1), createIndex(row, 1));
+        }
         return true;
     }
     else if (column == 3 && (role == Qt::DisplayRole || role == Qt::EditRole)) {

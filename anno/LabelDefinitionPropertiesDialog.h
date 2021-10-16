@@ -68,6 +68,7 @@ public:
 private slots:
     void onSharedLabelsCountChanged(int);
     void ApplyAndClose();
+    void CloseEditors();
 
 private:
     Ui::LabelDefinitionPropertiesDialog ui;

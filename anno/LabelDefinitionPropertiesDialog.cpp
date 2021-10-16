@@ -14,12 +14,29 @@
 
 using namespace std;
 
+class SharedPropertiesTableDelegate : public QStyledItemDelegate
+{
+public:
+    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const override {
+            auto w = QStyledItemDelegate::createEditor(parent, option, index);
+
+            auto sp = qobject_cast<QDoubleSpinBox*>(w);
+            if (sp) {
+                sp->setDecimals(4);
+            }
+            return w;
+        }
+};
+
 LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<LabelDefinition> definition, shared_ptr<LabelDefinitionsTreeModel> definitions, QWidget *parent)
 : QDialog(parent)
 , definition_(definition)
 , definitions_(definitions)
 {
     ui.setupUi(this);
+
+    ui.shared_properties_tableView->setItemDelegate(new SharedPropertiesTableDelegate());
 
     // Main properties page.
     properties_ = new LDProperties(this);
@@ -62,6 +79,9 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     // Button box
     connect(ui.buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &QDialog::close);
     connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &LabelDefinitionPropertiesDialog::ApplyAndClose);
+    connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::pressed, this, &LabelDefinitionPropertiesDialog::CloseEditors);
+
+
 }
 
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
@@ -114,8 +134,11 @@ struct SharedPropertiesConverter {
 
 };
 
-void LabelDefinitionPropertiesDialog::ApplyAndClose() {
+void LabelDefinitionPropertiesDialog::CloseEditors() {
+    ui.shared_properties_tableView->setCurrentIndex(QModelIndex());
+}
 
+void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     // Test changes to be done.
     auto existind_definition = definitions_->FindDefinition(properties_->get_type_name());
     if (existind_definition && existind_definition != definition_) {

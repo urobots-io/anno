@@ -208,6 +208,7 @@ void FileModel::ReconnectSharedProperties(std::shared_ptr<LabelDefinition> def) 
             file_updated = true;
             l->ConnectSharedProperties(false, false);
             l->ConnectSharedProperties(true, false);
+            l->UpdateSharedProperties();
         }
     }
 

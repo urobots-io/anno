@@ -202,6 +202,7 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
 }
 
 void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels) {
+    bool file_updated = false;
     auto old_number = int(def->shared_labels.size());
     auto new_number = int(shared_labels.size());
     if (old_number && !new_number) {
@@ -215,6 +216,7 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
                 new_label->SetCategory(l->GetCategory());
                 new_label->FromStringsList(l->ToStringsList());
                 it = labels_.insert(it, new_label) + 1;
+                file_updated = true;
             }
             else {
                 ++it;
@@ -228,6 +230,7 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
             auto l = *it;
             if (l->GetDefinition() == def && l->GetSharedLabelIndex() >= new_number) {
                 it = labels_.erase(it);
+                file_updated = true;
             }
             else {
                 ++it;
@@ -247,6 +250,7 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
                     new_label->FromStringsList(l->ToStringsList());
                     it = labels_.insert(it, new_label) + 1;
                     ++index;
+                    file_updated = true;
                 }
             }
             else {
@@ -257,5 +261,10 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
     else  {
         // --> new_number >= old_number
         // shared count increased - do nothing
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
     }
 }

@@ -766,7 +766,7 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
         def->shared_properties.erase(def->shared_properties.find(p));
     }
     // property changes from not shared -> shared
-    for (auto p: to_modify) {
+    for (auto p: to_add) {
         def->shared_properties[p] = make_shared<SharedPropertyDefinition>();
         *def->shared_properties[p] = props[p];
     }

@@ -52,6 +52,9 @@ public:
     /// Definition gets new shared labels
     void UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels);
 
+    /// Modify shared properties of labels
+    void ReconnectSharedProperties(std::shared_ptr<LabelDefinition>);
+
 public slots:
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified);
     IMPLEMENT_Q_PROPERTY_WRITE(QString, id);

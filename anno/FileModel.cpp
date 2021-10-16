@@ -201,6 +201,22 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
     return result;
 }
 
+void FileModel::ReconnectSharedProperties(std::shared_ptr<LabelDefinition> def) {
+    bool file_updated = false;
+    for (auto l: labels_) {
+        if (l->GetDefinition() == def) {
+            file_updated = true;
+            l->ConnectSharedProperties(false, false);
+            l->ConnectSharedProperties(true, false);
+        }
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
+    }
+}
+
 void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels) {
     bool file_updated = false;
     auto old_number = int(def->shared_labels.size());

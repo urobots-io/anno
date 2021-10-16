@@ -734,3 +734,49 @@ void ApplicationModel::UpdateDefinitionSharedCount(std::shared_ptr<LabelDefiniti
 
     def->shared_labels = shared_labels;
 }
+
+void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<std::string, SharedPropertyDefinition> props) {
+    set<string> to_remove;
+    set<string> to_add;
+    set<string> to_modify;
+
+    for (auto p: def->shared_properties) {
+        if (props.count(p.first)) {
+            auto p1 = p.second;
+            auto p2 = props[p.first];
+            if (p1->name != p2.name ||
+                fabs(p1->a - p2.a) > SharedPropertyDefinition::eps() ||
+                fabs(p1->b - p2.b) > SharedPropertyDefinition::eps()) {
+                to_modify.insert(p.first);
+            }
+        }
+        else {
+            to_remove.insert(p.first);
+        }
+    }
+
+    for (auto p: props) {
+        if (def->shared_properties.count(p.first) == 0) {
+            to_add.insert(p.first);
+        }
+    }
+
+    // property changes from shared -> not shared
+    for (auto p: to_remove) {
+        def->shared_properties.erase(def->shared_properties.find(p));
+    }
+    // property changes from not shared -> shared
+    for (auto p: to_modify) {
+        def->shared_properties[p] = make_shared<SharedPropertyDefinition>();
+        *def->shared_properties[p] = props[p];
+    }
+    // property changes from one shared -> another shared
+    for (auto p: to_modify) {
+        *def->shared_properties[p] = props[p];
+    }
+
+    for (auto file : file_models_) {
+        file.second->ReconnectSharedProperties(def);
+    }
+}
+

@@ -59,6 +59,9 @@ public:
     /// Change shared count of definition to a new number
     void UpdateDefinitionSharedCount(std::shared_ptr<LabelDefinition> def, int new_shared_count);
 
+    /// Change shared properties.
+    void UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<std::string, SharedPropertyDefinition>);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);

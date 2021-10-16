@@ -159,7 +159,14 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     definition_->filename_filter = filename_filter;
 
     auto model = definitions_->GetApplicationModel();
+
+    // Apply shared labels.
     model->UpdateDefinitionSharedCount(definition_, ui.spinBox->value());
+
+    // Apply shared properties.
+    auto props = ((SharedPropertiesEditorTableModel*)ui.shared_properties_tableView->model())->GetProperties();
+    model->UpdateDenitionSharedProperties(definition_, props);
+
 
     close();
 }

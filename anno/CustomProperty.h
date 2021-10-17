@@ -14,7 +14,7 @@ enum class CustomPropertyType {
 struct CustomPropertyDefinition {
     QString id;
 
-    CustomPropertyType type;
+    CustomPropertyType type = CustomPropertyType::p_unknown;
 
     QVariant default_value;
 

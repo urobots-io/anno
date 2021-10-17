@@ -761,6 +761,10 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
         }
     }
 
+    if (to_add.empty() && to_remove.empty() && to_modify.empty()) {
+        return;
+    }
+
     // property changes from shared -> not shared
     for (auto p: to_remove) {
         def->shared_properties.erase(def->shared_properties.find(p));

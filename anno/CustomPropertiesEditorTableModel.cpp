@@ -6,6 +6,8 @@
 
 #include "CustomPropertiesEditorTableModel.h"
 #include "LabelFactory.h"
+#include <QDebug>
+#include <QMetaEnum>
 
 using namespace std;
 
@@ -50,12 +52,11 @@ QVariant CustomPropertiesEditorTableModel::data(const QModelIndex &index, int ro
         break;
 
     case 1:
-        /*if (role == Qt::DisplayRole) {
-            return shared_.at(property_names_[row]);
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
+            auto result = QVariant::fromValue(PropertyType(properties_[row].type));
+            qDebug() << result;
+            return result;
         }
-        else if (role == Qt::CheckStateRole) {
-            return shared_.at(property_names_[row]) ? Qt::Checked : Qt::Unchecked;
-        }*/
         break;
 
     case 2:
@@ -88,7 +89,10 @@ bool CustomPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
         return true;
     }
     else if (column == 1) {
-        // TODO
+        static int enum_id = staticMetaObject.indexOfEnumerator("PropertyType");
+        auto e = staticMetaObject.enumerator(enum_id);
+        properties_[row].type = (CustomPropertyType)e.keyToValue(value.toString().toLatin1());
+        return true;
     }
     else if (column == 2 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         properties_[row].default_value = value;
@@ -103,10 +107,7 @@ bool CustomPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
 }
 
 Qt::ItemFlags CustomPropertiesEditorTableModel::flags(const QModelIndex &index) const {
-    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
-    if (index.column() == 0 || index.column() == 2 || index.column() == 3) {
-        flags |= Qt::ItemIsEditable;
-    }
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsEditable;
     return flags;
 }
 
@@ -120,5 +121,44 @@ QVariant CustomPropertiesEditorTableModel::headerData(int section, Qt::Orientati
     }
 
     return QVariant();
+}
+
+
+#include <QComboBox>
+
+QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    if (index.column() == 1) {
+        auto current_value = index.model()->data(index, Qt::EditRole).toString();
+        auto combo = new QComboBox(parent);
+
+
+        static int enum_id = CustomPropertiesEditorTableModel::staticMetaObject.indexOfEnumerator("PropertyType");
+        auto e = CustomPropertiesEditorTableModel::staticMetaObject.enumerator(enum_id);
+
+        int current_index = 0;
+        for (int i = 1; i < e.keyCount(); ++i) {
+            combo->addItem(e.key(i));
+            if (current_value == e.value(i))
+                current_index = i;
+        }
+        combo->setCurrentIndex(current_index);
+        connect(combo, QOverload<int>::of(&QComboBox::activated), this, &CustomPropertiesEditorTableItemDelegate::EditorValueChanged);
+
+        return combo;
+    }
+
+    return QStyledItemDelegate::createEditor(parent, option, index);
+}
+
+void CustomPropertiesEditorTableItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
+    if (editor != last_editor_) {
+        QStyledItemDelegate::setEditorData(editor, index);
+    }
+}
+
+void CustomPropertiesEditorTableItemDelegate::EditorValueChanged(int index) {
+    last_editor_ = (QWidget*)sender();
+    emit commitData(last_editor_);
+    last_editor_ = nullptr;
 }
 

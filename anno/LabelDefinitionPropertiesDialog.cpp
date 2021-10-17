@@ -37,6 +37,7 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     ui.setupUi(this);
 
     ui.shared_properties_tableView->setItemDelegate(new SharedPropertiesTableDelegate());
+    ui.custom_properties_tableView->setItemDelegate(new CustomPropertiesEditorTableItemDelegate());
 
     // Main properties page.
     properties_ = new LDProperties(this);

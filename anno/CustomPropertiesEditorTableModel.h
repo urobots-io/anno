@@ -3,6 +3,7 @@
 #include "LabelDefinition.h"
 #include <QAbstractTableModel>
 #include <QObject>
+#include <QStyledItemDelegate>
 
 class CustomPropertiesEditorTableModel : public QAbstractTableModel
 {
@@ -13,7 +14,8 @@ public:
     ~CustomPropertiesEditorTableModel();
 
     enum PropertyType {
-        Int = 1,
+        Undefined = 0,
+        Int,
         Double,
         String,
         Boolean,
@@ -36,3 +38,20 @@ private:
     QStringList headers_;
     std::vector<CustomPropertyDefinition> properties_;
 };
+
+Q_DECLARE_METATYPE(CustomPropertiesEditorTableModel::PropertyType)
+
+class CustomPropertiesEditorTableItemDelegate : public QStyledItemDelegate {
+    Q_OBJECT
+
+public:
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+
+public slots:
+    void EditorValueChanged(int index);
+
+private:
+    QWidget *last_editor_ = nullptr;
+};
+

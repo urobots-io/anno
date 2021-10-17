@@ -14,12 +14,11 @@ QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, 
         auto current_value = index.model()->data(index, Qt::EditRole).toString();
         auto combo = new QComboBox(parent);
 
-
         static int enum_id = CustomPropertiesEditorTableModel::staticMetaObject.indexOfEnumerator("PropertyType");
         auto e = CustomPropertiesEditorTableModel::staticMetaObject.enumerator(enum_id);
 
         int current_index = 0;
-        for (int i = 1; i < e.keyCount(); ++i) {
+        for (int i = 1; i < e.keyCount(); ++i) { // 1-to skip first (Unknown) value
             combo->addItem(e.key(i));
             if (current_value == e.value(i))
                 current_index = i;
@@ -28,6 +27,26 @@ QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, 
         connect(combo, QOverload<int>::of(&QComboBox::activated), this, &CustomPropertiesEditorTableItemDelegate::EditorValueChanged);
 
         return combo;
+    }
+    else if (index.column() == 2) {
+        auto model = (CustomPropertiesEditorTableModel*)index.model();
+        auto &p = model->GetProperties()[index.row()];
+        if (p.type == CustomPropertyType::p_selector) {
+            auto current_value = model->data(index, Qt::EditRole).toString();
+            auto combo = new QComboBox(parent);
+            auto cases = p.cases;
+
+            int current_index = 0;
+            for (int i = 0; i < cases.size(); ++i) {
+                combo->addItem(cases.at(i));
+                if (current_value == cases.at(i))
+                    current_index = i;
+            }
+            combo->setCurrentIndex(current_index);
+            connect(combo, QOverload<int>::of(&QComboBox::activated), this, &CustomPropertiesEditorTableItemDelegate::EditorValueChanged);
+
+            return combo;
+        }
     }
 
     return QStyledItemDelegate::createEditor(parent, option, index);

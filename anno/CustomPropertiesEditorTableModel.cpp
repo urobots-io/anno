@@ -16,8 +16,13 @@ CustomPropertiesEditorTableModel::CustomPropertiesEditorTableModel(const vector<
 , properties_(props)
 {
     headers_ << "Name" << "Type" << "Default value" << "Cases";
-    for (auto &p : props) {
+    for (auto &p : properties_) {
         original_names_ << p.id;
+
+        // numbers are loaded as doubles from JSON, convert them to ints
+        if (p.type == CustomPropertyType::p_int) {
+            p.default_value = QVariant(p.default_value.toInt());
+        }
     }
 }
 
@@ -33,7 +38,7 @@ void CustomPropertiesEditorTableModel::AddProperty() {
 }
 
 void CustomPropertiesEditorTableModel::DeleteProperty(QModelIndex index) {
-    if (index.row() < properties_.size()) {
+    if (index.row() < int(properties_.size())) {
         emit beginResetModel();
         properties_.erase(properties_.begin() + index.row());
         original_names_.removeAt(index.row());
@@ -74,7 +79,7 @@ QVariant CustomPropertiesEditorTableModel::data(const QModelIndex &index, int ro
 
     case 2:
         if (role == Qt::DisplayRole || role == Qt::EditRole) {
-            return properties_[row].default_value.toString();
+            return properties_[row].default_value;
         }
         break;
 

@@ -109,8 +109,8 @@ public:
         return client_; 
     }
 
-    void UpdateSharedProperties() override { 
-        client_->UpdateSharedProperties(); 
+    void UpdateSharedProperties(bool forced_update) override {
+        client_->UpdateSharedProperties(forced_update); 
     }
 
     LabelProperty* GetProperty(QString property_name) override {

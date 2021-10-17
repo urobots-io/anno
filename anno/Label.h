@@ -115,7 +115,7 @@ public:
     void CopyFrom(const Label &);
 
     /// Update content from the database
-    virtual void UpdateSharedProperties() {}
+    virtual void UpdateSharedProperties(bool forced_update=false) {}
 
     /// Return pointer to the standard property
     virtual LabelProperty* GetProperty(QString property_name) { Q_UNUSED(property_name); return nullptr; }

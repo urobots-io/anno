@@ -394,10 +394,10 @@ QJsonObject ApplicationModel::GenerateHeader() {
     return header;
 }
 
-void ApplicationModel::UpdateSharedProperties() {
+void ApplicationModel::UpdateSharedProperties(bool forced_update) {
     for (auto i : file_models_) {
         for (auto l : i.second->labels_) {
-            l->UpdateSharedProperties();
+            l->UpdateSharedProperties(forced_update);
         }
     }
 }

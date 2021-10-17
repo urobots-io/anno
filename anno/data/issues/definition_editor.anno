@@ -1,0 +1,51 @@
+{
+    "definitions": {
+        "files_root_dir": "demo_multi_marker/images/shared_props",
+        "marker_types": {
+            "Circle 0": {
+                "categories": [
+                    {
+                        "color": "#ff0000",
+                        "id": 0,
+                        "name": "Category 0"
+                    }
+                ],
+                "value_type": "circle"
+            }
+        },
+        "project_script": [
+            "function myDrawCircle() {",
+            "  RenderBase()",
+            "  SetBaseTransform(true, false)",
+            "  Rotate(45) ",
+            "  DrawLine(-1, 0, 1, 0)",
+            "  Rotate(90)",
+            "  DrawLine(-1, 0, 1, 0)",
+            "}",
+            "",
+            ""
+        ]
+    },
+    "files": [
+        {
+            "markers": [
+                {
+                    "category": 0,
+                    "type": "Circle 0",
+                    "value": "561.62 70.0427  48.185"
+                },
+                {
+                    "category": 0,
+                    "type": "Circle 0",
+                    "value": "221.962 64.2857  19.6871"
+                },
+                {
+                    "category": 0,
+                    "type": "Circle 0",
+                    "value": "371.642 68.1237  30.3417"
+                }
+            ],
+            "name": "batteries.jpg"
+        }
+    ]
+}

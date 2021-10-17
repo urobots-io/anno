@@ -91,8 +91,8 @@ void RectLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     }
 }
 
-void RectLabel::UpdateSharedProperties() {
-    if (width_.PullUpdate() + height_.PullUpdate() > 0) {
+void RectLabel::UpdateSharedProperties(bool forced_update) {
+    if ((width_.PullUpdate() + height_.PullUpdate()) > 0 || forced_update) {
         UpdateHandlesPositions();
     }
 }

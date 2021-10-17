@@ -11,6 +11,18 @@ PropertyDatabase& PropertyDatabase::Instance() {
     return instance;
 }
 
+int PropertyDatabase::GetStateIndex() const { 
+    return state_index_; 
+}
+
+void PropertyDatabase::Modify() { 
+    state_index_++; 
+}
+
+void PropertyDatabase::Clear() {
+    properties_.clear();
+}
+
 double PropertyDatabase::GetCurrentValue(const std::string & name, double default_value) {
     if (properties_.count(name)) {
         return properties_[name]->value;

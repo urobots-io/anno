@@ -146,8 +146,8 @@ bool OrientedPointLabel::MoveBy(const QPointF & offset) {
 	return true;
 }
 
-void OrientedPointLabel::UpdateSharedProperties() {
-    if (angle_.PullUpdate()) {
+void OrientedPointLabel::UpdateSharedProperties(bool forced_update) {
+    if (angle_.PullUpdate() || forced_update) {
         UpdateHandlesPositions();
     }
 }

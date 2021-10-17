@@ -45,7 +45,7 @@ public:
     std::shared_ptr<FileModel> GetFirstFileModel();
 
     /// Update all shared properties
-    void UpdateSharedProperties();
+    void UpdateSharedProperties(bool forced_update = false);
 
     /// Return object which converts images after loading.
     std::shared_ptr<ImageConverter> GetImageConverter();

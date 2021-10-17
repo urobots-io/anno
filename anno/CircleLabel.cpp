@@ -51,8 +51,8 @@ void CircleLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     }
 }
 
-void CircleLabel::UpdateSharedProperties() {
-    if (radius_.PullUpdate()) {
+void CircleLabel::UpdateSharedProperties(bool forced_update) {
+    if (radius_.PullUpdate() || forced_update) {
         handles_[1]->SetPosition(handles_[0]->GetPosition() + QPointF(radius_.get(), 0), false);
     }
 }

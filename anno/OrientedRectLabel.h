@@ -42,7 +42,7 @@ public:
 
 	bool MoveBy(const QPointF & offset) override;
 
-    void UpdateSharedProperties() override;
+    void UpdateSharedProperties(bool forced_update = false) override;
 
     LabelProperty *GetProperty(QString property_name) override;
 

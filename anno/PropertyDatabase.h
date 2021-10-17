@@ -10,12 +10,10 @@ public:
 
     static PropertyDatabase& Instance();
 
-    int GetStateIndex() const { return state_index_; }
-    void Modify() { state_index_++; }
-
-    void Clear() {
-        properties_.clear();
-    }
+    int GetStateIndex() const;
+    void Modify();
+    
+    void Clear();
 
     double GetCurrentValue(const std::string & name, double default_value);
 
@@ -74,7 +72,8 @@ public:
 
     double get() const {
         if (shared_ && definition_) {
-            return definition_->FromDatabaseValue(shared_->value);
+            const_cast<double&>(value_) = definition_->FromDatabaseValue(shared_->value);
+            return value_;
         }
         else {
             return value_;

@@ -36,7 +36,7 @@ public:
 
     void FromStringsList(const QStringList &) override;
 
-    void UpdateSharedProperties() override;
+    void UpdateSharedProperties(bool forced_update = false) override;
 
     LabelProperty *GetProperty(QString property_name) override;
 

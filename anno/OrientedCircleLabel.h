@@ -38,7 +38,7 @@ public:
 	
 	bool MoveBy(const QPointF & offset) override;
     
-    void UpdateSharedProperties() override;
+    void UpdateSharedProperties(bool forced_update = false) override;
 
     void OnNewDefinition() override;
 

@@ -219,8 +219,8 @@ bool OrientedCircleLabel::MoveBy(const QPointF & offset) {
 	return true;
 }
 
-void OrientedCircleLabel::UpdateSharedProperties() {
-    if (angle_.PullUpdate() + radius_.PullUpdate() > 0) {
+void OrientedCircleLabel::UpdateSharedProperties(bool forced_update) {
+    if ((angle_.PullUpdate() + radius_.PullUpdate()) > 0 || forced_update) {
         UpdateHandlesPositions();
     }
 }

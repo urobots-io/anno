@@ -114,7 +114,8 @@ bool CustomPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
         auto e = staticMetaObject.enumerator(enum_id);
         properties_[row].type = (CustomPropertyType)e.keyToValue(value.toString().toLatin1());
 
-        if (!properties_[row].default_value.isNull()) {
+        //if (!properties_[row].default_value.isNull())
+        {
             switch (properties_[row].type) {
             default:
                 break;

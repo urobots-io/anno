@@ -6,6 +6,7 @@
 
 #include "LabelDefinitionPropertiesDialog.h"
 #include "ApplicationModel.h"
+#include "CustomPropertiesEditorTableItemDelegate.h"
 #include "CustomPropertiesEditorTableModel.h"
 #include "messagebox.h"
 #include "PropertyTableItemDelegate.h"

@@ -28,6 +28,7 @@ PRE_TARGETDEPS += git_rev
 
 SOURCES += \
     AboutDialog.cpp ApplicationModel.cpp CircleLabel.cpp ColorDisplayWidget.cpp CreateLabelFileModelCommand.cpp \
+    CustomPropertiesEditorTableItemDelegate.cpp \
     CustomPropertiesEditorTableModel.cpp \
     CustomPropertyTableItemDelegate.cpp CustomPropertyTableModel.cpp DeleteAllLabelsFileModelCommand.cpp \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
@@ -49,6 +50,7 @@ SOURCES += \
     triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
 
 HEADERS += \
+    CustomPropertiesEditorTableItemDelegate.h \
     ImagePropertiesTableModel.h \
     ImagePropertiesWidget.h \
     LabelDefinitionPropertiesDialog.h \

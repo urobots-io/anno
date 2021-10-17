@@ -265,6 +265,7 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
                 if (index < new_number) {
                     auto new_label = make_shared<ProxyLabel>(shared_labels[index]);
                     new_label->FromStringsList(l->ToStringsList());
+                    new_label->SetSharedLabelIndex(index);
                     it = labels_.insert(it, new_label) + 1;
                     ++index;
                     file_updated = true;

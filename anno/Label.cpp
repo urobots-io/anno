@@ -124,8 +124,8 @@ QPen Label::GetOutlinePen(const PaintInfo & pi) const {
 
 void Label::CopyFrom(const Label & other) {    
     text_ = other.text_;
-    FromStringsList(other.ToStringsList());
     SetCategory(other.category_);
+    FromStringsList(other.ToStringsList());
 }
 
 QVariant Label::Read(const CustomPropertyDefinition & prop_def) const {

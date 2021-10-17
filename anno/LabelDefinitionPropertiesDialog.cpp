@@ -92,50 +92,51 @@ void LabelDefinitionPropertiesDialog::onSharedLabelsCountChanged(int count) {
     ui.shared_status_label->setText(count == 0 ? tr(" - labels are not shared") : QString());
 }
 
-// Test changes in shared properties:
-// shared check -> Change from not_shared -> shared: question to remove already available labels.
-// shared check -> Warn if sharing is to be removed.
-// shared check -> Warn/Question if shared labels number decreased and some labels will be removed.
-struct SharedPropertiesConverter {
-    QString question;
+void LabelDefinitionPropertiesDialog::CloseEditors() {
+    ui.shared_properties_tableView->setCurrentIndex(QModelIndex());
+}
 
-    void Prepare(shared_ptr<LabelDefinition> def, int new_count, ApplicationModel *app) {
-        set<int> existing_indexes = def->is_shared()
-                ? app->GetExistingSharedIndexes(def)
-                : set<int>();
-        auto existing_labels_count = app->GetLabelsCount(def);
-        if (!existing_indexes.size() && !existing_labels_count) {
-            // nothing to worry about, no labels are created yet.
-            return;
+QString LabelDefinitionPropertiesDialog::GetSharedLabelsCountUpdateNotification() {
+    // Test changes in shared properties:
+    // 1. Change from not_shared -> shared: question to remove already available labels.
+    // 2. Warn if sharing is to be removed.
+    // 3. Warn/Question if shared labels number decreased and some labels will be removed.
+    auto def = definition_;
+    auto new_count = ui.spinBox->value();
+    auto app = definitions_->GetApplicationModel();
+
+    set<int> existing_indexes = def->is_shared()
+            ? app->GetExistingSharedIndexes(def)
+            : set<int>();
+    auto existing_labels_count = app->GetLabelsCount(def);
+    if (!existing_indexes.size() && !existing_labels_count) {
+        // nothing to worry about, no labels are created yet.
+        return QString();
+    }
+
+    if (!def->is_shared()) {
+        if (new_count > 0) {
+            return "You want to make marker shared, but there are existing labels which might be deleted or modified via this change. Dou you want to continue?";
         }
-
-        if (!def->is_shared()) {
-            if (new_count > 0) {
-                question = "You want to make marker shared, but there are existing labels which might be deleted or modified via this change. Dou you want to continue?";
-            }
+    }
+    else {
+        if (new_count == 0) {
+            return "Do you want to disable labels sharing?";
         }
         else {
-            if (new_count == 0) {
-                question = "Do you want to disable labels sharing?";
+            set<int> indexes_to_delete;
+            for (auto i: existing_indexes) {
+                if (i >= new_count) {
+                    indexes_to_delete.insert(i);
+                }
             }
-            else {
-                set<int> indexes_to_delete;
-                for (auto i: existing_indexes) {
-                    if (i >= new_count) {
-                        indexes_to_delete.insert(i);
-                    }
-                }
-                if (indexes_to_delete.size()) {
-                    question = "You want to decrease number of shared instances of the marker. Some labels will be deleted. Do you want to continue?";
-                }
+            if (indexes_to_delete.size()) {
+                return "You want to decrease number of shared instances of the marker. Some labels will be deleted. Do you want to continue?";
             }
         }
     }
 
-};
-
-void LabelDefinitionPropertiesDialog::CloseEditors() {
-    ui.shared_properties_tableView->setCurrentIndex(QModelIndex());
+    return QString();
 }
 
 void LabelDefinitionPropertiesDialog::ApplyAndClose() {
@@ -152,10 +153,9 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
         return;
     }
 
-    SharedPropertiesConverter shared_converter;
-    shared_converter.Prepare(definition_, ui.spinBox->value(), definitions_->GetApplicationModel());
-    if (!shared_converter.question.isEmpty()) {
-        if (!messagebox::Question(shared_converter.question +
+    auto notification = GetSharedLabelsCountUpdateNotification();
+    if (!notification.isEmpty()) {
+        if (!messagebox::Question(notification +
                                   "\nReverting changes will not be possible, undo stack will be cleared.",
                                   tr("Shared Instances Number Modified"))) {
             return;

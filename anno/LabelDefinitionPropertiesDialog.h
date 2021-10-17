@@ -71,6 +71,9 @@ private slots:
     void CloseEditors();
 
 private:
+    QString GetSharedLabelsCountUpdateNotification();
+
+private:
     Ui::LabelDefinitionPropertiesDialog ui;
     std::shared_ptr<LabelDefinition> definition_;
     std::shared_ptr<LabelDefinitionsTreeModel> definitions_;

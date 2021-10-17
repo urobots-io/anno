@@ -16,6 +16,9 @@ CustomPropertiesEditorTableModel::CustomPropertiesEditorTableModel(const vector<
 , properties_(props)
 {
     headers_ << "Name" << "Type" << "Default value" << "Cases";
+    for (auto &p : props) {
+        original_names_ << p.id;
+    }
 }
 
 CustomPropertiesEditorTableModel::~CustomPropertiesEditorTableModel()
@@ -25,7 +28,17 @@ CustomPropertiesEditorTableModel::~CustomPropertiesEditorTableModel()
 void CustomPropertiesEditorTableModel::AddProperty() {
     emit beginResetModel();
     properties_.push_back(CustomPropertyDefinition());    
+    original_names_.push_back(QString());
     emit endResetModel();
+}
+
+void CustomPropertiesEditorTableModel::DeleteProperty(QModelIndex index) {
+    if (index.row() < properties_.size()) {
+        emit beginResetModel();
+        properties_.erase(properties_.begin() + index.row());
+        original_names_.removeAt(index.row());
+        emit endResetModel();
+    }
 }
 
 int CustomPropertiesEditorTableModel::rowCount(const QModelIndex &parent) const {
@@ -107,7 +120,8 @@ bool CustomPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
 }
 
 Qt::ItemFlags CustomPropertiesEditorTableModel::flags(const QModelIndex &index) const {
-    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsEditable;
+    Q_UNUSED(index)
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsEditable | Qt::ItemIsSelectable;
     return flags;
 }
 

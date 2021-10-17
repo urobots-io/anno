@@ -31,12 +31,17 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
+    const std::vector<CustomPropertyDefinition> & GetProperties() const { return properties_; }
+    const QStringList GetOriginalNames() const { return original_names_; }
+
 public slots:
     void AddProperty();
+    void DeleteProperty(QModelIndex index);
 
 private:
     QStringList headers_;
     std::vector<CustomPropertyDefinition> properties_;
+    QStringList original_names_;
 };
 
 Q_DECLARE_METATYPE(CustomPropertiesEditorTableModel::PropertyType)

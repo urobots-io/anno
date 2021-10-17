@@ -69,6 +69,7 @@ private slots:
     void onSharedLabelsCountChanged(int);
     void ApplyAndClose();
     void CloseEditors();
+    void DeleteCustomProperty();
 
 private:
     QString GetSharedLabelsCountUpdateNotification();

@@ -230,7 +230,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QTableView" name="custom_properties_tableView"/>
+        <widget class="QTableView" name="custom_properties_tableView">
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

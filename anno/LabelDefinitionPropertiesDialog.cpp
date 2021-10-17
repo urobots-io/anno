@@ -76,13 +76,12 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     ui.custom_properties_tableView->setModel(custom_properties);
 
     connect(ui.add_cp_pushButton, &QPushButton::clicked, custom_properties, &CustomPropertiesEditorTableModel::AddProperty);
+    connect(ui.delete_cp_pushButton, &QPushButton::clicked, this, &LabelDefinitionPropertiesDialog::DeleteCustomProperty);
 
     // Button box
     connect(ui.buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &QDialog::close);
     connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &LabelDefinitionPropertiesDialog::ApplyAndClose);
     connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::pressed, this, &LabelDefinitionPropertiesDialog::CloseEditors);
-
-
 }
 
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
@@ -95,6 +94,11 @@ void LabelDefinitionPropertiesDialog::onSharedLabelsCountChanged(int count) {
 
 void LabelDefinitionPropertiesDialog::CloseEditors() {
     ui.shared_properties_tableView->setCurrentIndex(QModelIndex());
+}
+
+void LabelDefinitionPropertiesDialog::DeleteCustomProperty() {
+    auto model = (CustomPropertiesEditorTableModel*)ui.custom_properties_tableView->model();
+    model->DeleteProperty(ui.custom_properties_tableView->currentIndex());
 }
 
 QString LabelDefinitionPropertiesDialog::GetSharedLabelsCountUpdateNotification() {

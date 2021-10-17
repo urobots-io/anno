@@ -32,7 +32,10 @@ CustomPropertiesEditorTableModel::~CustomPropertiesEditorTableModel()
 
 void CustomPropertiesEditorTableModel::AddProperty() {
     emit beginResetModel();
-    properties_.push_back(CustomPropertyDefinition());    
+    CustomPropertyDefinition d;
+    d.id = QString("custom %0").arg(properties_.size() + 1);
+    d.type = CustomPropertyType::p_int;
+    properties_.push_back(d);
     original_names_.push_back(QString());
     emit endResetModel();
 }
@@ -110,14 +113,58 @@ bool CustomPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
         static int enum_id = staticMetaObject.indexOfEnumerator("PropertyType");
         auto e = staticMetaObject.enumerator(enum_id);
         properties_[row].type = (CustomPropertyType)e.keyToValue(value.toString().toLatin1());
+
+        if (!properties_[row].default_value.isNull()) {
+            switch (properties_[row].type) {
+            default:
+                break;
+            case CustomPropertyType::p_int:
+                properties_[row].default_value = properties_[row].default_value.toInt();
+                break;
+            case CustomPropertyType::p_double:
+                properties_[row].default_value = properties_[row].default_value.toDouble();
+                break;
+            case CustomPropertyType::p_string:
+                properties_[row].default_value = properties_[row].default_value.toString();
+                break;
+            case CustomPropertyType::p_boolean:
+                properties_[row].default_value = properties_[row].default_value.toBool();
+                break;
+            case CustomPropertyType::p_selector:
+                properties_[row].default_value = properties_[row].default_value.toString();
+                break;
+            }
+            emit dataChanged(createIndex(row, 2), createIndex(row, 2));
+        }
         return true;
     }
     else if (column == 2 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        properties_[row].default_value = value;
+        switch (properties_[row].type) {
+        default:
+            break;
+        case CustomPropertyType::p_int:
+            properties_[row].default_value = value.toInt();
+            break;
+        case CustomPropertyType::p_double:
+            properties_[row].default_value = value.toDouble();
+            break;
+        case CustomPropertyType::p_string:
+            properties_[row].default_value = value.toString();
+            break;
+        case CustomPropertyType::p_boolean:
+            properties_[row].default_value = value.toBool();
+            break;
+        case CustomPropertyType::p_selector:
+            properties_[row].default_value = value.toString();
+            break;
+        }
         return true;
     }
     else if (column == 3 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        properties_[row].cases = value.toString().split(", ");
+        properties_[row].cases.clear();
+        for (auto s: value.toString().split(",")) {
+            properties_[row].cases << s.trimmed();
+        }
         return true;
     }
 

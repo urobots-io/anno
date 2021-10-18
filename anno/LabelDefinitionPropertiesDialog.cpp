@@ -20,11 +20,11 @@ class SharedPropertiesTableDelegate : public QStyledItemDelegate
 public:
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                           const QModelIndex &index) const override {
-            auto w = QStyledItemDelegate::createEditor(parent, option, index);
 
+            auto w = QStyledItemDelegate::createEditor(parent, option, index);
             auto sp = qobject_cast<QDoubleSpinBox*>(w);
             if (sp) {
-                sp->setDecimals(4);
+                sp->setDecimals(6);
             }
             return w;
         }

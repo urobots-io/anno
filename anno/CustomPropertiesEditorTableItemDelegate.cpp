@@ -7,6 +7,7 @@
 #include "CustomPropertiesEditorTableItemDelegate.h"
 #include "CustomPropertiesEditorTableModel.h"
 #include <QComboBox>
+#include <QDoubleSpinBox>
 #include <QMetaEnum>
 
 QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
@@ -49,7 +50,12 @@ QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, 
         }
     }
 
-    return QStyledItemDelegate::createEditor(parent, option, index);
+    auto w = QStyledItemDelegate::createEditor(parent, option, index);
+    auto sp = qobject_cast<QDoubleSpinBox*>(w);
+    if (sp) {
+        sp->setDecimals(6);
+    }
+    return w;
 }
 
 void CustomPropertiesEditorTableItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {

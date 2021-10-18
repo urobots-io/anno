@@ -296,7 +296,10 @@ void FileModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition
         }
 
         auto &label_properties = l->GetCustomProperties();
-        // TODO
+        auto old_keys = label_properties.keys();
+        for (auto old : old_keys) {
+            // find new property with the same name
+            auto it_new_property = find_if(props.begin(), props.end(), [&](const CustomPropertyDefinition& cpd) { return cpd.id == old; });
     }
 
     if (file_updated) {

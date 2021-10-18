@@ -788,4 +788,5 @@ void ApplicationModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDef
     for (auto file : file_models_) {
         file.second->UpdateDefinitionCustomProperties(def, props, original_names);
     }
+    def->custom_properties = props;
 }

@@ -41,7 +41,7 @@ void CustomPropertiesEditorTableModel::AddProperty() {
 }
 
 void CustomPropertiesEditorTableModel::DeleteProperty(QModelIndex index) {
-    if (index.row() < int(properties_.size())) {
+    if (index.isValid() && index.row() < int(properties_.size())) {
         emit beginResetModel();
         properties_.erase(properties_.begin() + index.row());
         original_names_.removeAt(index.row());

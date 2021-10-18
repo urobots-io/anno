@@ -177,10 +177,11 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
     QJsonArray categories;
 
     for (auto c : def->categories) {
-        QJsonObject json;
-        json.insert(K_CATEGORY_NAME, c->get_name());
-        json.insert(K_CATEGORY_ID, c->get_value());
-        json.insert(K_CATEGORY_COLOR, c->get_color().name());
+        QJsonObject json = {
+            { K_CATEGORY_NAME, c->get_name() },
+            { K_CATEGORY_ID, c->get_value() },
+            { K_CATEGORY_COLOR, c->get_color().name() }
+        };
         categories.push_back(json);
     }
 
@@ -235,9 +236,10 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
                 shared_properties[p.first] = p.second->name;
             }
             else {
-                QJsonObject jprop;
-                jprop.insert(K_DEFINITION_SHARED_PROPERTY_NAME, p.second->name);
-                jprop.insert(K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_A, QJsonValue::fromVariant(p.second->a));
+                QJsonObject jprop = {
+                    { K_DEFINITION_SHARED_PROPERTY_NAME, p.second->name },
+                    { K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_A, QJsonValue::fromVariant(p.second->a) }
+                };
                 if (p.second->b != 0) {
                     jprop.insert(K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_B, QJsonValue::fromVariant(p.second->b));
                 }

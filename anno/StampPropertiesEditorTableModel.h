@@ -24,5 +24,6 @@ public:
 private:
     QStringList headers_;
     std::vector<QString> names_;
+    // TODO(ap21): change to doubles (at the moment all values are doubles)
     std::vector<QString> values_;
 };

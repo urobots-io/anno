@@ -1,9 +1,10 @@
 #pragma once
+#include <QString>
 #include <string>
 #include <math.h>
 
 struct SharedPropertyDefinition {
-    std::string name;
+    QString name;
     double a = 1.0;
     double b = 0.0;
     

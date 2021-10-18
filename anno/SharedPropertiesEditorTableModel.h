@@ -8,7 +8,7 @@ class SharedPropertiesEditorTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    SharedPropertiesEditorTableModel(const std::map<std::string, std::shared_ptr<SharedPropertyDefinition>> & properties, LabelType type, QObject *parent);
+    SharedPropertiesEditorTableModel(const std::map<QString, std::shared_ptr<SharedPropertyDefinition>> & properties, LabelType type, QObject *parent);
     ~SharedPropertiesEditorTableModel();
 
     int rowCount(const QModelIndex &parent) const override;
@@ -19,7 +19,7 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-    std::map<std::string, SharedPropertyDefinition> GetProperties() const;
+    std::map<QString, SharedPropertyDefinition> GetProperties() const;
     
 private:
     std::map<QString, bool> shared_;

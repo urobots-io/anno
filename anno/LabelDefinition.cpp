@@ -40,7 +40,7 @@ std::shared_ptr<LabelCategory> LabelDefinition::GetCategory(int value) const {
     return {};
 }
 
-void LabelDefinition::ConnectProperty(LabelProperty& prop, const std::string & name, bool inject_my_value) const {
+void LabelDefinition::ConnectProperty(LabelProperty& prop, const QString & name, bool inject_my_value) const {
     auto it = shared_properties.find(name);
     if (it != shared_properties.end()) {
         prop.Connect(it->second, inject_my_value);
@@ -50,7 +50,7 @@ void LabelDefinition::ConnectProperty(LabelProperty& prop, const std::string & n
     }
 }
 
-double LabelDefinition::GetSharedPropertyValue(const std::string & name, double default_value) const {
+double LabelDefinition::GetSharedPropertyValue(const QString & name, double default_value) const {
     auto it = shared_properties.find(name);
     if (it != shared_properties.end()) {
         auto def = it->second;
@@ -95,7 +95,7 @@ bool LabelDefinition::AllowedForFile(FileModel* file, int shared_index) const {
 
 bool LabelDefinition::AllowedForFilename(QString filename, int shared_index) const {
     int index = min<int>(shared_index, int(filename_filter.size()) - 1);
-    QRegularExpression re(filename_filter[index].c_str());
+    QRegularExpression re(filename_filter[index]);
     QRegularExpressionMatch match = re.match(filename);
     return match.hasMatch();
 }

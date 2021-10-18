@@ -58,18 +58,18 @@ public:
 
     /// regex which defines if label is allowed on the image with given name
     /// for shared labels, each label uses filter with corresponding index  
-    std::vector<std::string> filename_filter;
+    std::vector<QString> filename_filter;
 
     /// shared properties
-    std::map<std::string, std::shared_ptr<SharedPropertyDefinition>> shared_properties;
+    std::map<QString, std::shared_ptr<SharedPropertyDefinition>> shared_properties;
 
     /// custom label properties
     std::vector<CustomPropertyDefinition> custom_properties;
 	
     bool is_shared() const { return shared_labels.size() > 0; }
 
-    void ConnectProperty(LabelProperty&, const std::string & name, bool inject_my_value) const;
-    double GetSharedPropertyValue(const std::string & name, double default_value) const;
+    void ConnectProperty(LabelProperty&, const QString & name, bool inject_my_value) const;
+    double GetSharedPropertyValue(const QString & name, double default_value) const;
 
     std::set<int> GetMissingIndexes(const std::set<int>& existing_indexes) const;
 

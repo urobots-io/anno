@@ -60,7 +60,7 @@ public:
     void UpdateDefinitionSharedCount(std::shared_ptr<LabelDefinition> def, int new_shared_count);
 
     /// Change shared properties.
-    void UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<std::string, SharedPropertyDefinition>);
+    void UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<QString, SharedPropertyDefinition>);
 
     /// Update custom properties.
     void UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition>, QStringList);

@@ -60,7 +60,7 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
 
     QStringList filenames;
     for (auto s: definition_->filename_filter) {
-        filenames << QString::fromStdString(s);
+        filenames << s;
     }
     ui.plainTextEdit->setPlainText(filenames.join("\n"));
 
@@ -182,10 +182,10 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     definition_->stamp_parameters = stamp_properties->GetStampProperties();
 
     // Apply filename filter.
-    vector<string> filename_filter;
+    vector<QString> filename_filter;
     for (auto s : ui.plainTextEdit->toPlainText().split('\n')) {
         if (!s.trimmed().isEmpty()) {
-            filename_filter.push_back(s.toStdString());
+            filename_filter.push_back(s);
         }
     }
     definition_->filename_filter = filename_filter;

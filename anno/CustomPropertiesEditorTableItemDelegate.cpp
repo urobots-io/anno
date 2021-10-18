@@ -65,6 +65,7 @@ void CustomPropertiesEditorTableItemDelegate::setEditorData(QWidget *editor, con
 }
 
 void CustomPropertiesEditorTableItemDelegate::EditorValueChanged(int index) {
+    Q_UNUSED(index);
     last_editor_ = (QWidget*)sender();
     emit commitData(last_editor_);
     last_editor_ = nullptr;

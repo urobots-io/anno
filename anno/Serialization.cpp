@@ -64,11 +64,11 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
     if (def_json.contains(K_DEFINITION_FILENAME_FILTER)) {
         auto filter = def_json[K_DEFINITION_FILENAME_FILTER];
         if (filter.isString()) {
-            def->filename_filter.push_back(filter.toString().toStdString());
+            def->filename_filter.push_back(filter.toString());
         }
         else if (filter.isArray()) {
             for (const auto &i : filter.toArray()) {
-                def->filename_filter.push_back(i.toString().toStdString());
+                def->filename_filter.push_back(i.toString());
             }
         }
     }
@@ -86,11 +86,11 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
             auto property_def = std::make_shared<SharedPropertyDefinition>();
             auto jnode = shared_props[key];
             if (!jnode.isObject()) {
-                property_def->name = jnode.toString().toStdString();
+                property_def->name = jnode.toString();
             }
             else {
                 auto jobj = jnode.toObject();
-                property_def->name = jobj[K_DEFINITION_SHARED_PROPERTY_NAME].toString().toStdString();
+                property_def->name = jobj[K_DEFINITION_SHARED_PROPERTY_NAME].toString();
                 if (jobj.contains(K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_A)) {
                     property_def->a = jobj[K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_A].toDouble();
                 }
@@ -98,7 +98,7 @@ std::shared_ptr<LabelDefinition> DeserializeLabelDefinition(const QJsonObject & 
                     property_def->b = jobj[K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_B].toDouble();
                 }
             }
-            def->shared_properties[key.toStdString()] = property_def;
+            def->shared_properties[key] = property_def;
         }
     }
 
@@ -204,7 +204,7 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
     if (def->filename_filter.size()) {
         QJsonArray filename_filters_array;
         for (const auto &i : def->filename_filter)
-            filename_filters_array.push_back(QJsonValue::fromVariant(QString::fromStdString(i)));
+            filename_filters_array.push_back(QJsonValue::fromVariant(i));
         json.insert(K_DEFINITION_FILENAME_FILTER, filename_filters_array);
     }
 
@@ -232,16 +232,16 @@ QJsonObject Serialize(std::shared_ptr<LabelDefinition> def) {
         QJsonObject shared_properties;
         for (auto p : def->shared_properties) {
             if (p.second->IsIdentity()) {
-                shared_properties[QString::fromStdString(p.first)] = QString::fromStdString(p.second->name);
+                shared_properties[p.first] = p.second->name;
             }
             else {
                 QJsonObject jprop;
-                jprop.insert(K_DEFINITION_SHARED_PROPERTY_NAME, QString::fromStdString(p.second->name));
+                jprop.insert(K_DEFINITION_SHARED_PROPERTY_NAME, p.second->name);
                 jprop.insert(K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_A, QJsonValue::fromVariant(p.second->a));
                 if (p.second->b != 0) {
                     jprop.insert(K_DEFINITION_SHARED_PROPERTY_LINEAR_TRANSFORM_B, QJsonValue::fromVariant(p.second->b));
                 }
-                shared_properties[QString::fromStdString(p.first)] = jprop;
+                shared_properties[p.first] = jprop;
             }
         }
         json.insert(K_DEFINITION_SHARED_PROPERTIES, shared_properties);

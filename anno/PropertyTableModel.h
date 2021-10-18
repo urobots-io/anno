@@ -44,7 +44,7 @@ private:
     QObject *object_ = nullptr;
     bool suppress_object_properties_ = true;
     bool read_only_ = false;
-    std::vector<std::string> property_names_;
+    std::vector<QString> property_names_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(object);

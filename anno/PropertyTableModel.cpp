@@ -37,14 +37,14 @@ void PropertyTableModel::set_object(QObject* object) {
     object_ = object;    
     
     if (object_) {
-        vector<string> property_names;
+        vector<QString> property_names;
         auto meta = object_->metaObject();
         for (int i = 0; i < meta->propertyCount(); ++i) {
             auto p = meta->property(i);
             auto name = p.name();
             if (name && p.isValid()) {
                 if (!get_suppress_object_properties() || strcmp(name, "objectName"))
-                    property_names.push_back(name);
+                    property_names.push_back(QString::fromLatin1(name));
             }
         }
 
@@ -81,7 +81,7 @@ int PropertyTableModel::columnCount(const QModelIndex &parent) const {
 QMetaProperty PropertyTableModel::GetProperty(const QModelIndex &index) const {
     int row = index.row();
     if (object_ && row >= 0 && row < int(property_names_.size())) {
-        int property_index = object_->metaObject()->indexOfProperty(property_names_[row].c_str());
+        int property_index = object_->metaObject()->indexOfProperty(property_names_[row].toLatin1());
         return object_->metaObject()->property(property_index);
     }
     return QMetaProperty();
@@ -139,9 +139,7 @@ QVariant PropertyTableModel::data(const QModelIndex &index, int role) const {
 }
 
 bool PropertyTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    int row = index.row();
     int column = index.column();
-
     if (column == 1 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         auto p = GetProperty(index);
         p.reset(object_);
@@ -179,13 +177,13 @@ void PropertyTableModel::SubscribeForObjectChanges() {
     QMetaMethod updateSlot = this->metaObject()->method(this->metaObject()->indexOfSlot("OnObjectPropertyChanged()"));
     auto meta = object_->metaObject();
     for (auto name : property_names_) {
-        int index = meta->indexOfProperty(name.c_str());
+        int index = meta->indexOfProperty(name.toLatin1());
         if (index == -1) continue;
         auto mp = meta->property(index);
         if (mp.hasNotifySignal()) {                        
             auto c = connect(object_, mp.notifySignal(), this, updateSlot);
             if (!c) {
-                qDebug() << QString("Failed to connect to %0 notification\n").arg(name.c_str());
+                qDebug() << QString("Failed to connect to %0 notification\n").arg(name);
             }
         }
     }
@@ -198,7 +196,7 @@ void PropertyTableModel::OnObjectPropertyChanged() {
 
     auto meta = object_->metaObject();
     for (int i = 0; i < int(property_names_.size()); ++i) {
-        auto index = meta->indexOfProperty(property_names_[i].c_str());
+        auto index = meta->indexOfProperty(property_names_[i].toLatin1());
         auto p = meta->property(index);
         if (p.notifySignalIndex() == sender_index) {
             emit dataChanged(createIndex(i, 1), createIndex(i, 1));

@@ -735,10 +735,10 @@ void ApplicationModel::UpdateDefinitionSharedCount(std::shared_ptr<LabelDefiniti
     def->shared_labels = shared_labels;
 }
 
-void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<std::string, SharedPropertyDefinition> props) {
-    set<string> to_remove;
-    set<string> to_add;
-    set<string> to_modify;
+void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<QString, SharedPropertyDefinition> props) {
+    set<QString> to_remove;
+    set<QString> to_add;
+    set<QString> to_modify;
 
     for (auto p: def->shared_properties) {
         if (props.count(p.first)) {

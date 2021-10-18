@@ -9,19 +9,18 @@
 
 using namespace std;
 
-SharedPropertiesEditorTableModel::SharedPropertiesEditorTableModel(const map<std::string, shared_ptr<SharedPropertyDefinition>> & props, LabelType type, QObject *parent)
+SharedPropertiesEditorTableModel::SharedPropertiesEditorTableModel(const map<QString, shared_ptr<SharedPropertyDefinition>> & props, LabelType type, QObject *parent)
     : QAbstractTableModel(parent)
 {
     headers_ << "Property" << "Shared" << "Id" << "a" << "b";
 
     auto label = LabelFactory::CreateLabel(type);
     for (auto name : label->GetPropertiesList()) {
-        auto name_string = name.toStdString();
-        bool shared = props.count(name_string) > 0;
+        bool shared = props.count(name) > 0;
 
         SharedPropertyDefinition spd;
         if (shared) {            
-            spd = *props.at(name_string);            
+            spd = *props.at(name);
         }
                 
         property_names_.push_back(name);
@@ -34,12 +33,12 @@ SharedPropertiesEditorTableModel::~SharedPropertiesEditorTableModel()
 {
 }
 
-map<string, SharedPropertyDefinition> SharedPropertiesEditorTableModel::GetProperties() const {
-    map<string, SharedPropertyDefinition> result;
+map<QString, SharedPropertyDefinition> SharedPropertiesEditorTableModel::GetProperties() const {
+    map<QString, SharedPropertyDefinition> result;
     for (size_t i = 0; i < property_names_.size(); ++i) {
         auto name = property_names_[i];
         if (shared_.at(name)) {
-            result[name.toStdString()] = properties_[i];
+            result[name] = properties_[i];
         }
     }
     return result;
@@ -79,7 +78,7 @@ QVariant SharedPropertiesEditorTableModel::data(const QModelIndex &index, int ro
 
     case 2:
         if (role == Qt::DisplayRole || role == Qt::EditRole) {
-            return QString::fromStdString(properties_[row].name);
+            return properties_[row].name;
         }
         break;
 
@@ -116,8 +115,8 @@ bool SharedPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
         }
     }
     else if (column == 2 && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        properties_[row].name = value.toString().toStdString();
-        if (!properties_[row].name.empty() && !shared_[property_names_[row]]){
+        properties_[row].name = value.toString();
+        if (!properties_[row].name.isEmpty() && !shared_[property_names_[row]]){
             shared_[property_names_[row]] = true;
             emit dataChanged(createIndex(row, 1), createIndex(row, 1));
         }

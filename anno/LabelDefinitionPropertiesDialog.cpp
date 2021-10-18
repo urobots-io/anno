@@ -95,6 +95,9 @@ void LabelDefinitionPropertiesDialog::onSharedLabelsCountChanged(int count) {
 
 void LabelDefinitionPropertiesDialog::CloseEditors() {
     ui.shared_properties_tableView->setCurrentIndex(QModelIndex());
+    ui.properties_tableView->setCurrentIndex(QModelIndex());
+    ui.stamp_parameters_tableView->setCurrentIndex(QModelIndex());
+    ui.custom_properties_tableView->setCurrentIndex(QModelIndex());
 }
 
 void LabelDefinitionPropertiesDialog::DeleteCustomProperty() {

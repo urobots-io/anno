@@ -19,7 +19,6 @@
 #include <QTransform>
 #include <algorithm>
 #include <cmath>
-#include <string>
 
 struct PaintExtraFunctionsDW : public PaintExtraFunctions {
     struct Hint {

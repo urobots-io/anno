@@ -1,6 +1,5 @@
 #pragma once
 #include <QString>
-#include <string>
 #include <math.h>
 
 struct SharedPropertyDefinition {

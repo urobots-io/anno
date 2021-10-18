@@ -784,3 +784,8 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
     }
 }
 
+void ApplicationModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition> props, QStringList original_names) {
+    for (auto file : file_models_) {
+        file.second->UpdateDefinitionCustomProperties(def, props, original_names);
+    }
+}

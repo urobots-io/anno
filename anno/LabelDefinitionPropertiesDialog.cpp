@@ -199,6 +199,9 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     auto props = ((SharedPropertiesEditorTableModel*)ui.shared_properties_tableView->model())->GetProperties();
     model->UpdateDenitionSharedProperties(definition_, props);
 
+    // Apply custom properties.
+    auto custom = (CustomPropertiesEditorTableModel*)ui.custom_properties_tableView->model();    
+    model->UpdateDefinitionCustomProperties(definition_, custom->GetProperties(), custom->GetOriginalNames());
 
     close();
 }

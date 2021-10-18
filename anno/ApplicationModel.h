@@ -62,6 +62,9 @@ public:
     /// Change shared properties.
     void UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<std::string, SharedPropertyDefinition>);
 
+    /// Update custom properties.
+    void UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition>, QStringList);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);

@@ -286,3 +286,21 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
         set_is_modified(true);
     }
 }
+
+void FileModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition> props, QStringList original_names) {
+    bool file_updated = false;
+
+    for (auto l : labels_) {
+        if (l->GetDefinition() != def) {
+            continue;
+        }
+
+        auto &label_properties = l->GetCustomProperties();
+        // TODO
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
+    }
+}

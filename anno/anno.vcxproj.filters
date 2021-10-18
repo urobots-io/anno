@@ -537,6 +537,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_StampPropertiesEditorTableModel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CustomPropertiesEditorTableItemDelegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CustomPropertiesEditorTableItemDelegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomPropertiesEditorTableItemDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -896,6 +905,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="StampPropertiesEditorTableModel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CustomPropertiesEditorTableItemDelegate.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -288,15 +288,21 @@ void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> de
 }
 
 namespace  {
-QVariant ConvertVariant(QVariant value, CustomPropertyType type) {
+QVariant ConvertVariant(QVariant value, CustomPropertyType type, bool &changed) {
+    QVariant result;
     switch (type) {
-    default: return value;
-    case CustomPropertyType::p_int: return value.toInt();
-    case CustomPropertyType::p_double: return value.toDouble();
-    case CustomPropertyType::p_string: return value.toString();
-    case CustomPropertyType::p_boolean: return value.toBool();
-    case CustomPropertyType::p_selector: return value.toString();
+    default: result = value;
+    case CustomPropertyType::p_int: result = value.toInt(); break;
+    case CustomPropertyType::p_double: result = value.toDouble(); break;
+    case CustomPropertyType::p_string: result = value.toString(); break;
+    case CustomPropertyType::p_boolean: result = value.toBool(); break;
+    case CustomPropertyType::p_selector: result = value.toString(); break;
     }
+    if (result != value) {
+        // "do not assign false" is intended here
+        changed = true;
+    }
+    return result;
 }
 }
 
@@ -312,23 +318,25 @@ void FileModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition
         QVariantMap new_props;
         auto &label_properties = l->GetCustomProperties();
         auto old_keys = label_properties.keys();
+        QStringList new_keys;
         for (auto old : old_keys) {
             // find new property with the same name
             auto it_new_property = find_if(props.begin(), props.end(), [&](const CustomPropertyDefinition& cpd) { return cpd.id == old; });
             if (it_new_property != props.end()) {
-                new_props[old] = ConvertVariant(label_properties[old], it_new_property->type);
-                label_updated = true;
+                new_props[old] = ConvertVariant(label_properties[old], it_new_property->type, label_updated);
+                new_keys << old;
             }
             else if (original_names.contains(old)) {
                 // property name was changed
                 auto index = original_names.indexOf(old);
                 auto &new_property = props[index];
-                new_props[new_property.id] = ConvertVariant(label_properties[old], new_property.type);
+                new_props[new_property.id] = ConvertVariant(label_properties[old], new_property.type, label_updated);
+                new_keys << new_property.id;
                 label_updated = true;
             }
         }
 
-        label_updated = label_updated || old_keys.size(); // old keys will be removed
+        label_updated = label_updated || old_keys.size() != new_keys.size(); // old keys will be removed
         if (label_updated) {
             l->GetCustomProperties() = new_props;
             file_updated = true;

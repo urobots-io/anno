@@ -194,6 +194,9 @@ void OrientedCircleLabel::UpdateHandlesPositions() {
     int axis_x = axis_array.size() > 0 ? axis_array[0] : axis_length;
     int axis_y = axis_array.size() > 1 ? axis_array[1] : axis_length;
 
+    if (axis_x < 0) axis_x = axis_length;
+    if (axis_y < 0) axis_y = axis_length;
+
     handles_[1]->SetEnabled(axis_x);
     if (axis_x) {
         handles_[1]->SetPosition(pos + t.map(QPointF(axis_x, 0)), false);

@@ -790,3 +790,13 @@ void ApplicationModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDef
     }
     def->custom_properties = props;
 }
+
+void ApplicationModel::UpdateDefinitionInternalData(std::shared_ptr<LabelDefinition> def) {
+    for (auto file : file_models_) {
+        for (auto l : file.second->labels_) {
+            if (l->GetDefinition() == def) {
+                l->OnNewDefinition();
+            }
+        }
+    }
+}

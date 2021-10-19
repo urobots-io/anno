@@ -57,6 +57,32 @@ public:
     IMPLEMENT_Q_PROPERTY_READ(value_type);
 };
 
+class LDPropertiesWithAxis : public LDProperties {
+    Q_OBJECT
+
+public:
+    LDPropertiesWithAxis(QObject* parent) : LDProperties(parent) {}
+
+    Q_PROPERTY(int axis_length_x READ get_axis_length_x WRITE set_axis_length_x NOTIFY axis_length_x_changed);
+    Q_PROPERTY(int axis_length_y READ get_axis_length_y WRITE set_axis_length_y NOTIFY axis_length_y_changed);
+
+signals:
+    void axis_length_x_changed(int);
+    void axis_length_y_changed(int);
+
+public slots:
+    IMPLEMENT_Q_PROPERTY_WRITE(int, axis_length_x);
+    IMPLEMENT_Q_PROPERTY_WRITE(int, axis_length_y);
+
+private:
+    int axis_length_x_ = -1;
+    int axis_length_y_ = -1;
+
+public:
+    IMPLEMENT_Q_PROPERTY_READ(axis_length_x);
+    IMPLEMENT_Q_PROPERTY_READ(axis_length_y);
+};
+
 class LabelDefinitionPropertiesDialog : public QDialog
 {
     Q_OBJECT

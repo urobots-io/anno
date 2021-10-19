@@ -65,6 +65,9 @@ public:
     /// Update custom properties.
     void UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition>, QStringList);
 
+    /// Trigger update of labels internal data.
+    void UpdateDefinitionInternalData(std::shared_ptr<LabelDefinition> def);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);

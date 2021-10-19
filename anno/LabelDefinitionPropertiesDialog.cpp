@@ -41,11 +41,24 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     ui.custom_properties_tableView->setItemDelegate(new CustomPropertiesEditorTableItemDelegate());
 
     // Main properties page.
-    properties_ = new LDProperties(this);
+    if (definition_->value_type == LabelType::oriented_point || definition_->value_type == LabelType::oriented_circle) {
+        properties_ = new LDPropertiesWithAxis(this);
+    }
+    else {
+        properties_ = new LDProperties(this);
+    }
+
     properties_->set_type_name(definition_->get_type_name());
     properties_->set_description(definition_->get_description());
     properties_->set_line_width(definition_->get_line_width());
     properties_->set_value_type(LDProperties::LabelType(int(definition_->value_type)));
+
+    if (auto props_with_axis = dynamic_cast<LDPropertiesWithAxis*>(properties_)) {
+        auto &a = definition_->axis_length;
+        props_with_axis->set_axis_length_x(a.size() > 0 ? a[0] : 0);
+        props_with_axis->set_axis_length_y(a.size() > 1 ? a[1] : 0);
+    }
+
     PropertyTableItemDelegate::SetupTableView(ui.properties_tableView, properties_);
 
     auto shared = new SharedPropertiesEditorTableModel(definition_->shared_properties, definition_->value_type, this);
@@ -202,6 +215,20 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     // Apply custom properties.
     auto custom = (CustomPropertiesEditorTableModel*)ui.custom_properties_tableView->model();    
     model->UpdateDefinitionCustomProperties(definition_, custom->GetProperties(), custom->GetOriginalNames());
+
+    // Apply axis lengths.
+    if (auto props_with_axis = dynamic_cast<LDPropertiesWithAxis*>(properties_)) {
+        definition_->axis_length.clear();
+        auto x = props_with_axis->get_axis_length_x();
+        auto y = props_with_axis->get_axis_length_y();
+        if (x >= 0 || y >= 0) {
+            definition_->axis_length.push_back(x);
+        }
+        if (y >= 0) {
+            definition_->axis_length.push_back(y);
+        }
+        model->UpdateDefinitionInternalData(definition_);
+    }
 
     close();
 }

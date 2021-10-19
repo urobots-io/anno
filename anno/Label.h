@@ -123,10 +123,11 @@ public:
     /// Generate comment which might be helpful to understand label content
     virtual QString GetComment() { return QString(); }
 
-protected:	
+    /// Update internal data when defintion changed.
     virtual void OnNewDefinition() {}
 
-	/// save vector of handles into string
+protected:	
+    /// save vector of handles into string
 	static QString ToString(const std::vector<std::shared_ptr<LabelHandle>> & handles);
 
 	/// load handles from string, add them into <handles>

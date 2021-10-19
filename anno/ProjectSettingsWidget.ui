@@ -58,7 +58,7 @@
      <item>
       <widget class="QPushButton" name="edit_definitions_pushButton">
        <property name="text">
-        <string>Edit Project Definitions...</string>
+        <string>Edit user data...</string>
        </property>
        <property name="icon">
         <iconset resource="MainWindow.qrc">

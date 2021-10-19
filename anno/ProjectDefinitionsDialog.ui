@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>987</width>
-    <height>622</height>
+    <width>622</width>
+    <height>342</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Edit project settings</string>
+   <string>Edit project user data</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
@@ -57,7 +57,7 @@
       <item>
        <widget class="QDialogButtonBox" name="buttonBox">
         <property name="standardButtons">
-         <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
         </property>
        </widget>
       </item>

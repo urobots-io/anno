@@ -391,7 +391,7 @@
      <x>0</x>
      <y>0</y>
      <width>1279</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -463,7 +463,6 @@
    <addaction name="undo_action"/>
    <addaction name="redo_action"/>
    <addaction name="separator"/>
-   <addaction name="project_settings_action"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="save_action">

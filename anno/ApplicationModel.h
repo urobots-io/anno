@@ -19,7 +19,8 @@ public:
     Q_PROPERTY(QString project_script READ get_project_script WRITE set_project_script NOTIFY project_script_changed);
     Q_PROPERTY(std::shared_ptr<LabelDefinitionsTreeModel> label_definitions READ get_label_definitions WRITE set_label_definitions NOTIFY label_definitions_changed);
     Q_PROPERTY(std::shared_ptr<FilesystemInterface> filesystem READ get_filesystem WRITE set_filesystem NOTIFY filesystem_changed);
-    
+    Q_PROPERTY(QJsonObject user_data READ get_user_data WRITE set_user_data NOTIFY user_data_changed);
+
     void NewProject(QString images_folder);
     bool OpenProject(QString filename, QStringList &errors);
     bool SaveProject(QStringList & errors, QString filename = QString());
@@ -74,6 +75,7 @@ public slots:
 
     DECLARE_Q_PROPERTY_WRITE(QString, project_script);
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified); 
+    IMPLEMENT_Q_PROPERTY_WRITE_ALWAYS(QJsonObject, user_data);
 
 private:
 	IMPLEMENT_Q_PROPERTY_WRITE(QString, project_filename);	
@@ -89,6 +91,7 @@ signals:
 	void pictures_path_changed(QString);	
 	void label_definitions_changed(std::shared_ptr<LabelDefinitionsTreeModel>);
     void filesystem_changed(std::shared_ptr<FilesystemInterface>);
+    void user_data_changed(QJsonObject);
 
     void ApplicationShutdown();
 
@@ -113,6 +116,7 @@ private:
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(is_modified);
+    IMPLEMENT_Q_PROPERTY_READ(user_data);
     IMPLEMENT_Q_PROPERTY_READ(project_script);
 	IMPLEMENT_Q_PROPERTY_READ(project_filename);
 	IMPLEMENT_Q_PROPERTY_READ(label_definitions);

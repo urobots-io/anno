@@ -19,11 +19,9 @@ ProjectDefinitionsDialog::ProjectDefinitionsDialog(ApplicationModel *model, QWid
     ui.setupUi(this);
 
     new Highlighter(ui.textEdit->document(), palette(), Highlighter::JSon);
-    
-    auto def = model_->GenerateHeader();
-    ui.textEdit->setText(QJsonDocument(def).toJson());
 
-    connect(ui.buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &ProjectDefinitionsDialog::OnApply);
+    ui.textEdit->setText(QJsonDocument(model_->get_user_data()).toJson());
+
     connect(ui.buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ProjectDefinitionsDialog::close);
 	connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &ProjectDefinitionsDialog::OnOk);
 }
@@ -57,7 +55,8 @@ void ProjectDefinitionsDialog::Apply(bool close_if_success) {
         errors << json_error;
     }
     else {
-        model_->ApplyHeader(json.object(), errors);
+        model_->set_user_data(json.object());
+        model_->SetModified();
     }
 
     if (errors.size()) {

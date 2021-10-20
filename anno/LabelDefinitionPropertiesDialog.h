@@ -30,7 +30,7 @@ public:
     Q_PROPERTY(QString type_name READ get_type_name WRITE set_type_name NOTIFY type_name_changed);
     Q_PROPERTY(QString description READ get_description WRITE set_description NOTIFY description_changed);
     Q_PROPERTY(int line_width READ get_line_width WRITE set_line_width NOTIFY line_width_changed);
-    Q_PROPERTY(LabelType value_type READ get_value_type WRITE set_value_type NOTIFY value_type_changed);
+    //Q_PROPERTY(LabelType value_type READ get_value_type WRITE set_value_type NOTIFY value_type_changed);
 
 signals:
     void type_name_changed(QString);

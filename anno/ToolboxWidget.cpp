@@ -6,7 +6,10 @@
 
 #include "ToolboxWidget.h"
 #include "messagebox.h"
+#include "Serialization.h"
+#include <QClipboard>
 #include <QDebug>
+#include <QJsonDocument>
 #include <QMenu>
 #include <LabelDefinitionPropertiesDialog.h>
 
@@ -24,9 +27,12 @@ ToolboxWidget::ToolboxWidget(QWidget *parent)
     connect(&proxy_, &QAbstractItemModel::rowsInserted, this, &ToolboxWidget::OnRowsAdded);
     connect(ui.add_marker_type_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowAddMarkerMenu);
     connect(ui.properties_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ShowLabelDefinitionProperties);
-    ui.properties_pushButton->setEnabled(false);
-
+    connect(ui.copy_definition_pushButton, &QPushButton::clicked, this, &ToolboxWidget::CopyLabelDefinition);
+    connect(ui.paste_definition_pushButton, &QPushButton::clicked, this, &ToolboxWidget::PasteLabelDefinition);
     connect(ui.toggle_tree_state_pushButton, &QPushButton::clicked, this, &ToolboxWidget::ToggleTreeOpenState);
+
+    ui.properties_pushButton->setEnabled(false);
+    ui.copy_definition_pushButton->setEnabled(false);
 
     ui.treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.treeView, &QWidget::customContextMenuRequested, this, &ToolboxWidget::OnCustomContextMenu);
@@ -100,10 +106,10 @@ void ToolboxWidget::OnCurrentChanged(const QModelIndex &current, const QModelInd
     if (cat) qDebug() << "Selected Category: " << cat->get_name();
 #endif
 
-    bool enabled = def && !cat;
-    ui.properties_pushButton->setEnabled(enabled);
-    qDebug() << enabled;
-
+    bool definition_selected = def && !cat;
+    ui.properties_pushButton->setEnabled(definition_selected);
+    ui.copy_definition_pushButton->setEnabled(definition_selected);
+    
     emit SelectionChanged(def, cat);
 }
 
@@ -280,7 +286,6 @@ void ToolboxWidget::OnError(QString message) {
     messagebox::Critical(message);
 }
 
-
 void ToolboxWidget::ToggleTreeOpenState() {
     if (!definitions_) {
         return;
@@ -313,3 +318,50 @@ void ToolboxWidget::ToggleTreeOpenState() {
     }    
 }
 
+void ToolboxWidget::CopyLabelDefinition() {
+    auto current = ui.treeView->selectionModel()->currentIndex();
+    if (!current.isValid()) {
+        return;
+    }
+
+    auto index = proxy_.mapToSource(current);
+    auto def = definitions_->GetDefinition(index);
+    auto def_json = Serialize(def);
+    
+    if (auto clipboard = QGuiApplication::clipboard()) {
+        QJsonObject json {
+            { "name", def->get_type_name() },
+            { "data", def_json }
+        };
+        auto text = QJsonDocument(json).toJson(QJsonDocument::Indented);
+        clipboard->setText(text);
+    }
+}
+
+void ToolboxWidget::PasteLabelDefinition() {
+    auto clipboard = QGuiApplication::clipboard();
+    if (!clipboard) {
+        return;
+    }
+
+    auto text = clipboard->text();
+    QJsonDocument doc = QJsonDocument::fromJson(text.toUtf8());
+    if (doc.isNull() || !doc.isObject()) {
+        messagebox::Critical("Clipboard does not contain json");
+        return;
+    }
+
+    QStringList errors;
+    auto obj = doc.object();
+    auto name = obj["name"].toString();
+    auto definition = DeserializeLabelDefinition(obj["data"].toObject(), errors);
+    if (!definition || name.isEmpty()) {
+        messagebox::Critical("Clipboard does not contain valid label definition");
+        return;
+    }
+
+    auto index = definitions_->InsertNewDefinition(name, definition);
+    if (index.isValid()) {
+        ui.treeView->edit(proxy_.mapFromSource(index));
+    }
+}

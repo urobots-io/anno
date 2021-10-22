@@ -36,6 +36,7 @@ public:
     void Delete(std::shared_ptr<LabelDefinition>);
     void Delete(std::shared_ptr<LabelCategory>);
     QModelIndex CloneDefinition(std::shared_ptr<LabelDefinition>);
+    QModelIndex InsertNewDefinition(QString name, std::shared_ptr<LabelDefinition>);
 
     QModelIndex GetIndex(LabelDefinition*) const;
     ApplicationModel *GetApplicationModel() const { return app_model_; }
@@ -48,7 +49,8 @@ public slots:
     void DefinitionChanged();
 
 private:
-    std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> GetItem(const QModelIndex & index) const;        
+    std::pair<std::shared_ptr<LabelDefinition>, std::shared_ptr<LabelCategory>> GetItem(const QModelIndex & index) const;  
+    QString GetDefinitionCopyName(QString base_name);
 
 private:
 	std::vector<std::shared_ptr<LabelDefinition>> definitions_;

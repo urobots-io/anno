@@ -28,6 +28,8 @@ public slots:
     void AddMarkerType();
     void OnCustomContextMenu(const QPoint &point);
     void OnError(QString);
+    void CopyLabelDefinition();
+    void PasteLabelDefinition();
 
 private slots:
 	void OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous);	

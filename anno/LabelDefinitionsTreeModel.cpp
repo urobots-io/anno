@@ -299,16 +299,11 @@ void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelCategory> category) 
     }
 }
 
-QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefinition> marker) {
-    auto index = GetIndex(marker.get());
-    if (!index.isValid()) {
-        return QModelIndex();
-    }
-
-    QString name = marker->get_type_name() + tr(" copy");
-    int copy_index = 1;
+QString LabelDefinitionsTreeModel::GetDefinitionCopyName(QString base_name) {
+    QString name = base_name;
+    int copy_index = 0;
     bool name_found = false;
-    while (!name_found) {        
+    while (!name_found) {
         for (auto d : definitions_) {
             if (d->get_type_name() == name) {
                 name.clear();
@@ -318,10 +313,24 @@ QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefi
 
         name_found = !name.isEmpty();
         if (!name_found) {
-            name = marker->get_type_name() + tr(" copy(%0)").arg(++copy_index);
+            if (++copy_index == 1) {
+                name = base_name + tr(" copy");                
+            }
+            else {
+                name = base_name + tr(" copy(%0)").arg(copy_index);
+            }
         }
     }
+    return name;
+}
 
+QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefinition> marker) {
+    auto index = GetIndex(marker.get());
+    if (!index.isValid()) {
+        return QModelIndex();
+    }
+
+    QString name = GetDefinitionCopyName(marker->get_type_name());    
     QStringList errors;    
     if (auto new_marker = DeserializeLabelDefinition(Serialize(marker), errors)) {
         new_marker->set_type_name(name);
@@ -335,7 +344,30 @@ QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefi
 
         return createIndex(pos, 0, new_marker.get());
     }
-
     return QModelIndex();
+}
+
+QModelIndex LabelDefinitionsTreeModel::InsertNewDefinition(QString base_name, std::shared_ptr<LabelDefinition> definition) {
+    QString name = GetDefinitionCopyName(base_name);
+    definition->set_type_name(name);
+
+    QModelIndex index = createIndex(0, 0);
+    for (size_t i = 0; i < definitions_.size(); ++i) {
+        if (definitions_[i]->get_type_name() < name) {
+            index = createIndex(int(i + 1), 0, definitions_[i].get());
+        }
+        else {
+            break;
+        }
+    }    
+    
+    int pos = index.row() + 1;
+    beginInsertRows(QModelIndex(), pos, pos);
+    definitions_.insert(definitions_.begin() + index.row(), definition);
+    endInsertRows();
+
+    emit Changed();
+
+    return createIndex(pos, 0, definition.get());    
 }
 

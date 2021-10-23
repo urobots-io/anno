@@ -201,7 +201,7 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
     return result;
 }
 
-void FileModel::ReconnectSharedProperties(std::shared_ptr<LabelDefinition> def) {
+bool FileModel::ReconnectSharedProperties(std::shared_ptr<LabelDefinition> def) {
     bool file_updated = false;
     for (auto l: labels_) {
         if (l->GetDefinition() == def) {
@@ -216,6 +216,8 @@ void FileModel::ReconnectSharedProperties(std::shared_ptr<LabelDefinition> def) 
         GetUndoStack()->clear();
         set_is_modified(true);
     }
+
+    return file_updated;
 }
 
 void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels) {

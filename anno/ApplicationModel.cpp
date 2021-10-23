@@ -14,6 +14,7 @@
 #include "qjson_helpers.h"
 #include "Serialization.h"
 #include "rest.h"
+#include <QDebug>
 #include <QDir>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -779,8 +780,23 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
         *def->shared_properties[p] = props[p];
     }
 
+    bool files_changed = false;
     for (auto file : file_models_) {
-        file.second->ReconnectSharedProperties(def);
+        if (file.second->ReconnectSharedProperties(def)) {
+            files_changed = true;
+        }
+    }
+
+    // reconnect shared properties of shared labels
+    for (auto l: def->shared_labels) {
+        l->ConnectSharedProperties(false, false);
+
+        if (!files_changed) {
+            l->InitStamp();
+        }
+
+        l->ConnectSharedProperties(true, false);
+        l->UpdateSharedProperties(true);
     }
 }
 

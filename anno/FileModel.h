@@ -52,8 +52,8 @@ public:
     /// Definition gets new shared labels
     void UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels);
 
-    /// Modify shared properties of labels
-    void ReconnectSharedProperties(std::shared_ptr<LabelDefinition>);
+    /// Modify shared properties of labels. Returns true if any label is modified.
+    bool ReconnectSharedProperties(std::shared_ptr<LabelDefinition>);
 
     /// Modify custom properties of labels.
     void UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition>, QStringList);

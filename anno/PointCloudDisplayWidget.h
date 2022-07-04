@@ -69,6 +69,9 @@ public slots:
     /// set initial view transform
     void ResetView();
 
+private:
+    void LoadPCD(QString filename, std::shared_ptr<FilesystemInterface> filesystem);
+
 private:    
     QOpenGLShaderProgram program_;
     QMatrix4x4 projection_;

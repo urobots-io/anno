@@ -169,7 +169,10 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="GeneratedFiles\Debug\moc_ImagePropertiesWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ImageSettingsWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_ImageSettingsWidgetOpenCV.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ImageSettingsWidgetQt.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_LabelDefinition.cpp">
@@ -271,7 +274,10 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="GeneratedFiles\Release\moc_ImagePropertiesWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ImageSettingsWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_ImageSettingsWidgetOpenCV.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ImageSettingsWidgetQt.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_LabelDefinition.cpp">
@@ -328,9 +334,12 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="Highlighter.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImageModel.cpp" />
+    <ClCompile Include="ImageModelOpenCV.cpp" />
+    <ClCompile Include="ImageModelQt.cpp" />
     <ClCompile Include="ImagePropertiesTableModel.cpp" />
     <ClCompile Include="ImagePropertiesWidget.cpp" />
-    <ClCompile Include="ImageSettingsWidget.cpp" />
+    <ClCompile Include="ImageSettingsWidgetOpenCV.cpp" />
+    <ClCompile Include="ImageSettingsWidgetQt.cpp" />
     <ClCompile Include="LabelCategory.cpp" />
     <ClCompile Include="LabelDefinitionPropertiesWidget.cpp" />
     <ClCompile Include="LabelDefinitionPropertiesDialog.cpp" />
@@ -487,6 +496,8 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     </CustomBuild>
     <ClInclude Include="FileTreeElement.h" />
     <ClInclude Include="GeneratedFiles\ui_ImagePropertiesWidget.h" />
+    <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidgetOpenCV.h" />
+    <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidgetQt.h" />
     <ClInclude Include="GeneratedFiles\ui_StartupDialog.h" />
     <ClInclude Include="git_rev.h" />
     <CustomBuild Include="ImagePropertiesWidget.h">
@@ -500,6 +511,17 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
     </CustomBuild>
     <CustomBuild Include="ImagePropertiesTableModel.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidget.h" />
+    <CustomBuild Include="ImageSettingsWidgetOpenCV.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
@@ -573,7 +595,6 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClInclude Include="FileTreeItemInfo.h" />
     <ClInclude Include="GeneratedFiles\ui_Desktop3dWindow.h" />
     <ClInclude Include="GeneratedFiles\ui_ErrorsListDialog.h" />
-    <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidget.h" />
     <ClInclude Include="GeneratedFiles\ui_LabelPropertiesWidget.h" />
     <ClInclude Include="GeneratedFiles\ui_ProjectDefinitionsDialog.h" />
     <ClInclude Include="GeneratedFiles\ui_ToolboxWidget.h" />
@@ -608,15 +629,15 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions)  "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml" "-fstdafx.h" "-f../../%(Filename)%(Extension)"</Command>
     </CustomBuild>
-    <CustomBuild Include="ImageSettingsWidget.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+    <CustomBuild Include="ImageSettingsWidgetQt.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions)  "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml" "-fstdafx.h" "-f../../%(Filename)%(Extension)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions)  "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml" "-fstdafx.h" "-f../../%(Filename)%(Extension)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
     </CustomBuild>
     <ClInclude Include="ImageConverter.h" />
     <ClInclude Include="ImageData.h" />
@@ -1053,7 +1074,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
       <SubType>Designer</SubType>
     </CustomBuild>
-    <CustomBuild Include="ImageSettingsWidget.ui">
+    <CustomBuild Include="ImageSettingsWidgetQt.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
@@ -1074,6 +1095,16 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="ImagePropertiesWidget.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidgetOpenCV.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>

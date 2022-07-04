@@ -33,9 +33,10 @@ SOURCES += \
     CustomPropertyTableItemDelegate.cpp CustomPropertyTableModel.cpp DeleteAllLabelsFileModelCommand.cpp \
     DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
     FileTreeElement.cpp FilenamesEditorWidget.cpp \
-    ImageLoader.cpp ImageModel.cpp ImageSettingsWidget.cpp Label.cpp LabelCategory.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
+    ImageLoader.cpp ImageModel.cpp ImageSettingsWidgetQt.cpp Label.cpp LabelCategory.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
     ImagePropertiesTableModel.cpp \
     ImagePropertiesWidget.cpp \
+    ImageModelQt.cpp \
     LabelDefinitionPropertiesDialog.cpp \
     LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
     MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
@@ -63,7 +64,7 @@ HEADERS += \
     FilenamesEditorWidget.h \
     FileModel.h FilesystemInterface.h FileTreeItemInfo.h geometry.h Highlighter.h ImageConverter.h ImageData.h ImageLoader.h \
     FileTreeElement.h \
-    ImageModel.h ImageSettingsWidget.h implement_q_property.h Label.h LabelCategory.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
+    ImageModel.h ImageSettingsWidgetQt.h implement_q_property.h Label.h LabelCategory.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
     LabelDefinitionsTreeModel.h LabelFactory.h LabelHandle.h LabelPropertiesWidget.h LabelType.h LocalFilesystem.h \
     MainWindow.h messagebox.h ModifyLabelCategoryFileModelCommand.h ModifyLabelGeometryFileModelCommand.h \
     ModifyLabelTextFileModelCommand.h OrientedCircleLabel.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
@@ -77,7 +78,7 @@ HEADERS += \
 
 FORMS += \
     AboutDialog.ui Desktop3dWindow.ui \
-    ErrorsListDialog.ui ImageSettingsWidget.ui LabelDefinitionPropertiesWidget.ui \
+    ErrorsListDialog.ui ImageSettingsWidgetQt.ui LabelDefinitionPropertiesWidget.ui \
     ImagePropertiesWidget.ui \
     LabelDefinitionPropertiesDialog.ui \
     LabelPropertiesWidget.ui MainWindow.ui ProjectDefinitionsDialog.ui \

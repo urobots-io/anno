@@ -9,6 +9,8 @@
 #include <QStringBuilder>
 #include <QTextStream>
 
+#define ANGLE "angle"
+
 using namespace std;
 
 OrientedPointLabel::OrientedPointLabel(const WorldInfo *wi) {
@@ -26,10 +28,14 @@ void OrientedPointLabel::OnNewDefinition() {
     UpdateHandlesPositions();
 }
 
+QStringList OrientedPointLabel::GetPropertiesList() const {
+    return { ANGLE };
+}
+
 void OrientedPointLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     if (connect) {
         if (auto def = GetDefinition()) {
-            def->ConnectProperty(angle_, "angle", inject_my_values);
+            def->ConnectProperty(angle_, ANGLE, inject_my_values);
         }
     }
     else {
@@ -38,7 +44,7 @@ void OrientedPointLabel::ConnectSharedProperties(bool connect, bool inject_my_va
 }
 
 LabelProperty *OrientedPointLabel::GetProperty(QString property_name) {
-    if (property_name == "angle") { return &angle_; }
+    if (property_name == ANGLE) { return &angle_; }
     return nullptr;
 }
 
@@ -117,6 +123,9 @@ void OrientedPointLabel::UpdateHandlesPositions() {
     int axis_x = axis_array.size() > 0 ? axis_array[0] : axis_length;
     int axis_y = axis_array.size() > 1 ? axis_array[1] : axis_length;
 
+    if (axis_x < 0) axis_x = axis_length;
+    if (axis_y < 0) axis_y = axis_length;
+
     handles_[1]->SetEnabled(axis_x);
     if (axis_x) {
         handles_[1]->SetPosition(pos + t.map(QPointF(axis_x, 0)), false);
@@ -140,8 +149,8 @@ bool OrientedPointLabel::MoveBy(const QPointF & offset) {
 	return true;
 }
 
-void OrientedPointLabel::UpdateSharedProperties() {
-    if (angle_.PullUpdate()) {
+void OrientedPointLabel::UpdateSharedProperties(bool forced_update) {
+    if (angle_.PullUpdate() || forced_update) {
         UpdateHandlesPositions();
     }
 }

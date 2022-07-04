@@ -22,6 +22,9 @@ public:
     /// Create geometry for stamp label
     virtual void InitStamp() {}
 
+    /// Get list of all available properties.
+    virtual QStringList GetPropertiesList() const { return {}; }
+
     /// Connect / disconnect shared properties to the database
     /// If (connect && inject_my_values), then database will be overwritten with 
     /// new values.
@@ -112,7 +115,7 @@ public:
     void CopyFrom(const Label &);
 
     /// Update content from the database
-    virtual void UpdateSharedProperties() {}
+    virtual void UpdateSharedProperties(bool forced_update=false) { Q_UNUSED(forced_update) }
 
     /// Return pointer to the standard property
     virtual LabelProperty* GetProperty(QString property_name) { Q_UNUSED(property_name); return nullptr; }
@@ -120,10 +123,11 @@ public:
     /// Generate comment which might be helpful to understand label content
     virtual QString GetComment() { return QString(); }
 
-protected:	
+    /// Update internal data when defintion changed.
     virtual void OnNewDefinition() {}
 
-	/// save vector of handles into string
+protected:	
+    /// save vector of handles into string
 	static QString ToString(const std::vector<std::shared_ptr<LabelHandle>> & handles);
 
 	/// load handles from string, add them into <handles>

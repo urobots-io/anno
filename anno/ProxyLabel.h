@@ -21,6 +21,10 @@ public:
         return client_->ToStringsList(); 
     }
 
+    QStringList GetPropertiesList() const override {
+        return client_->GetPropertiesList();
+    }
+
     void ConnectSharedProperties(bool connect, bool inject_my_values) override {
         client_->ConnectSharedProperties(connect, inject_my_values);
     }
@@ -105,8 +109,8 @@ public:
         return client_; 
     }
 
-    void UpdateSharedProperties() override { 
-        client_->UpdateSharedProperties(); 
+    void UpdateSharedProperties(bool forced_update) override {
+        client_->UpdateSharedProperties(forced_update); 
     }
 
     LabelProperty* GetProperty(QString property_name) override {

@@ -10,14 +10,12 @@ public:
 
     static PropertyDatabase& Instance();
 
-    int GetStateIndex() const { return state_index_; }
-    void Modify() { state_index_++; }
+    int GetStateIndex() const;
+    void Modify();
+    
+    void Clear();
 
-    void Clear() {
-        properties_.clear();
-    }
-
-    double GetCurrentValue(const std::string & name, double default_value);
+    double GetCurrentValue(const QString & name, double default_value);
 
 protected:
     friend class LabelProperty;
@@ -31,11 +29,11 @@ protected:
         int update_counter = 0;
     };
 
-    std::shared_ptr<Value> GetSharedValue(const std::string & name, double init_value, bool inject_init_value);
+    std::shared_ptr<Value> GetSharedValue(const QString & name, double init_value, bool inject_init_value);
 
 private:
     int state_index_ = 0;
-    std::map<std::string, std::shared_ptr<Value>> properties_;
+    std::map<QString, std::shared_ptr<Value>> properties_;
 };
 
 class LabelProperty {
@@ -74,7 +72,8 @@ public:
 
     double get() const {
         if (shared_ && definition_) {
-            return definition_->FromDatabaseValue(shared_->value);
+            const_cast<double&>(value_) = definition_->FromDatabaseValue(shared_->value);
+            return value_;
         }
         else {
             return value_;

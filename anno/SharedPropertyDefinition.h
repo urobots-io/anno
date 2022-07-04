@@ -1,15 +1,18 @@
 #pragma once
-#include <string>
+#include <QString>
 #include <math.h>
 
 struct SharedPropertyDefinition {
-    std::string name;
+    QString name;
     double a = 1.0;
     double b = 0.0;
-    const double eps = 0.0000001;
+    
+    inline static double eps() {
+        return 0.0000001;
+    }
 
     bool IsIdentity() const {        
-        return fabs(a - 1.0) < eps && fabs(b) < eps;
+        return fabs(a - 1.0) < eps() && fabs(b) < eps();
     }
 
     double FromDatabaseValue(double x) {
@@ -17,7 +20,7 @@ struct SharedPropertyDefinition {
     }
 
     double ToDatabaseValue(double y) {
-        if (fabs(a) < eps) {
+        if (fabs(a) < eps()) {
             return 1.0;
         }
 

@@ -104,7 +104,7 @@ void ImageLoader::run() {
             QImage image;
             image.loadFromData(buffer);
             image = image.convertToFormat(QImage::Format_BGR888);
-            cv::Mat(image.height(), image.width(), CV_8UC3, (cv::Scalar*)image.bits()).copyTo(image_);
+            cv::Mat(image.height(), image.width(), CV_8UC3, (cv::Scalar*)image.bits(), image.bytesPerLine()).copyTo(image_);
 
             ::GetProperties(image, buffer, properties_);
         }

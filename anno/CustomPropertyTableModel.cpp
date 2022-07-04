@@ -159,38 +159,3 @@ QVariant CustomPropertyTableModel::headerData(int section, Qt::Orientation orien
     return QVariant();
 }
 
-/*
-void CustomPropertyTableModel::SubscribeForObjectChanges() {
-    QMetaMethod updateSlot = this->metaObject()->method(this->metaObject()->indexOfSlot("OnObjectPropertyChanged()"));
-    auto meta = object_->metaObject();
-    for (auto name : property_names_) {
-        int index = meta->indexOfProperty(name.c_str());
-        if (index == -1) continue;
-        auto mp = meta->property(index);
-        if (mp.hasNotifySignal()) {
-            auto c = connect(object_, mp.notifySignal(), this, updateSlot);
-            if (!c) {
-                OutputDebugString(QString("Failed to connect to %0 notification\n").arg(name.c_str()).toStdWString().c_str());
-            }
-        }
-    }
-}
-
-void CustomPropertyTableModel::OnObjectPropertyChanged() {
-    if (sender() != object_) return;
-
-    auto sender_index = senderSignalIndex();    
-
-    auto meta = object_->metaObject();
-    for (int i = 0; i < property_names_.size(); ++i) {
-        auto index = meta->indexOfProperty(property_names_[i].c_str());
-        auto p = meta->property(index);
-        if (p.notifySignalIndex() == sender_index) {
-            emit dataChanged(createIndex(i, 1), createIndex(i, 1));
-            OutputDebugString(QString("%0 changed\n").arg(p.name()).toStdWString().c_str());
-            emit object_property_changed(p.name());
-            break;
-        }
-    }    
-}
-*/

@@ -11,7 +11,19 @@ PropertyDatabase& PropertyDatabase::Instance() {
     return instance;
 }
 
-double PropertyDatabase::GetCurrentValue(const std::string & name, double default_value) {
+int PropertyDatabase::GetStateIndex() const { 
+    return state_index_; 
+}
+
+void PropertyDatabase::Modify() { 
+    state_index_++; 
+}
+
+void PropertyDatabase::Clear() {
+    properties_.clear();
+}
+
+double PropertyDatabase::GetCurrentValue(const QString & name, double default_value) {
     if (properties_.count(name)) {
         return properties_[name]->value;
     }
@@ -20,7 +32,7 @@ double PropertyDatabase::GetCurrentValue(const std::string & name, double defaul
     }
 }
 
-std::shared_ptr<PropertyDatabase::Value> PropertyDatabase::GetSharedValue(const std::string & name, double init_value, bool inject_init_value) {
+std::shared_ptr<PropertyDatabase::Value> PropertyDatabase::GetSharedValue(const QString & name, double init_value, bool inject_init_value) {
     if (properties_.count(name)) {
         auto value = properties_[name];
         if (inject_init_value) {

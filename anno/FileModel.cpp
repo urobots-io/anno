@@ -8,6 +8,7 @@
 #include "CreateLabelFileModelCommand.h"
 #include "DeleteAllLabelsFileModelCommand.h"
 #include "DeleteLabelFileModelCommand.h"
+#include "LabelFactory.h"
 #include "ModifyLabelCategoryFileModelCommand.h"
 #include "ModifyLabelGeometryFileModelCommand.h"
 #include "ModifyLabelTextFileModelCommand.h"
@@ -200,3 +201,152 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
     return result;
 }
 
+bool FileModel::ReconnectSharedProperties(std::shared_ptr<LabelDefinition> def) {
+    bool file_updated = false;
+    for (auto l: labels_) {
+        if (l->GetDefinition() == def) {
+            file_updated = true;
+            l->ConnectSharedProperties(false, false);
+            l->ConnectSharedProperties(true, false);
+            l->UpdateSharedProperties(true);
+        }
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
+    }
+
+    return file_updated;
+}
+
+void FileModel::UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels) {
+    bool file_updated = false;
+    auto old_number = int(def->shared_labels.size());
+    auto new_number = int(shared_labels.size());
+    if (old_number && !new_number) {
+        // sharing is disabled -> convert from shared to not shared
+        auto it = labels_.begin();
+        while (it != labels_.end()) {
+            auto l = *it;
+            if (l->GetDefinition() == def) {
+                it = labels_.erase(it);
+                auto new_label = LabelFactory::CreateLabel(def->value_type);
+                new_label->SetCategory(l->GetCategory());
+                new_label->FromStringsList(l->ToStringsList());
+                it = labels_.insert(it, new_label) + 1;
+                file_updated = true;
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+    else if (new_number < old_number) {
+        // shared count decreased - remove labels with shared index > new max index
+        auto it = labels_.begin();
+        while (it != labels_.end()) {
+            auto l = *it;
+            if (l->GetDefinition() == def && l->GetSharedLabelIndex() >= new_number) {
+                it = labels_.erase(it);
+                file_updated = true;
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+    else if (!old_number && new_number) {
+        // sharing is enabled - try to convert from non-shared to shared if possible, delete rest of labels.
+        int index = 0;
+        auto it = labels_.begin();
+        while (it != labels_.end()) {
+            auto l = *it;
+            if (l->GetDefinition() == def) {
+                it = labels_.erase(it);
+                if (index < new_number) {
+                    auto new_label = make_shared<ProxyLabel>(shared_labels[index]);
+                    new_label->FromStringsList(l->ToStringsList());
+                    new_label->SetSharedLabelIndex(index);
+                    it = labels_.insert(it, new_label) + 1;
+                    ++index;
+                    file_updated = true;
+                }
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+    else  {
+        // --> new_number >= old_number
+        // shared count increased - do nothing
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
+    }
+}
+
+namespace  {
+QVariant ConvertVariant(QVariant value, CustomPropertyType type, bool &changed) {
+    QVariant result;
+    switch (type) {
+    default: result = value;
+    case CustomPropertyType::p_int: result = value.toInt(); break;
+    case CustomPropertyType::p_double: result = value.toDouble(); break;
+    case CustomPropertyType::p_string: result = value.toString(); break;
+    case CustomPropertyType::p_boolean: result = value.toBool(); break;
+    case CustomPropertyType::p_selector: result = value.toString(); break;
+    }
+    if (result != value) {
+        // "do not assign false" is intended here
+        changed = true;
+    }
+    return result;
+}
+}
+
+void FileModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition> props, QStringList original_names) {
+    bool file_updated = false;
+
+    for (auto l : labels_) {
+        if (l->GetDefinition() != def) {
+            continue;
+        }
+
+        bool label_updated = false;
+        QVariantMap new_props;
+        auto &label_properties = l->GetCustomProperties();
+        auto old_keys = label_properties.keys();
+        QStringList new_keys;
+        for (auto old : old_keys) {
+            // find new property with the same name
+            auto it_new_property = find_if(props.begin(), props.end(), [&](const CustomPropertyDefinition& cpd) { return cpd.id == old; });
+            if (it_new_property != props.end()) {
+                new_props[old] = ConvertVariant(label_properties[old], it_new_property->type, label_updated);
+                new_keys << old;
+            }
+            else if (original_names.contains(old)) {
+                // property name was changed
+                auto index = original_names.indexOf(old);
+                auto &new_property = props[index];
+                new_props[new_property.id] = ConvertVariant(label_properties[old], new_property.type, label_updated);
+                new_keys << new_property.id;
+                label_updated = true;
+            }
+        }
+
+        label_updated = label_updated || old_keys.size() != new_keys.size(); // old keys will be removed
+        if (label_updated) {
+            l->GetCustomProperties() = new_props;
+            file_updated = true;
+        }
+    }
+
+    if (file_updated) {
+        GetUndoStack()->clear();
+        set_is_modified(true);
+    }
+}

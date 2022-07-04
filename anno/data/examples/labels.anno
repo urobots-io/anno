@@ -1,6 +1,18 @@
 {
     "definitions": {
         "files_root_dir": "images/random",
+        "image_script": [
+            "function myDrawCircle() {",
+            "  RenderBase()",
+            "  SetBaseTransform(true, false)",
+            "  Rotate(45) ",
+            "  DrawLine(-1, 0, 1, 0)",
+            "  Rotate(90)",
+            "  DrawLine(-1, 0, 1, 0)",
+            "}",
+            "",
+            ""
+        ],
         "marker_types": {
             "circle": {
                 "categories": [
@@ -17,12 +29,8 @@
                 ],
                 "description": "My Circles",
                 "rendering_script": [
-                    "p.RenderBase()",
-                    "p.SetBaseTransform(true, false)",
-                    "p.Rotate(45) ",
-                    "p.DrawLine(-1, 0, 1, 0)",
-                    "p.Rotate(90) ",
-                    "p.DrawLine(-1, 0, 1, 0)"
+                    "// myDrawCircle is defined in the project script",
+                    "myDrawCircle()"
                 ],
                 "stamp_parameters": {
                     "radius": 70
@@ -79,13 +87,13 @@
                 ],
                 "description": "My Oriented Rects",
                 "rendering_script": [
-                    "p.SetBaseTransform(true, true)",
-                    "p.SetDefaultPen()",
-                    "p.DrawRect(-1, -1, 2, 2)",
-                    "p.SetPen(255, 0, 0, -3)",
-                    "p.DrawLine(0, 0, 1.2, 0)",
-                    "p.SetPen(0, 255, 0, -3)",
-                    "p.DrawLine(0, 0, 0, 1)"
+                    "SetBaseTransform(true, true)",
+                    "SetDefaultPen()",
+                    "DrawRect(-1, -1, 2, 2)",
+                    "SetPen(255, 0, 0, -3)",
+                    "DrawLine(0, 0, 1.2, 0)",
+                    "SetPen(0, 255, 0, -3)",
+                    "DrawLine(0, 0, 0, 1)"
                 ],
                 "value_type": "oriented_rect"
             },
@@ -104,13 +112,13 @@
                 ],
                 "description": "Stamped Oriented Rects",
                 "rendering_script": [
-                    "p.SetBaseTransform(true, true)",
-                    "p.SetDefaultPen()",
-                    "p.DrawRect(-1, -1, 2, 2)",
-                    "p.SetPen(255, 0, 0, -3)",
-                    "p.DrawLine(0, 0, 1.2, 0)",
-                    "p.SetPen(0, 255, 0, -3)",
-                    "p.DrawLine(0, 0, 0, 1)"
+                    "SetBaseTransform(true, true)",
+                    "SetDefaultPen()",
+                    "DrawRect(-1, -1, 2, 2)",
+                    "SetPen(255, 0, 0, -3)",
+                    "DrawLine(0, 0, 1.2, 0)",
+                    "SetPen(0, 255, 0, -3)",
+                    "DrawLine(0, 0, 0, 1)"
                 ],
                 "stamp": true,
                 "stamp_parameters": {
@@ -134,9 +142,9 @@
                 ],
                 "description": "My Points",
                 "rendering_script": [
-                    "p.SetBaseTransform(false, false)",
-                    "p.SetDefaultPen()",
-                    "p.DrawRect(-20, -20, 40, 40)"
+                    "SetBaseTransform(false, false)",
+                    "SetDefaultPen()",
+                    "DrawRect(-20, -20, 40, 40)"
                 ],
                 "stamp": true,
                 "value_type": "point"

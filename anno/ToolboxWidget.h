@@ -22,11 +22,14 @@ public slots:
     void SetDefinitionsModel(std::shared_ptr<LabelDefinitionsTreeModel>);
     void SetFile(std::shared_ptr<FileModel>);
     void CleanupSelection();
+    void DismissCreation();
     void EnableFileFilter(bool);
     void ShowAddMarkerMenu();
     void AddMarkerType();
     void OnCustomContextMenu(const QPoint &point);
     void OnError(QString);
+    void CopyLabelDefinition();
+    void PasteLabelDefinition();
 
 private slots:
 	void OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous);	
@@ -40,6 +43,7 @@ private slots:
     void DeleteCategory();
     void DeleteCategoryFromImages();
     void ToggleTreeOpenState();
+    void ShowLabelDefinitionProperties();
 
 private:
     template<class T>

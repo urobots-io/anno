@@ -7,12 +7,13 @@
 #include "PointCloudDisplayWidget.h"
 #include "ColoredVertexData.h"
 #include "PointCloudDisplayShaders.h"
+#include <QApplication>
 #include <QFileInfo>
 #include <QMouseEvent>
 #include <QRegularExpression>
 #include <math.h>
 #include <vector>
-#include <QApplication>
+#include <sstream>
 
 using namespace std;
 
@@ -310,6 +311,7 @@ bool TryLoadFile(QString filename, std::shared_ptr<FilesystemInterface> filesyst
     }
     return true;
 }
+#endif
 
 inline QVector3D IndexToColor(size_t index) {
     const float color_scale = 1.f / 255;
@@ -318,7 +320,6 @@ inline QVector3D IndexToColor(size_t index) {
         ((index >> 8) & 0xff) * color_scale,
         (index & 0xff) * color_scale);
 }
-#endif
 
 inline int ColorToIndex(const QVector3D& color) {
     return
@@ -338,6 +339,12 @@ void PointCloudDisplayWidget::SetupImage(QString filename, std::shared_ptr<Files
     if (!is_initialized_ || !filesystem)
         return;
 
+    QFileInfo fi(filename);
+    if (fi.suffix().toUpper() == "PCD") {
+        LoadPCD(filename, filesystem);
+        return;
+    }
+    
     auto file_data = filesystem->LoadFile(filename);
     
     QImage image;
@@ -358,8 +365,7 @@ void PointCloudDisplayWidget::SetupImage(QString filename, std::shared_ptr<Files
         return;
     }
 
-#ifdef ANNO_USE_OPENCV
-    QFileInfo fi(filename);
+#ifdef ANNO_USE_OPENCV    
     cv::Mat depth, xyz;
     QRegularExpression re("(.*)_RGB(.*)");
     QRegularExpressionMatch match = re.match(fi.fileName());
@@ -572,3 +578,32 @@ void PointCloudDisplayWidget::UpdateSelection(QVector2D mouse_pos) {
     update();
 }
 
+void PointCloudDisplayWidget::LoadPCD(QString filename, std::shared_ptr<FilesystemInterface> filesystem) {
+    auto file_data = filesystem->LoadFile(filename);
+    std::istringstream cin(file_data.toStdString());
+
+    for (int i = 0; i < 11; ++i) {
+        std::string buffer;
+        if (!std::getline(cin, buffer)) break;
+    }
+    
+    vector<ColoredVertexData> vertices;
+    while (!cin.eof()) {
+        float x, y, z, color, intencity;
+        cin >> x >> y >> z >> color >> intencity;
+        ColoredVertexData cvd;
+        cvd.color = QVector3D(1, intencity, 0);
+        cvd.color_index = IndexToColor(vertices.size() + 1);
+        cvd.position = QVector3D(x, y, z);
+        vertices.push_back(cvd);
+    }
+
+    float scale = 0.001f;
+    image_scale_ = QVector3D(scale * 2, -scale * 2, scale);
+
+
+    image_buffer_.bind();
+    image_buffer_.allocate(&vertices[0], int(sizeof(ColoredVertexData) * vertices.size()));
+
+    update();
+}

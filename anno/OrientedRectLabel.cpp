@@ -11,6 +11,10 @@
 
 using namespace std;
 
+#define ANGLE "angle"
+#define WIDTH "width"
+#define HEIGHT "height"
+
 #define MAX_HANDLES 4
 
 OrientedRectLabel::OrientedRectLabel(const WorldInfo * wi) {    
@@ -33,38 +37,42 @@ OrientedRectLabel::OrientedRectLabel(const WorldInfo * wi) {
     }
 }
 
+QStringList OrientedRectLabel::GetPropertiesList() const {
+    return { WIDTH, HEIGHT, ANGLE };
+}
+
 void OrientedRectLabel::InitStamp() {
     auto def = GetDefinition();
     if (!def) {
         return;
     }
 
-    auto jw = def->stamp_parameters["width"];
-    auto jh = def->stamp_parameters["height"];
+    auto jw = def->stamp_parameters[WIDTH];
+    auto jh = def->stamp_parameters[HEIGHT];
     
     double width = jw.isDouble() ? jw.toDouble() : default_dimension_;
     double height = jh.isDouble() ? jh.toDouble() : default_dimension_;
     
-    width_.set(def->GetSharedPropertyValue("width", width));
-    height_.set(def->GetSharedPropertyValue("height", height));
+    width_.set(def->GetSharedPropertyValue(WIDTH, width));
+    height_.set(def->GetSharedPropertyValue(HEIGHT, height));
 
     // do not take shared angle, because angle is defined by creation tool
     angle_.set(0);
 }
 
 LabelProperty *OrientedRectLabel::GetProperty(QString property_name) {
-    if (property_name == "angle") { return &angle_; }
-    if (property_name == "height") { return &height_; }
-    if (property_name == "width") { return &width_; }
+    if (property_name == ANGLE) { return &angle_; }
+    if (property_name == HEIGHT) { return &height_; }
+    if (property_name == WIDTH) { return &width_; }
     return nullptr;
 }
 
 void OrientedRectLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     if (connect) {
         if (auto def = GetDefinition()) {
-            def->ConnectProperty(width_, "width", inject_my_values);
-            def->ConnectProperty(height_, "height", inject_my_values);
-            def->ConnectProperty(angle_, "angle", inject_my_values);
+            def->ConnectProperty(width_, WIDTH, inject_my_values);
+            def->ConnectProperty(height_, HEIGHT, inject_my_values);
+            def->ConnectProperty(angle_, ANGLE, inject_my_values);
         }
     }
     else {
@@ -284,8 +292,8 @@ bool OrientedRectLabel::MoveBy(const QPointF & offset) {
 	return true;
 }
 
-void OrientedRectLabel::UpdateSharedProperties() {
-    if (angle_.PullUpdate() + width_.PullUpdate() + height_.PullUpdate() > 0) {
+void OrientedRectLabel::UpdateSharedProperties(bool forced_update) {
+    if ((angle_.PullUpdate() + width_.PullUpdate() + height_.PullUpdate()) > 0 || forced_update) {
         UpdateHandlesPositions();
     }
 }

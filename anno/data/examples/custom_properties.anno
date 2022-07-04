@@ -110,6 +110,14 @@
                     "category": 0,
                     "type": "bounding_box",
                     "value": "627.755 242.533 223.915 375.326 -0.366519"
+                },
+                {
+                    "category": 0,
+                    "custom_properties": {
+                        "some_boolean": true
+                    },
+                    "type": "coordinate_system",
+                    "value": "148.59 138.382 0"
                 }
             ],
             "name": "0.jpg"

@@ -19,7 +19,6 @@
 #include <QTransform>
 #include <algorithm>
 #include <cmath>
-#include <string>
 
 struct PaintExtraFunctionsDW : public PaintExtraFunctions {
     struct Hint {
@@ -52,7 +51,7 @@ DesktopWidget::~DesktopWidget() {
 
 void DesktopWidget::Init(ApplicationModel *model) {
     model_ = model;
-    connect(model, &ApplicationModel::image_script_changed, this, &DesktopWidget::OnImageScriptChanged);
+    connect(model, &ApplicationModel::project_script_changed, this, &DesktopWidget::OnProjectScriptChanged);
     connect(model, &ApplicationModel::label_definitions_changed, this, &DesktopWidget::OnLabelDefinitionsChanged);
 }
 
@@ -243,7 +242,7 @@ void DesktopWidget::set_category_for_creation(std::shared_ptr<LabelCategory> val
 
     if (category_for_creation_) {
         if (auto def = category_for_creation_->GetDefinition()) {
-            if (def->is_stamp) {
+            if (def->get_is_stamp()) {
                 CreateStampLabel();
             }
         }        
@@ -362,9 +361,9 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
         js_engine_.globalObject().setProperty("cols", image_size.width());
         js_engine_.globalObject().setProperty("rows", image_size.height());
 
-		auto image_script = model_->get_image_script();
-        if (!image_script.isEmpty()) {
-            js_engine_.evaluate(image_script);
+        auto project_script = model_->get_project_script();
+        if (!project_script.isEmpty()) {
+            js_engine_.evaluate(project_script);
         }
 
         for (auto label : file_->labels_) {
@@ -1058,6 +1057,6 @@ void DesktopWidget::ChangeCurrentCategory(int category_value) {
     }
 }
 
-void DesktopWidget::OnImageScriptChanged(QString) {
+void DesktopWidget::OnProjectScriptChanged(QString) {
     update();
 }

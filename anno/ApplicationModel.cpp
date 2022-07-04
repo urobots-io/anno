@@ -14,6 +14,7 @@
 #include "qjson_helpers.h"
 #include "Serialization.h"
 #include "rest.h"
+#include <QDebug>
 #include <QDir>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -23,7 +24,8 @@
 #define K_FILES_ROOT_DIR "files_root_dir"
 #define K_MARKER_TYPES "marker_types"
 #define K_USER_DATA "user_data"
-#define K_IMAGE_SCRIPT "image_script"
+#define K_IMAGE_SCRIPT "image_script" // deprecated
+#define K_PROJECT_SCRIPT "project_script"
 #define K_FILES "files"
 
 #define K_FILE_NAME "name"
@@ -37,7 +39,6 @@
 #define K_MARKER_CHILDREN "children"
 #define K_MARKER_CUSTOM_PROPERTIES "custom_properties"
 
-using namespace urobots::qt_helpers;
 using namespace std;
 
 ApplicationModel::ApplicationModel(QObject *parent)
@@ -133,7 +134,7 @@ std::vector<std::shared_ptr<LabelDefinition>> ApplicationModel::LoadLabelDefinit
     for (auto key : types.keys()) {
         auto def = DeserializeLabelDefinition(types[key].toObject(), errors);        
         if (def) {
-            def->type_name = key;
+            def->set_type_name(key);
             definitions.push_back(def);
         }
     }
@@ -158,18 +159,18 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
 
             auto new_definition = std::find_if(definitions.begin(), definitions.end(),
                 [&](std::shared_ptr<LabelDefinition> & def) {
-                return def->type_name == old_definition->type_name;
+                return def->get_type_name() == old_definition->get_type_name();
             });
 
             if (new_definition == definitions.end()) {
-                errors << tr("Missing label definition: \"%0\"").arg(old_definition->type_name);
+                errors << tr("Missing label definition: \"%0\"").arg(old_definition->get_type_name());
                 break;
             }
 
             if (!(*new_definition)->GetCategory(old_category->get_value())) {
                 errors << tr("Missing category \"%0\" of definition: \"%1\"")
                     .arg(old_category->get_value())
-                    .arg(old_definition->type_name);
+                    .arg(old_definition->get_type_name());
                 break;
             }
 
@@ -177,7 +178,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
             auto value_type_new = (*new_definition)->value_type;
             if (value_type_old != value_type_new) {
                 errors << tr("Cannot change label type of \"%0\" from \"%1\" to \"%2\"")
-                    .arg(old_definition->type_name)                    
+                    .arg(old_definition->get_type_name())
                     .arg(LabelTypeToString(value_type_old))
                     .arg(LabelTypeToString(value_type_new));
                 break;
@@ -187,7 +188,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
             auto is_shared_new = (*new_definition)->is_shared();
             if (is_shared_new != is_shared_old) {
                 errors << tr("Cannot change shared type of \"%0\" from \"%1\" to \"%2\"")
-                    .arg(old_definition->type_name)                    
+                    .arg(old_definition->get_type_name())
                     .arg(is_shared_old)
                     .arg(is_shared_new);
                 break;
@@ -200,7 +201,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
                 auto shared_count_new = int((*new_definition)->shared_labels.size());
                 if (index >= shared_count_new) {
                     errors << tr("Cannot reduce shared_count type of \"%0\" from \"%1\" to \"%2\"")
-                        .arg(old_definition->type_name)
+                        .arg(old_definition->get_type_name())
                         .arg(shared_count_old)
                         .arg(shared_count_new);
                     break;
@@ -209,7 +210,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
                     auto proxy = dynamic_cast<ProxyLabel*>(label.get());
                     if (!proxy) {
                         errors << tr("Intenal error, cannot get cast to ProxyLabel label of \"%0\"")
-                            .arg(old_definition->type_name);
+                            .arg(old_definition->get_type_name());
                         break;
                     }
                     (*new_definition)->shared_labels[index] = proxy->GetProxyClient();
@@ -257,7 +258,12 @@ void ApplicationModel::ApplyBasicDefinitions(QJsonObject & definitions) {
     user_data_ = definitions[K_USER_DATA].toObject();
     pictures_path_original_ = definitions[K_FILES_ROOT_DIR].toString();
     files_loader_ = definitions[K_FILES_LOADER].toObject();
-    set_image_script(ArrayToString(definitions[K_IMAGE_SCRIPT]));
+    QString project_script = ArrayToString(definitions[K_PROJECT_SCRIPT]);
+    if (project_script.isEmpty()) {
+        // try deprecated script name
+        project_script = ArrayToString(definitions[K_IMAGE_SCRIPT]);
+    }
+    set_project_script(project_script);
 }
 
 bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filename, QStringList & errors) {
@@ -301,12 +307,12 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             }
 
             if (!definition->categories.size()) {
-                errors << tr("Definition \"%0\" has no categories").arg(definition->type_name);
+                errors << tr("Definition \"%0\" has no categories").arg(definition->get_type_name());
             }
 
             if (!definition->GetCategory(category)) {
                 errors << tr("Definition \"%0\" has no category \"%1\"")
-                    .arg(definition->type_name)
+                    .arg(definition->get_type_name())
                     .arg(category);
                 continue;
             }
@@ -314,7 +320,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             auto shared_index = marker[K_MARKER_SHARED_INDEX].toInt(0);
             if (definition->is_shared() && shared_index >= int(definition->shared_labels.size())) {
                 errors << tr("Definition \"%0\" shared count is less than label shared index \"%1\"")
-                    .arg(definition->type_name)
+                    .arg(definition->get_type_name())
                     .arg(shared_index);
                 continue;
             }
@@ -330,7 +336,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
                 if (!label) {
                     errors << tr("Failed to create label with type \"%0\" for definition \"%1\"")
                         .arg(LabelTypeToString(definition->value_type))
-                        .arg(definition->type_name);
+                        .arg(definition->get_type_name());
                     continue;
                 }
             }
@@ -375,24 +381,24 @@ QJsonObject ApplicationModel::GenerateHeader() {
         header.insert(K_USER_DATA, user_data_);
     }
 
-    if (image_script_.length()) {
-        header.insert(K_IMAGE_SCRIPT, ToJsonArray(image_script_));
+    if (project_script_.length()) {
+        header.insert(K_PROJECT_SCRIPT, ToJsonArray(project_script_));
     }
 
     QJsonObject types;
 	if (label_definitions_) {
 		for (auto def : label_definitions_->GetDefinitions()) {
-            types.insert(def->type_name, Serialize(def));
+            types.insert(def->get_type_name(), Serialize(def));
 		}
 	}
     header.insert(K_MARKER_TYPES, types);
     return header;
 }
 
-void ApplicationModel::UpdateSharedProperties() {
+void ApplicationModel::UpdateSharedProperties(bool forced_update) {
     for (auto i : file_models_) {
         for (auto l : i.second->labels_) {
-            l->UpdateSharedProperties();
+            l->UpdateSharedProperties(forced_update);
         }
     }
 }
@@ -433,7 +439,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
         for (auto label : i.second->labels_) {
             QJsonObject marker;
             marker.insert(K_MARKER_CATEGORY, QJsonValue::fromVariant(label->GetCategory()->get_value()));
-            marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetDefinition()->type_name));
+            marker.insert(K_MARKER_TYPE_NAME, QJsonValue::fromVariant(label->GetDefinition()->get_type_name()));
 
             // Save text only if not empty
             auto text = label->GetText();
@@ -507,10 +513,10 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
     return true;
 }
 
-void ApplicationModel::set_image_script(QString value) {
-    if (image_script_ != value) {
-        image_script_ = value;
-        image_script_changed(value);
+void ApplicationModel::set_project_script(QString value) {
+    if (project_script_ != value) {
+        project_script_ = value;
+        project_script_changed(value);
     }
 }
 
@@ -644,6 +650,18 @@ std::set<int> ApplicationModel::GetExistingSharedIndexes(shared_ptr<LabelDefinit
     return result;
 }
 
+int ApplicationModel::GetLabelsCount(std::shared_ptr<LabelDefinition> def) {
+    int result = 0;
+    for (auto i : file_models_) {
+        for (auto l: i.second->labels_) {
+            if (l->GetDefinition() == def) {
+                result++;
+            }
+        }
+    }
+    return result;
+}
+
 std::shared_ptr<FileModel> ApplicationModel::GetFirstFileModel() {
     if (file_models_.size()) {
         return file_models_.begin()->second;
@@ -686,4 +704,115 @@ void ApplicationModel::Delete(std::shared_ptr<LabelCategory> category, bool dele
     }
 
     label_definitions_->Delete(category);
+}
+
+void ApplicationModel::UpdateDefinitionSharedCount(std::shared_ptr<LabelDefinition> def, int new_shared_count) {
+    if (int(def->shared_labels.size()) == new_shared_count || def->categories.size() == 0) {
+        // nothing to update
+        return;
+    }
+
+    // Create new shared labels
+    vector<shared_ptr<Label>> shared_labels;
+    for (int i = 0; i < new_shared_count; ++i) {
+        auto shared_label = LabelFactory::CreateLabel(def->value_type);
+
+        // setup valid shared label index
+        shared_label->SetSharedLabelIndex(i);
+
+        // use first category
+        shared_label->SetCategory(def->categories[0]);
+
+        // connect to the database
+        shared_label->ConnectSharedProperties(true, false);
+
+        shared_labels.push_back(shared_label);
+    }
+
+    for (auto file: file_models_) {
+        file.second->UpdateDefinitionSharedLabels(def, shared_labels);
+    }
+
+    def->shared_labels = shared_labels;
+}
+
+void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<QString, SharedPropertyDefinition> props) {
+    set<QString> to_remove;
+    set<QString> to_add;
+    set<QString> to_modify;
+
+    for (auto p: def->shared_properties) {
+        if (props.count(p.first)) {
+            auto p1 = p.second;
+            auto p2 = props[p.first];
+            if (p1->name != p2.name ||
+                fabs(p1->a - p2.a) > SharedPropertyDefinition::eps() ||
+                fabs(p1->b - p2.b) > SharedPropertyDefinition::eps()) {
+                to_modify.insert(p.first);
+            }
+        }
+        else {
+            to_remove.insert(p.first);
+        }
+    }
+
+    for (auto p: props) {
+        if (def->shared_properties.count(p.first) == 0) {
+            to_add.insert(p.first);
+        }
+    }
+
+    if (to_add.empty() && to_remove.empty() && to_modify.empty()) {
+        return;
+    }
+
+    // property changes from shared -> not shared
+    for (auto p: to_remove) {
+        def->shared_properties.erase(def->shared_properties.find(p));
+    }
+    // property changes from not shared -> shared
+    for (auto p: to_add) {
+        def->shared_properties[p] = make_shared<SharedPropertyDefinition>();
+        *def->shared_properties[p] = props[p];
+    }
+    // property changes from one shared -> another shared
+    for (auto p: to_modify) {
+        *def->shared_properties[p] = props[p];
+    }
+
+    bool files_changed = false;
+    for (auto file : file_models_) {
+        if (file.second->ReconnectSharedProperties(def)) {
+            files_changed = true;
+        }
+    }
+
+    // reconnect shared properties of shared labels
+    for (auto l: def->shared_labels) {
+        l->ConnectSharedProperties(false, false);
+
+        if (!files_changed) {
+            l->InitStamp();
+        }
+
+        l->ConnectSharedProperties(true, false);
+        l->UpdateSharedProperties(true);
+    }
+}
+
+void ApplicationModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition> props, QStringList original_names) {
+    for (auto file : file_models_) {
+        file.second->UpdateDefinitionCustomProperties(def, props, original_names);
+    }
+    def->custom_properties = props;
+}
+
+void ApplicationModel::UpdateDefinitionInternalData(std::shared_ptr<LabelDefinition> def) {
+    for (auto file : file_models_) {
+        for (auto l : file.second->labels_) {
+            if (l->GetDefinition() == def) {
+                l->OnNewDefinition();
+            }
+        }
+    }
 }

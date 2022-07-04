@@ -16,7 +16,7 @@ public:
 
 public slots:
     void OnTextChanged();
-    void OnImageScriptChanged(QString);
+    void OnProjectScriptChanged(QString);
     void OnEditDefinitions();
 
 private:

@@ -16,10 +16,11 @@ public:
 
     Q_PROPERTY(bool is_modified READ get_is_modified WRITE set_is_modified NOTIFY is_modified_changed);    
     Q_PROPERTY(QString project_filename READ get_project_filename WRITE set_project_filename NOTIFY project_filename_changed);	    
-    Q_PROPERTY(QString image_script READ get_image_script WRITE set_image_script NOTIFY image_script_changed);
+    Q_PROPERTY(QString project_script READ get_project_script WRITE set_project_script NOTIFY project_script_changed);
     Q_PROPERTY(std::shared_ptr<LabelDefinitionsTreeModel> label_definitions READ get_label_definitions WRITE set_label_definitions NOTIFY label_definitions_changed);
     Q_PROPERTY(std::shared_ptr<FilesystemInterface> filesystem READ get_filesystem WRITE set_filesystem NOTIFY filesystem_changed);
-    
+    Q_PROPERTY(QJsonObject user_data READ get_user_data WRITE set_user_data NOTIFY user_data_changed);
+
     void NewProject(QString images_folder);
     bool OpenProject(QString filename, QStringList &errors);
     bool SaveProject(QStringList & errors, QString filename = QString());
@@ -35,14 +36,17 @@ public:
     QJsonObject GenerateHeader();
     bool ApplyHeader(QJsonObject, QStringList & errors);
 
-    /// Return shated indexes which are present in the document
+    /// Return shared indexes which are present in the document
     std::set<int> GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> def);
+
+    /// Returns count of existing labels for a definition
+    int GetLabelsCount(std::shared_ptr<LabelDefinition> def);
 
     /// Test function
     std::shared_ptr<FileModel> GetFirstFileModel();
 
     /// Update all shared properties
-    void UpdateSharedProperties();
+    void UpdateSharedProperties(bool forced_update = false);
 
     /// Return object which converts images after loading.
     std::shared_ptr<ImageConverter> GetImageConverter();
@@ -53,12 +57,25 @@ public:
     /// Delete label category or its instances from all files
     void Delete(std::shared_ptr<LabelCategory>, bool delete_only_instances);
 
+    /// Change shared count of definition to a new number
+    void UpdateDefinitionSharedCount(std::shared_ptr<LabelDefinition> def, int new_shared_count);
+
+    /// Change shared properties.
+    void UpdateDenitionSharedProperties(std::shared_ptr<LabelDefinition> def, std::map<QString, SharedPropertyDefinition>);
+
+    /// Update custom properties.
+    void UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition>, QStringList);
+
+    /// Trigger update of labels internal data.
+    void UpdateDefinitionInternalData(std::shared_ptr<LabelDefinition> def);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);
 
-    DECLARE_Q_PROPERTY_WRITE(QString, image_script);
+    DECLARE_Q_PROPERTY_WRITE(QString, project_script);
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified); 
+    IMPLEMENT_Q_PROPERTY_WRITE_ALWAYS(QJsonObject, user_data);
 
 private:
 	IMPLEMENT_Q_PROPERTY_WRITE(QString, project_filename);	
@@ -68,12 +85,13 @@ private:
     std::vector<std::shared_ptr<LabelDefinition>> LoadLabelDefinitions(const QJsonObject & types, QStringList& errors);
         
 signals:
-    void image_script_changed(QString);
+    void project_script_changed(QString);
     void is_modified_changed(bool);
 	void project_filename_changed(QString);		
 	void pictures_path_changed(QString);	
 	void label_definitions_changed(std::shared_ptr<LabelDefinitionsTreeModel>);
     void filesystem_changed(std::shared_ptr<FilesystemInterface>);
+    void user_data_changed(QJsonObject);
 
     void ApplicationShutdown();
 
@@ -94,11 +112,12 @@ private:
     QJsonObject user_data_;
     QJsonObject files_loader_;
 
-    QString image_script_;
+    QString project_script_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(is_modified);
-    IMPLEMENT_Q_PROPERTY_READ(image_script);
+    IMPLEMENT_Q_PROPERTY_READ(user_data);
+    IMPLEMENT_Q_PROPERTY_READ(project_script);
 	IMPLEMENT_Q_PROPERTY_READ(project_filename);
 	IMPLEMENT_Q_PROPERTY_READ(label_definitions);
     IMPLEMENT_Q_PROPERTY_READ(filesystem);

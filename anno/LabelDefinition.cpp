@@ -14,6 +14,12 @@ using namespace std;
 LabelDefinition::LabelDefinition(LabelType type, QObject *parent)
 : QObject(parent)
 , value_type(type) {
+    connect(this, &LabelDefinition::description_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::rendering_script_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::type_name_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::line_width_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::description_changed, this, &LabelDefinition::Changed);
+    connect(this, &LabelDefinition::is_stamp_changed, this, &LabelDefinition::Changed);
 }
 
 LabelDefinition::~LabelDefinition() {
@@ -34,17 +40,7 @@ std::shared_ptr<LabelCategory> LabelDefinition::GetCategory(int value) const {
     return {};
 }
 
-void LabelDefinition::set_rendering_script(const QString script) {
-    rendering_script_ = script;
-    emit Changed();
-}
-
-void LabelDefinition::set_description(const QString description) {
-    description_ = description;
-    emit Changed();
-}
-
-void LabelDefinition::ConnectProperty(LabelProperty& prop, const std::string & name, bool inject_my_value) const {
+void LabelDefinition::ConnectProperty(LabelProperty& prop, const QString & name, bool inject_my_value) const {
     auto it = shared_properties.find(name);
     if (it != shared_properties.end()) {
         prop.Connect(it->second, inject_my_value);
@@ -54,7 +50,7 @@ void LabelDefinition::ConnectProperty(LabelProperty& prop, const std::string & n
     }
 }
 
-double LabelDefinition::GetSharedPropertyValue(const std::string & name, double default_value) const {
+double LabelDefinition::GetSharedPropertyValue(const QString & name, double default_value) const {
     auto it = shared_properties.find(name);
     if (it != shared_properties.end()) {
         auto def = it->second;
@@ -99,7 +95,7 @@ bool LabelDefinition::AllowedForFile(FileModel* file, int shared_index) const {
 
 bool LabelDefinition::AllowedForFilename(QString filename, int shared_index) const {
     int index = min<int>(shared_index, int(filename_filter.size()) - 1);
-    QRegularExpression re(filename_filter[index].c_str());
+    QRegularExpression re(filename_filter[index]);
     QRegularExpressionMatch match = re.match(filename);
     return match.hasMatch();
 }

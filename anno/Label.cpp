@@ -103,7 +103,7 @@ QPen Label::GetOutlinePen(const PaintInfo & pi) const {
         return {};
 
 	QColor color(category_->get_color());
-	int line_width = def->line_width;
+    int line_width = def->get_line_width();
 	
 	auto style = Qt::SolidLine;
 
@@ -124,8 +124,8 @@ QPen Label::GetOutlinePen(const PaintInfo & pi) const {
 
 void Label::CopyFrom(const Label & other) {    
     text_ = other.text_;
-    FromStringsList(other.ToStringsList());
     SetCategory(other.category_);
+    FromStringsList(other.ToStringsList());
 }
 
 QVariant Label::Read(const CustomPropertyDefinition & prop_def) const {

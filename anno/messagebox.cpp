@@ -6,8 +6,6 @@
 
 #include <QMessageBox>
 
-namespace urobots {
-namespace qt_helpers {
 namespace messagebox {
 
 void Info(QString text) {
@@ -40,6 +38,4 @@ QMessageBox::StandardButton Question3(QString text, QString caption) {
     return (QMessageBox::StandardButton)box.exec();
 }
 
-}
-}
 }

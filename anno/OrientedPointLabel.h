@@ -6,6 +6,8 @@ class OrientedPointLabel : public CloneableLabel<OrientedPointLabel> {
 public:
     OrientedPointLabel(const WorldInfo *);
 
+    QStringList GetPropertiesList() const override;
+
     void ConnectSharedProperties(bool connect, bool inject_my_values) override;
     
     void CenterTo(QPointF position, double angle) override;
@@ -24,7 +26,7 @@ public:
 	
 	bool MoveBy(const QPointF & offset) override;
     
-    void UpdateSharedProperties() override;
+    void UpdateSharedProperties(bool forced_update = false) override;
 
     void OnNewDefinition() override;
 

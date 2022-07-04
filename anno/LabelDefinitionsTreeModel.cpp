@@ -10,7 +10,8 @@
 
 LabelDefinitionsTreeModel::LabelDefinitionsTreeModel(ApplicationModel *parent, const std::vector<std::shared_ptr<LabelDefinition>> & definitions)
     : QAbstractItemModel(parent)
-    , definitions_(definitions)    
+    , definitions_(definitions)
+    , app_model_(parent)
 {
     for (auto def : definitions) {
         connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
@@ -25,7 +26,7 @@ LabelDefinitionsTreeModel::~LabelDefinitionsTreeModel() {
 
 std::shared_ptr<LabelDefinition> LabelDefinitionsTreeModel::FindDefinition(QString type_name) const {
     for (auto def : definitions_) {
-        if (def->type_name == type_name) {
+        if (def->get_type_name() == type_name) {
             return def;
         }
     }
@@ -69,13 +70,13 @@ QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) co
     if (role == Qt::DisplayRole) {
         if (item.second) return item.second->get_name();
         else if (item.first) {
-            return item.first->type_name;
+            return item.first->get_type_name();
         }
         else return tr("Select");
     }
     else if (role == Qt::EditRole) {
         if (item.second) return item.second->get_name();
-        else if (item.first) return item.first->type_name;
+        else if (item.first) return item.first->get_type_name();
         else return QString();
     }
     else if (role == Qt::DecorationRole) {
@@ -104,19 +105,18 @@ bool LabelDefinitionsTreeModel::setData(const QModelIndex &index, const QVariant
         else if (item.first) {
             auto definition = item.first;
             auto new_name = value.toString();
-            if (definition->type_name == new_name) {
+            if (definition->get_type_name() == new_name) {
                 return true;
             }
 
             for (auto d : definitions_) {
-                if (d.get() != definition.get() && d->type_name == new_name) {
+                if (d.get() != definition.get() && d->get_type_name() == new_name) {
                     emit Error(tr("Cannot rename marker to %0, marker with this name already exists").arg(new_name));
                     return false;
                 }
             }
 
-            definition->type_name = value.toString();
-            DefinitionChanged();
+            definition->set_type_name(value.toString());
             return true;
         }
     }
@@ -211,7 +211,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     for (int i = 0; name.isEmpty(); ++i) {
         name = QString("%0 %1").arg(label_type_name).arg(i);
         for (auto d : definitions_) {
-            if (d->type_name == name) {
+            if (d->get_type_name() == name) {
                 name.clear();
                 break;
             }
@@ -219,7 +219,7 @@ QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     }
 
     auto def = std::make_shared<LabelDefinition>(value_type);
-    def->type_name = name;    
+    def->set_type_name(name);
     connect(def.get(), &LabelDefinition::Changed, this, &LabelDefinitionsTreeModel::DefinitionChanged);
     
     LabelDefinition::CreateCategory(def, 0, "Category 0", Qt::red);
@@ -299,18 +299,13 @@ void LabelDefinitionsTreeModel::Delete(std::shared_ptr<LabelCategory> category) 
     }
 }
 
-QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefinition> marker) {
-    auto index = GetIndex(marker.get());
-    if (!index.isValid()) {
-        return QModelIndex();
-    }
-
-    QString name = marker->type_name + tr(" copy");
-    int copy_index = 1;
+QString LabelDefinitionsTreeModel::GetDefinitionCopyName(QString base_name) {
+    QString name = base_name;
+    int copy_index = 0;
     bool name_found = false;
-    while (!name_found) {        
+    while (!name_found) {
         for (auto d : definitions_) {
-            if (d->type_name == name) {
+            if (d->get_type_name() == name) {
                 name.clear();
                 break;
             }
@@ -318,13 +313,27 @@ QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefi
 
         name_found = !name.isEmpty();
         if (!name_found) {
-            name = marker->type_name + tr(" copy(%0)").arg(++copy_index);
+            if (++copy_index == 1) {
+                name = base_name + tr(" copy");                
+            }
+            else {
+                name = base_name + tr(" copy(%0)").arg(copy_index);
+            }
         }
     }
+    return name;
+}
 
+QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefinition> marker) {
+    auto index = GetIndex(marker.get());
+    if (!index.isValid()) {
+        return QModelIndex();
+    }
+
+    QString name = GetDefinitionCopyName(marker->get_type_name());    
     QStringList errors;    
     if (auto new_marker = DeserializeLabelDefinition(Serialize(marker), errors)) {
-        new_marker->type_name = name;
+        new_marker->set_type_name(name);
 
         int pos = index.row() + 1;
         beginInsertRows(QModelIndex(), pos, pos);
@@ -335,7 +344,30 @@ QModelIndex LabelDefinitionsTreeModel::CloneDefinition(std::shared_ptr<LabelDefi
 
         return createIndex(pos, 0, new_marker.get());
     }
-
     return QModelIndex();
+}
+
+QModelIndex LabelDefinitionsTreeModel::InsertNewDefinition(QString base_name, std::shared_ptr<LabelDefinition> definition) {
+    QString name = GetDefinitionCopyName(base_name);
+    definition->set_type_name(name);
+
+    QModelIndex index = createIndex(0, 0);
+    for (size_t i = 0; i < definitions_.size(); ++i) {
+        if (definitions_[i]->get_type_name() < name) {
+            index = createIndex(int(i + 1), 0, definitions_[i].get());
+        }
+        else {
+            break;
+        }
+    }    
+    
+    int pos = index.row() + 1;
+    beginInsertRows(QModelIndex(), pos, pos);
+    definitions_.insert(definitions_.begin() + index.row(), definition);
+    endInsertRows();
+
+    emit Changed();
+
+    return createIndex(pos, 0, definition.get());    
 }
 

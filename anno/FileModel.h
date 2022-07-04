@@ -49,6 +49,15 @@ public:
     /// Return shared indexes which are present on this file
     std::set<int> GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> def);
 
+    /// Definition gets new shared labels
+    void UpdateDefinitionSharedLabels(std::shared_ptr<LabelDefinition> def, std::vector<std::shared_ptr<Label>>& shared_labels);
+
+    /// Modify shared properties of labels. Returns true if any label is modified.
+    bool ReconnectSharedProperties(std::shared_ptr<LabelDefinition>);
+
+    /// Modify custom properties of labels.
+    void UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition>, QStringList);
+
 public slots:
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified);
     IMPLEMENT_Q_PROPERTY_WRITE(QString, id);

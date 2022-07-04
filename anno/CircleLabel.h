@@ -8,6 +8,8 @@ public:
 
     void InitStamp() override;
 
+    QStringList GetPropertiesList() const override;
+
     void ConnectSharedProperties(bool connect, bool inject_my_values) override;
 
     void CenterTo(QPointF position, double angle) override;
@@ -34,7 +36,7 @@ public:
 
 	bool MoveBy(const QPointF & offset) override;
 
-    void UpdateSharedProperties() override;
+    void UpdateSharedProperties(bool forced_update = false) override;
 
     LabelProperty *GetProperty(QString property_name) override;
 

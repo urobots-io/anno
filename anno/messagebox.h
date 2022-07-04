@@ -1,8 +1,6 @@
 #pragma once
 #include <QMessageBox>
 
-namespace urobots {
-namespace qt_helpers {
 namespace messagebox {
 
 /// Displays information notification.
@@ -17,6 +15,4 @@ bool Question(QString text, QString caption, QMessageBox::StandardButton negativ
 /// Asks Yes/No/Cancel question. Returns one of these values (close message box = Cancel)
 QMessageBox::StandardButton Question3(QString text, QString caption);
 
-}
-}
 }

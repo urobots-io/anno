@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#define RADIUS "radius"
+
 CircleLabel::CircleLabel(const WorldInfo * wi)
 : creation_completed_(wi == nullptr) {    
     QPointF position0 = wi ? wi->position : QPointF(0, 0);
@@ -19,16 +21,20 @@ CircleLabel::CircleLabel(const WorldInfo * wi)
     handles_.push_back(make_shared<LabelHandle>(position1, this));    
 }
 
+QStringList CircleLabel::GetPropertiesList() const {
+    return { RADIUS };
+}
+
 void CircleLabel::InitStamp() {  
     auto def = GetDefinition();
     if (!def) {
         return;
     }
 
-    auto jval = def->stamp_parameters["radius"];
+    auto jval = def->stamp_parameters[RADIUS];
     double radius = jval.isDouble() ? jval.toDouble() : default_dimension_;
 
-    radius_.set(def->GetSharedPropertyValue("radius", radius));
+    radius_.set(def->GetSharedPropertyValue(RADIUS, radius));
     
     handles_[0]->SetPosition(QPointF(0, 0), false);
     handles_[1]->SetPosition(QPointF(radius, 0), false);
@@ -37,7 +43,7 @@ void CircleLabel::InitStamp() {
 void CircleLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     if (connect) {
         if (auto def = GetDefinition()) {
-            def->ConnectProperty(radius_, "radius", inject_my_values);
+            def->ConnectProperty(radius_, RADIUS, inject_my_values);
         }
     }
     else {        
@@ -45,14 +51,14 @@ void CircleLabel::ConnectSharedProperties(bool connect, bool inject_my_values) {
     }
 }
 
-void CircleLabel::UpdateSharedProperties() {
-    if (radius_.PullUpdate()) {
+void CircleLabel::UpdateSharedProperties(bool forced_update) {
+    if (radius_.PullUpdate() || forced_update) {
         handles_[1]->SetPosition(handles_[0]->GetPosition() + QPointF(radius_.get(), 0), false);
     }
 }
 
 LabelProperty *CircleLabel::GetProperty(QString property_name) {
-    if (property_name == "radius") { return &radius_; }
+    if (property_name == RADIUS) { return &radius_; }
     return nullptr;
 }
 

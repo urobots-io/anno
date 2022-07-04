@@ -17,8 +17,6 @@
 #include <QProcess>
 #endif
 
-using namespace urobots::qt_helpers;
-
 SourcePicturesWidget::SourcePicturesWidget(QWidget *parent)
     : QWidget(parent)
 {

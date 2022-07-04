@@ -7,12 +7,13 @@
 #include "PointCloudDisplayWidget.h"
 #include "ColoredVertexData.h"
 #include "PointCloudDisplayShaders.h"
+#include <QApplication>
 #include <QFileInfo>
 #include <QMouseEvent>
 #include <QRegularExpression>
 #include <math.h>
 #include <vector>
-#include <QApplication>
+#include <sstream>
 
 using namespace std;
 
@@ -310,6 +311,7 @@ bool TryLoadFile(QString filename, std::shared_ptr<FilesystemInterface> filesyst
     }
     return true;
 }
+#endif
 
 inline QVector3D IndexToColor(size_t index) {
     const float color_scale = 1.f / 255;
@@ -318,7 +320,6 @@ inline QVector3D IndexToColor(size_t index) {
         ((index >> 8) & 0xff) * color_scale,
         (index & 0xff) * color_scale);
 }
-#endif
 
 inline int ColorToIndex(const QVector3D& color) {
     return
@@ -597,7 +598,7 @@ void PointCloudDisplayWidget::LoadPCD(QString filename, std::shared_ptr<Filesyst
         vertices.push_back(cvd);
     }
 
-    float scale = 0.001;    
+    float scale = 0.001f;
     image_scale_ = QVector3D(scale * 2, -scale * 2, scale);
 
 

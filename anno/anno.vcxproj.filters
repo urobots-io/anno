@@ -360,15 +360,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ToolboxWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ImageSettingsWidget.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ImageSettingsWidget.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageSettingsWidget.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_LabelDefinition.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -546,6 +537,30 @@
     <ClCompile Include="CustomPropertiesEditorTableItemDelegate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImageModelQt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageModelOpenCV.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ImageSettingsWidgetQt.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ImageSettingsWidgetQt.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageSettingsWidgetQt.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ImageSettingsWidgetOpenCV.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ImageSettingsWidgetOpenCV.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageSettingsWidgetOpenCV.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -671,9 +686,6 @@
     <ClInclude Include="GeneratedFiles\ui_ToolboxWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidget.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="FileTreeItemInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -742,6 +754,12 @@
     </ClInclude>
     <ClInclude Include="LabelCategory.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidgetQt.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidgetOpenCV.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -844,12 +862,6 @@
     <CustomBuild Include="ToolboxWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ImageSettingsWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ImageSettingsWidget.h">
-      <Filter>Header Files\UI</Filter>
-    </CustomBuild>
     <CustomBuild Include="LabelDefinitionPropertiesWidget.h">
       <Filter>Header Files\UI</Filter>
     </CustomBuild>
@@ -909,6 +921,21 @@
     </CustomBuild>
     <CustomBuild Include="CustomPropertiesEditorTableItemDelegate.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidgetQt.h">
+      <Filter>Header Files\UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidgetQt.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidget.h">
+      <Filter>Header Files\UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidgetOpenCV.h">
+      <Filter>Header Files\UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ImageSettingsWidgetOpenCV.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

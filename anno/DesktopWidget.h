@@ -12,6 +12,12 @@ class DesktopWidget : public QWidget
 	Q_OBJECT
 
 public:
+#ifdef ANNO_USE_OPENCV
+    typedef ImageModelOpenCV ImageModelClass;
+#else    
+    typedef ImageModelQt ImageModelClass;
+#endif
+
 	DesktopWidget(QWidget *parent);
     ~DesktopWidget() override;
 
@@ -52,7 +58,7 @@ public:
 	// end: qt widget events
 
 	/// Model to control background image properties
-    ImageModel &GetBackgroundImage() { return image_; }
+    ImageModelClass &GetBackgroundImage() { return image_; }
 
     /// Abort creation of object if any
     void AbortCreation();
@@ -219,7 +225,7 @@ private:
     bool fit_to_view_on_resize_ = true;
 
     /// Background image
-    ImageModel image_;
+    ImageModelClass image_;
 
 	/// applicaion model to access project settings, loaders, converters, etc.
 	ApplicationModel *model_ = nullptr;

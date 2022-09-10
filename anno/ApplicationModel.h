@@ -69,6 +69,9 @@ public:
     /// Trigger update of labels internal data.
     void UpdateDefinitionInternalData(std::shared_ptr<LabelDefinition> def);
 
+    /// Update all labels
+    void BatchUpdate(std::shared_ptr<LabelDefinition> def, float dx, float dy, float da, bool use_label_cs);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);

@@ -13,7 +13,7 @@ public:
 
 	bool OnCreateMove(const WorldInfo &) override;
 
-	bool MoveBy(const QPointF & position) override;
+	bool MoveBy(const QPointF & position, bool use_own_cs) override;
 
 	void OnCreateClick(const WorldInfo &, bool) override;
 

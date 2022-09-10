@@ -143,8 +143,14 @@ bool OrientedPointLabel::Rotate(double angle) {
     return true;
 }
 
-bool OrientedPointLabel::MoveBy(const QPointF & offset) {
-	handles_[0]->SetPosition(handles_[0]->GetPosition() + offset);
+bool OrientedPointLabel::MoveBy(const QPointF & offset, bool use_own_cs) {
+    if (use_own_cs) {
+        auto rotated_offset = QTransform().rotate(180.f / M_PI * angle_.get()).map(offset);
+        handles_[0]->SetPosition(handles_[0]->GetPosition() + rotated_offset);
+    }
+    else {
+        handles_[0]->SetPosition(handles_[0]->GetPosition() + offset);
+    }
 	UpdateHandlesPositions();
 	return true;
 }

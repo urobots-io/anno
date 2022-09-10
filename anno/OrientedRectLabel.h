@@ -40,7 +40,7 @@ public:
 
     bool Rotate(double angle) override;
 
-	bool MoveBy(const QPointF & offset) override;
+	bool MoveBy(const QPointF & offset, bool use_own_cs) override;
 
     void UpdateSharedProperties(bool forced_update = false) override;
 

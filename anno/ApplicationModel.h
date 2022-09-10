@@ -75,7 +75,7 @@ public:
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);
-    void DetectPlates(const ImageData &image);
+    void DetectPlates(std::shared_ptr<FileModel>, const ImageData &image, QPointF image_offset);
 
     DECLARE_Q_PROPERTY_WRITE(QString, project_script);
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified); 

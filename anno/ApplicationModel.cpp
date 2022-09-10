@@ -835,7 +835,7 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 }
 
 
-void ApplicationModel::DetectPlates(const ImageData &source_image) {    
+void ApplicationModel::DetectPlates(std::shared_ptr<FileModel> file, const ImageData &source_image, QPointF image_offset) {
 #ifdef ANNO_USE_OPENCV
 
     const float store_exposure_time = 0.1f;
@@ -857,7 +857,33 @@ void ApplicationModel::DetectPlates(const ImageData &source_image) {
 
     QByteArray data((char*)(image.data), image.rows * image.cols * 4);
 
-    auto result = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
+    auto response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
+    QJsonDocument document = QJsonDocument::fromJson(response);
+    QJsonObject root = document.object();
+
+    auto definitions = get_label_definitions()->GetDefinitions();
+    auto poses = root["retval"].toObject()["poses"].toArray();
+    for (auto pose : poses) {
+        auto pa = pose.toArray();
+        float x = float(pa[0].toDouble());
+        float y = float(pa[1].toDouble());
+        float angle = float(pa[2].toDouble());
+        int category_value = pa[4].toInt();
+
+        angle *= M_PI / 180.0;
+
+        for (auto d : definitions) {
+            if (auto category = d->GetCategory(category_value)) {
+                // Create a new label
+                auto label = LabelFactory::CreateLabel(LabelType::oriented_point);
+                label->SetCategory(category);
+                label->MoveBy(QPointF(x, y) + image_offset);
+                label->Rotate(angle);                
+                file->CreateLabel(label);
+                break;
+            }
+        }
+    }
     
 #endif
 }

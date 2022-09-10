@@ -494,6 +494,10 @@ void MainWindow::OnToolboxDoubleClick(std::shared_ptr<LabelCategory> category) {
 }
 
 void MainWindow::OnDetectPlates() {
+    if (!selected_file_) {
+        return;
+    }
+
 #ifdef ANNO_USE_OPENCV
     auto label = ui.desktop->get_selected_label();
     auto definition = label ? label->GetDefinition() : nullptr;
@@ -514,9 +518,9 @@ void MainWindow::OnDetectPlates() {
     int y = int(min(p0.y(), p1.y()));
     int width = int(fabs(p1.x() - p0.x()));
     int height = int(fabs(p1.y() - p0.y()));    
-    auto cropped_image = image.CropImage(QRect(x, y, width, height));
+    auto cropped_image = image.CropImage(QRect(x, y, width, height));    
 
-    model_.DetectPlates(cropped_image);
+    model_.DetectPlates(selected_file_, cropped_image, QPointF(x, y));
 #endif
 }
 

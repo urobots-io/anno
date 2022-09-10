@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui.open_dataset_action, &QAction::triggered, this, &MainWindow::OnOpenDatasetProject);
     connect(ui.action3d_View, &QAction::triggered, this, &MainWindow::OnShow3dView);
 	connect(ui.project_settings_action, &QAction::triggered, this, &MainWindow::OnProjectSettings);
+    connect(ui.detect_plates_action, &QAction::triggered, this, &MainWindow::OnDetectPlates);
 
 	// files tree
     ui.files_tree->Init(&model_);
@@ -491,3 +492,32 @@ void MainWindow::OnToolboxDoubleClick(std::shared_ptr<LabelCategory> category) {
         }
     }
 }
+
+void MainWindow::OnDetectPlates() {
+#ifdef ANNO_USE_OPENCV
+    auto label = ui.desktop->get_selected_label();
+    auto definition = label ? label->GetDefinition() : nullptr;
+    if (!definition || definition->get_type_name() != "Plate train ROI") {
+        return;
+    }
+
+    if (ui.desktop->get_is_loading_image()) {
+        return;
+    }
+
+    auto& image = ui.desktop->GetBackgroundImage();
+
+    auto p0 = label->GetHandles()[0]->GetPosition();
+    auto p1 = label->GetHandles()[1]->GetPosition();
+
+    int x = int(min(p0.x(), p1.x()));
+    int y = int(min(p0.y(), p1.y()));
+    int width = int(fabs(p1.x() - p0.x()));
+    int height = int(fabs(p1.y() - p0.y()));    
+    auto cropped_image = image.CropImage(QRect(x, y, width, height));
+
+    model_.DetectPlates(cropped_image);
+#endif
+}
+
+

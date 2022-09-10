@@ -47,6 +47,7 @@ public slots:
 	void OnProjectSettings();
     void UpdateApplicationTitle();
     void UpdateProjectControls();
+    void OnDetectPlates();
 
 private:	
 	bool CloseActiveProject();

@@ -109,6 +109,8 @@ public:
     
     std::vector<float> GetBackgroundPixelValues(int x, int y);
 
+    ImageData CropImage(QRect rect);
+
 protected:
     void RebuildPixmapInternal();
 

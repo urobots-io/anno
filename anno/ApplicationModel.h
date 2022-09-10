@@ -75,6 +75,7 @@ public:
 public slots:
 	void SetModified() { set_is_modified(true); }
     void OnFileModifiedChanged(bool value);
+    void DetectPlates(const ImageData &image);
 
     DECLARE_Q_PROPERTY_WRITE(QString, project_script);
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified); 
@@ -105,8 +106,7 @@ private:
 private:
     bool is_modified_ = false;
 	QString project_filename_;
-    QString pictures_path_original_;	
-    std::shared_ptr<FileModel> selected_image_file_;
+    QString pictures_path_original_;	    
     std::shared_ptr<LabelDefinitionsTreeModel> label_definitions_;
     std::shared_ptr<FilesystemInterface> filesystem_;    
 

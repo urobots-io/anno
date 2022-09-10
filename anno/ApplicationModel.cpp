@@ -833,3 +833,32 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
         }
     }
 }
+
+
+void ApplicationModel::DetectPlates(const ImageData &source_image) {    
+#ifdef ANNO_USE_OPENCV
+
+    const float store_exposure_time = 0.1f;
+    const float hdr_base_scale = 100;    
+    const float hdr_calib_scale = 1.f;
+
+    auto image = source_image.clone();
+    image *= 500;
+    image *= store_exposure_time / (hdr_base_scale * hdr_calib_scale);
+
+    auto url = QString::fromLatin1("http://127.0.0.1:8009/userver/projects/verifier/runners/_program_main_/objects/mue/Plates_BMW_CLAR_WE_iCond_PHEV/check/attrs/evaluate/call/");
+
+    QJsonObject json;
+    json.insert("machine", "Mauch10");
+    json.insert("product", "BMW_CLAR_WE_iCond_PHEV");
+    json.insert("index", 0);
+    json.insert("image_width", image.cols);
+    json.insert("image_height", image.rows);
+
+    QByteArray data((char*)(image.data), image.rows * image.cols * 4);
+
+    auto result = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
+    
+#endif
+}
+

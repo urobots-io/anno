@@ -127,5 +127,10 @@ std::vector<float> ImageModelOpenCV::GetBackgroundPixelValues(int x, int y) {
     }
 }
 
+ImageData ImageModelOpenCV::CropImage(QRect rect) {
+    cv::Rect roi(rect.left(), rect.top(), rect.width(), rect.height());    
+    return image_(roi);
+}
+
 #endif
 

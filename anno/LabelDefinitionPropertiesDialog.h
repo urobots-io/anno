@@ -96,6 +96,7 @@ private slots:
     void ApplyAndClose();
     void CloseEditors();
     void DeleteCustomProperty();
+    void ApplyBatch();
 
 private:
     QString GetSharedLabelsCountUpdateNotification();

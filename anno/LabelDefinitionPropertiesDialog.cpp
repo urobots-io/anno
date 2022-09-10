@@ -96,6 +96,9 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     connect(ui.buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &QDialog::close);
     connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &LabelDefinitionPropertiesDialog::ApplyAndClose);
     connect(ui.buttonBox->button(QDialogButtonBox::Ok), &QPushButton::pressed, this, &LabelDefinitionPropertiesDialog::CloseEditors);
+
+    // Batch update apply button
+    connect(ui.apply_batch_pushButton, &QPushButton::clicked, this, &LabelDefinitionPropertiesDialog::ApplyBatch);
 }
 
 LabelDefinitionPropertiesDialog::~LabelDefinitionPropertiesDialog()
@@ -231,4 +234,13 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
     }
 
     close();
+}
+
+void LabelDefinitionPropertiesDialog::ApplyBatch() {
+    auto model = definitions_->GetApplicationModel();
+    model->BatchUpdate(definition_, 
+        ui.add_x_doubleSpinBox->value(),
+        ui.add_y_doubleSpinBox->value(), 
+        ui.add_angle_doubleSpinBox->value(), 
+        ui.add_in_label_cs_checkBox->isChecked());
 }

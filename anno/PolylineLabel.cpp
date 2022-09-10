@@ -56,7 +56,7 @@ bool PolylineLabel::OnCreateMove(const WorldInfo & wi) {
     return false;
 }
 
-bool PolylineLabel::MoveBy(const QPointF & offset) {
+bool PolylineLabel::MoveBy(const QPointF & offset, bool /*use_own_cs*/) {
     for (auto h : handles_) {
         h->SetPosition(h->GetPosition() + offset, false);
     } 

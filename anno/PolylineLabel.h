@@ -15,7 +15,7 @@ public:
 
     void OnCreateClick(const WorldInfo &, bool) override;
 
-    bool MoveBy(const QPointF & offset) override;
+    bool MoveBy(const QPointF & offset, bool use_own_cs) override;
 
     bool ForceCompleteCreation(const WorldInfo &) override;
 

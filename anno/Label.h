@@ -94,7 +94,7 @@ public:
     virtual bool Rotate(double angle) { Q_UNUSED(angle) return false; }
 
 	/// offset the label - returns true if move was done
-    virtual bool MoveBy(const QPointF & offset) { Q_UNUSED(offset) return false; }
+    virtual bool MoveBy(const QPointF & offset, bool use_own_coordinate_system = false) { Q_UNUSED(offset) return false; }
 
 	/// shall be called for labels to display on gui
     virtual void SetComputeVisualisationData(bool value);

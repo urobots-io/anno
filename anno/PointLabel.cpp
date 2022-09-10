@@ -37,7 +37,7 @@ QTransform PointLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y());
 }
 
-bool PointLabel::MoveBy(const QPointF & offset) {
+bool PointLabel::MoveBy(const QPointF & offset, bool /*use_own_cs*/) {
 	CenterTo(handles_[0]->GetPosition() + offset, 0);
 	return true;
 }

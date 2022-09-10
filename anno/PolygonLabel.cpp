@@ -116,7 +116,7 @@ bool PolygonLabel::OnCreateMove(const WorldInfo & wi) {
 	return IsNearStartPoint(wi);
 }
 
-bool PolygonLabel::MoveBy(const QPointF & offset) {
+bool PolygonLabel::MoveBy(const QPointF & offset, bool /*use_own_cs*/) {
     for (auto h : handles_) {
         h->SetPosition(h->GetPosition() + offset, false);
     }

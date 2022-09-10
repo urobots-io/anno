@@ -13,6 +13,6 @@ public:
 
     QTransform GetTransform(bool scale, bool rotate) override;
 
-	bool MoveBy(const QPointF & offset) override;
+	bool MoveBy(const QPointF & offset, bool use_own_cs) override;
 };
 

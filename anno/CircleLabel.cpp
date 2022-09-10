@@ -156,7 +156,7 @@ QTransform CircleLabel::GetTransform(bool scale, bool rotate) {
         .scale(scale ? radius : 1., scale ? radius : 1.);
 }
 
-bool CircleLabel::MoveBy(const QPointF & offset) {
+bool CircleLabel::MoveBy(const QPointF & offset, bool /*use_own_cs*/) {
 	CenterTo(handles_[0]->GetPosition() + offset, 0);
 	return true;
 }

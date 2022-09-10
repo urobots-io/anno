@@ -143,7 +143,7 @@ QTransform RectLabel::GetTransform(bool scale, bool rotate) {
     return QTransform().translate(pos.x(), pos.y()).scale(scale ? width_.get() : 1., scale ? height_.get() : 1.);
 }
 
-bool RectLabel::MoveBy(const QPointF & offset) {
+bool RectLabel::MoveBy(const QPointF & offset, bool /*use_own_cs*/) {
     handles_[0]->SetPosition(handles_[0]->GetPosition() + offset, false);
     handles_[1]->SetPosition(handles_[1]->GetPosition() + offset, false);
     UpdateHandlesPositions();

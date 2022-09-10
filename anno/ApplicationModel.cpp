@@ -816,3 +816,20 @@ void ApplicationModel::UpdateDefinitionInternalData(std::shared_ptr<LabelDefinit
         }
     }
 }
+
+void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float dx, float dy, float da, bool use_label_cs) {
+    for (auto it : file_models_) {
+        auto file = it.second;
+        for (auto l : file->labels_) {
+            if (l->GetDefinition() == def) {
+                file->ModifyLabelGeometry(l);
+                
+                if (da != 0) {
+                    l->Rotate(M_PI / 180.f * da);
+                }
+
+                l->MoveBy(QPointF(dx, dy), use_label_cs);
+            }
+        }
+    }
+}

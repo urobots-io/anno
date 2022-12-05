@@ -463,7 +463,7 @@
    <addaction name="undo_action"/>
    <addaction name="redo_action"/>
    <addaction name="separator"/>
-   <addaction name="detect_plates_action"/>
+   <addaction name="evaluate_in_roi_action"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="save_action">
@@ -584,13 +584,13 @@
     <string>Save Project As</string>
    </property>
   </action>
-  <action name="detect_plates_action">
+  <action name="evaluate_in_roi_action">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/MainWindow/Resources/fix.ico</normaloff>:/MainWindow/Resources/fix.ico</iconset>
+     <normaloff>:/MainWindow/Resources/component.ico</normaloff>:/MainWindow/Resources/component.ico</iconset>
    </property>
    <property name="text">
-    <string>Detect plates</string>
+    <string>Evaluate in ROI</string>
    </property>
   </action>
  </widget>

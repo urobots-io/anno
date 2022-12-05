@@ -47,7 +47,7 @@ public slots:
 	void OnProjectSettings();
     void UpdateApplicationTitle();
     void UpdateProjectControls();
-    void OnDetectPlates();
+    void OnEvaluateInROI();
 
 private:	
 	bool CloseActiveProject();

@@ -835,7 +835,7 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 }
 
 
-void ApplicationModel::DetectPlates(std::shared_ptr<FileModel> file, const ImageData &source_image, QPointF image_offset) {
+void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &source_image, QPointF image_offset) {
 #ifdef ANNO_USE_OPENCV
     auto url = QString::fromLatin1("http://127.0.0.1:8009/userver/projects/verifier/runners/_program_main_/objects/tools/plates_detector/attrs/evaluate/call/");
     auto image = source_image.clone();

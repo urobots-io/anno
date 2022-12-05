@@ -72,10 +72,12 @@ public:
     /// Update all labels
     void BatchUpdate(std::shared_ptr<LabelDefinition> def, float dx, float dy, float da, bool use_label_cs);
 
+    /// Evaluate on the image data using remote server.
+    void Evaluate(std::shared_ptr<FileModel>, const ImageData &image, QPointF image_offset);
+
 public slots:
 	void SetModified() { set_is_modified(true); }
-    void OnFileModifiedChanged(bool value);
-    void DetectPlates(std::shared_ptr<FileModel>, const ImageData &image, QPointF image_offset);
+    void OnFileModifiedChanged(bool value);    
 
     DECLARE_Q_PROPERTY_WRITE(QString, project_script);
     IMPLEMENT_Q_PROPERTY_WRITE(bool, is_modified); 

@@ -518,7 +518,7 @@ void MainWindow::OnEvaluateInROI() {
     int y = int(min(p0.y(), p1.y()));
     int width = int(fabs(p1.x() - p0.x()));
     int height = int(fabs(p1.y() - p0.y()));    
-    auto cropped_image = image.CropImage(QRect(x, y, width, height));    
+    auto cropped_image = image.CropImage(QRect(x, y, width, height)).clone();    
 
     model_.Evaluate(selected_file_, cropped_image, QPointF(x, y));
 #endif

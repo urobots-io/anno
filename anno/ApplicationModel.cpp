@@ -837,38 +837,41 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 
 void ApplicationModel::DetectPlates(std::shared_ptr<FileModel> file, const ImageData &source_image, QPointF image_offset) {
 #ifdef ANNO_USE_OPENCV
-
-    const float store_exposure_time = 0.1f;
-    const float hdr_base_scale = 100;    
-    const float hdr_calib_scale = 1.f;
-
+    auto url = QString::fromLatin1("http://127.0.0.1:8009/userver/projects/verifier/runners/_program_main_/objects/tools/plates_detector/attrs/evaluate/call/");
     auto image = source_image.clone();
-    image *= 500;
-    image *= store_exposure_time / (hdr_base_scale * hdr_calib_scale);
-
-    auto url = QString::fromLatin1("http://127.0.0.1:8009/userver/projects/verifier/runners/_program_main_/objects/mue/Plates_BMW_CLAR_WE_iCond_PHEV/check/attrs/evaluate/call/");
 
     QJsonObject json;
-    json.insert("machine", "Mauch10");
-    json.insert("product", "BMW_CLAR_WE_iCond_PHEV");
-    json.insert("index", 0);
     json.insert("image_width", image.cols);
     json.insert("image_height", image.rows);
 
+    QString filepath = get_filesystem()->GetLocalPath(file->get_id());
+    if (filepath.isEmpty()) {
+        filepath = file->get_id();
+    }
+
+    json.insert("image_file", filepath);
+
     QByteArray data((char*)(image.data), image.rows * image.cols * 4);
 
-    auto response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
+    QByteArray response;
+    try {
+        response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
+    }
+    catch (std::exception&) {
+        return;
+    }
+
     QJsonDocument document = QJsonDocument::fromJson(response);
     QJsonObject root = document.object();
 
     auto definitions = get_label_definitions()->GetDefinitions();
-    auto poses = root["retval"].toObject()["poses"].toArray();
+    auto poses = root["retval"].toArray();
     for (auto pose : poses) {
         auto pa = pose.toArray();
         float x = float(pa[0].toDouble());
         float y = float(pa[1].toDouble());
         float angle = float(pa[2].toDouble());
-        int category_value = pa[4].toInt();
+        int category_value = pa[3].toInt();
 
         angle *= M_PI / 180.0;
 
@@ -878,7 +881,7 @@ void ApplicationModel::DetectPlates(std::shared_ptr<FileModel> file, const Image
                 auto label = LabelFactory::CreateLabel(LabelType::oriented_point);
                 label->SetCategory(category);
                 label->MoveBy(QPointF(x, y) + image_offset);
-                label->Rotate(angle);                
+                label->Rotate(angle);
                 file->CreateLabel(label);
                 break;
             }

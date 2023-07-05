@@ -131,7 +131,7 @@ bool ApplicationModel::OpenProject(QString filename, QStringList & errors) {
 
 std::vector<std::shared_ptr<LabelDefinition>> ApplicationModel::LoadLabelDefinitions(const QJsonObject & types, QStringList& errors) {
     std::vector<std::shared_ptr<LabelDefinition>> definitions;
-    for (auto key : types.keys()) {
+    for (const auto & key : types.keys()) {
         auto def = DeserializeLabelDefinition(types[key].toObject(), errors);        
         if (def) {
             def->set_type_name(key);
@@ -227,7 +227,7 @@ bool ApplicationModel::ApplyHeader(QJsonObject json, QStringList & errors) {
     }
 
     // apply new labels
-    for (auto a : assignments) {
+    for (const auto & a : assignments) {
         a.first->SetCategory(a.second);
     }
 
@@ -355,7 +355,7 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             if (marker.contains(K_MARKER_CUSTOM_PROPERTIES)) {
                 auto &custom_properties = label->GetCustomProperties();
                 auto jcustom_properties = marker[K_MARKER_CUSTOM_PROPERTIES].toObject();
-                for (auto key : jcustom_properties.keys()) {
+                for (const auto & key : jcustom_properties.keys()) {
                     custom_properties[key] = jcustom_properties[key].toVariant();
                 }
             }
@@ -387,7 +387,7 @@ QJsonObject ApplicationModel::GenerateHeader() {
 
     QJsonObject types;
 	if (label_definitions_) {
-		for (auto def : label_definitions_->GetDefinitions()) {
+        for (const auto & def : label_definitions_->GetDefinitions()) {
             types.insert(def->get_type_name(), Serialize(def));
 		}
 	}
@@ -396,7 +396,7 @@ QJsonObject ApplicationModel::GenerateHeader() {
 }
 
 void ApplicationModel::UpdateSharedProperties(bool forced_update) {
-    for (auto i : file_models_) {
+    for (const auto & i : file_models_) {
         for (auto l : i.second->labels_) {
             l->UpdateSharedProperties(forced_update);
         }
@@ -428,7 +428,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
 
     // save all markers
     QJsonArray markers;
-    for (auto i : file_models_) {
+    for (const auto & i : file_models_) {
         if (!i.second->labels_.size())
             continue;
 
@@ -505,7 +505,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
         }
     }
 
-    for (auto file : file_models_) {
+    for (const auto & file : file_models_) {
         file.second->set_is_modified(false);
     }
 
@@ -516,7 +516,7 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
 void ApplicationModel::set_project_script(QString value) {
     if (project_script_ != value) {
         project_script_ = value;
-        project_script_changed(value);
+        emit project_script_changed(value);
     }
 }
 
@@ -614,12 +614,12 @@ void ApplicationModel::Rename(QStringList source, QStringList destination) {
         source_path += "/";
         destination_path += "/";
         QStringList files_to_rename;
-        for (auto i : file_models_) {
+        for (const auto & i : file_models_) {
             if (i.first.startsWith(source_path)) {
                 files_to_rename.push_back(i.first);
             }
         }
-        for (auto n : files_to_rename) {
+        for (const auto & n : files_to_rename) {
             auto file = file_models_[n];
             file_models_.erase(n);
             
@@ -643,7 +643,7 @@ void ApplicationModel::OnFileModifiedChanged(bool value) {
 
 std::set<int> ApplicationModel::GetExistingSharedIndexes(shared_ptr<LabelDefinition> def) {
     std::set<int> result;
-    for (auto i : file_models_) {
+    for (const auto & i : file_models_) {
         auto file_set = i.second->GetExistingSharedIndexes(def);
         result.insert(file_set.begin(), file_set.end());
     }
@@ -652,8 +652,8 @@ std::set<int> ApplicationModel::GetExistingSharedIndexes(shared_ptr<LabelDefinit
 
 int ApplicationModel::GetLabelsCount(std::shared_ptr<LabelDefinition> def) {
     int result = 0;
-    for (auto i : file_models_) {
-        for (auto l: i.second->labels_) {
+    for (const auto & i : file_models_) {
+        for (const auto & l: i.second->labels_) {
             if (l->GetDefinition() == def) {
                 result++;
             }
@@ -683,7 +683,7 @@ std::shared_ptr<ImageConverter> ApplicationModel::GetImageConverter() {
 }
 
 void ApplicationModel::Delete(std::shared_ptr<LabelDefinition> marker, bool delete_only_instances) {
-    for (auto file : file_models_) {
+    for (auto & file : file_models_) {
         file.second->Delete(marker, nullptr);
     }
 
@@ -695,7 +695,7 @@ void ApplicationModel::Delete(std::shared_ptr<LabelDefinition> marker, bool dele
 }
 
 void ApplicationModel::Delete(std::shared_ptr<LabelCategory> category, bool delete_only_instances) {
-    for (auto file : file_models_) {
+    for (auto & file : file_models_) {
         file.second->Delete(nullptr, category);
     }
 
@@ -729,7 +729,7 @@ void ApplicationModel::UpdateDefinitionSharedCount(std::shared_ptr<LabelDefiniti
         shared_labels.push_back(shared_label);
     }
 
-    for (auto file: file_models_) {
+    for (auto & file: file_models_) {
         file.second->UpdateDefinitionSharedLabels(def, shared_labels);
     }
 
@@ -741,7 +741,7 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
     set<QString> to_add;
     set<QString> to_modify;
 
-    for (auto p: def->shared_properties) {
+    for (const auto & p: def->shared_properties) {
         if (props.count(p.first)) {
             auto p1 = p.second;
             auto p2 = props[p.first];
@@ -756,7 +756,7 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
         }
     }
 
-    for (auto p: props) {
+    for (const auto & p: props) {
         if (def->shared_properties.count(p.first) == 0) {
             to_add.insert(p.first);
         }
@@ -767,28 +767,28 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
     }
 
     // property changes from shared -> not shared
-    for (auto p: to_remove) {
+    for (const auto & p: to_remove) {
         def->shared_properties.erase(def->shared_properties.find(p));
     }
     // property changes from not shared -> shared
-    for (auto p: to_add) {
+    for (const auto & p: to_add) {
         def->shared_properties[p] = make_shared<SharedPropertyDefinition>();
         *def->shared_properties[p] = props[p];
     }
     // property changes from one shared -> another shared
-    for (auto p: to_modify) {
+    for (const auto & p: to_modify) {
         *def->shared_properties[p] = props[p];
     }
 
     bool files_changed = false;
-    for (auto file : file_models_) {
+    for (auto & file : file_models_) {
         if (file.second->ReconnectSharedProperties(def)) {
             files_changed = true;
         }
     }
 
     // reconnect shared properties of shared labels
-    for (auto l: def->shared_labels) {
+    for (auto & l: def->shared_labels) {
         l->ConnectSharedProperties(false, false);
 
         if (!files_changed) {
@@ -801,15 +801,15 @@ void ApplicationModel::UpdateDenitionSharedProperties(std::shared_ptr<LabelDefin
 }
 
 void ApplicationModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition> def, std::vector<CustomPropertyDefinition> props, QStringList original_names) {
-    for (auto file : file_models_) {
+    for (auto & file : file_models_) {
         file.second->UpdateDefinitionCustomProperties(def, props, original_names);
     }
     def->custom_properties = props;
 }
 
 void ApplicationModel::UpdateDefinitionInternalData(std::shared_ptr<LabelDefinition> def) {
-    for (auto file : file_models_) {
-        for (auto l : file.second->labels_) {
+    for (auto & file : file_models_) {
+        for (auto & l : file.second->labels_) {
             if (l->GetDefinition() == def) {
                 l->OnNewDefinition();
             }
@@ -818,7 +818,7 @@ void ApplicationModel::UpdateDefinitionInternalData(std::shared_ptr<LabelDefinit
 }
 
 void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float dx, float dy, float da, bool use_label_cs) {
-    for (auto it : file_models_) {
+    for (auto & it : file_models_) {
         auto file = it.second;
         for (auto l : file->labels_) {
             if (l->GetDefinition() == def) {
@@ -836,7 +836,11 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 
 
 void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &image, QPointF image_offset) {    
-#ifdef ANNO_USE_OPENCV
+#ifndef ANNO_USE_OPENCV
+    Q_UNUSED(file)
+    Q_UNUSED(image)
+    Q_UNUSED(image_offset)
+#else
     auto url = get_user_data()["evaluate_url"].toString();
     if (url.isEmpty()) {
         return;

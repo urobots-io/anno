@@ -5,6 +5,7 @@
 // 2020-2021 (c) urobots GmbH, https://urobots.io
 
 #include "PropertyTableModel.h"
+#include "migration_helpers.h"
 #include <QColor>
 #include <QDebug>
 #include <QMetaProperty>
@@ -101,7 +102,9 @@ QVariant PropertyTableModel::data(const QModelIndex &index, int role) const {
             auto p = GetProperty(index);
             return p.name();
         }
-        else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
+        else if (role == QT_BACKGROUND_COLOR_ROLE) {
+            return QColor(240, 240, 240);
+        }
         break;
 
     case 1: 
@@ -122,7 +125,7 @@ QVariant PropertyTableModel::data(const QModelIndex &index, int role) const {
                 // TODO: Extra converters, i.e. for the rectangle                   
             }                        
         }
-        else if (role == Qt::BackgroundColorRole) {
+        else if (role == QT_BACKGROUND_COLOR_ROLE) {
             auto p = GetProperty(index);
             if (p.isConstant()) return QColor(200, 240, 200);
             else if (!p.hasNotifySignal()) return QColor(240, 210, 200);

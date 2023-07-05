@@ -8,6 +8,7 @@
 #include "ApplicationModel.h"
 #include "geometry.h"
 #include "LabelFactory.h"
+#include "migration_helpers.h"
 #include "ProxyLabel.h"
 #include "ScriptPainter.h"
 #include <QApplication>
@@ -783,7 +784,7 @@ void DesktopWidget::mouseMoveEvent(QMouseEvent *event) {
     if (!file_) {
         // do nothing
     }
-    else if (event->buttons() == Qt::MidButton || 
+    else if (event->buttons() == QT_MID_BUTTON ||
         (event->buttons() == Qt::LeftButton && (QApplication::keyboardModifiers() & Qt::ControlModifier)) ||
         (event->buttons() == Qt::LeftButton && lbutton_pressed_in_background_)) {
         auto delta = old_pos - mouse_pos_pixels_;
@@ -870,7 +871,7 @@ WorldInfo DesktopWidget::GetWorldInfo() const {
 }
 
 void DesktopWidget::wheelEvent(QWheelEvent *event) {
-    int numDegrees = event->delta() / 8;
+    int numDegrees = QtX::GetWheelDelta(event) / 8;
     int numSteps = numDegrees / 15;
 
     if (QApplication::keyboardModifiers() & Qt::ControlModifier) {

@@ -52,7 +52,7 @@ QJsonDocument LoadJsonFromText(const QByteArray& json_content, QString & error_t
 
         auto string = QTextCodec::codecForMib(utf_8_codec)->toUnicode(
             json_content.constBegin() + std::max(0, error.offset - 1),
-            std::min(error.offset + 80, json_content.size()) - error.offset);
+            std::min<int>(error.offset + 80, json_content.size()) - error.offset);
 
         error_text = 
             QString::fromLatin1("Format error: %0, error at line %1:\n\n%2...")

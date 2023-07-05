@@ -6,6 +6,7 @@
 
 #include "StampPropertiesEditorTableModel.h"
 #include "LabelFactory.h"
+#include <QRegExp>
 
 using namespace std;
 

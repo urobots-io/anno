@@ -21,7 +21,7 @@ QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, 
         int current_index = 0;
         for (int i = 1; i < e.keyCount(); ++i) { // 1-to skip first (Unknown) value
             combo->addItem(e.key(i));
-            if (current_value == e.value(i))
+            if (current_value == QChar(e.value(i)))
                 current_index = i;
         }
         combo->setCurrentIndex(current_index);

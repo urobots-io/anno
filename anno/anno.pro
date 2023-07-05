@@ -1,6 +1,11 @@
-QT       += core gui network qml
+QT += core gui opengl network qml
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += openglwidgets core5compat
+}
 
 CONFIG += c++11
 
@@ -72,6 +77,7 @@ HEADERS += \
     PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
     PropertyTableModel.h PropertyTableItemDelegate.h \
     ScriptPainter.h settings.h SharedPropertyDefinition.h SharedPropertiesEditorTableModel.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
+    migration_helpers.h \
     stdafx.h Serialization.h StampPropertiesEditorTableModel.h \
     ToolboxProxyModel.h ToolboxWidget.h ToolLabel.h win_helpers.h WorldInfo.h \
     triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h

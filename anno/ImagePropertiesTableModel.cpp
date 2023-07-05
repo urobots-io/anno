@@ -6,6 +6,7 @@
 
 #include "stdafx.h"
 #include "ImagePropertiesTableModel.h"
+#include "migration_helpers.h"
 
 ImagePropertiesTableModel::ImagePropertiesTableModel(const ImagePropertiesList& properties, QObject *parent)
     : QAbstractTableModel(parent)
@@ -41,7 +42,9 @@ QVariant ImagePropertiesTableModel::data(const QModelIndex &index, int role) con
         if (role == Qt::DisplayRole) {
             return properties_[row].name;
         }
-        else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
+        else if (role == QT_BACKGROUND_COLOR_ROLE) {
+            return QColor(240, 240, 240);
+        }
         break;
 
     case 1:

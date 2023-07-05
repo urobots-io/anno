@@ -8,6 +8,7 @@
 #include "messagebox.h"
 #include <QInputDialog>
 #include <QMenu>
+#include <QRegExp>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 #ifdef Q_OS_WIN
@@ -97,7 +98,12 @@ void SourcePicturesWidget::OnTextFilterChanged() {
     if (text.length() && !tree_model_->IsCompletelyLoaded()) {
         tree_model_->LoadCompletely();
     }
-    sort_filter_model_->setFilterRegExp(QRegExp(text, Qt::CaseInsensitive, QRegExp::Wildcard));
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    sort_filter_model_->setFilterRegExp(QRegExp(text, Qt::CaseInsensitive,  QRegExp::Wildcard));
+#else
+    // TODO(ap): qt6
+#endif
 }
 
 void SourcePicturesWidget::OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous) {

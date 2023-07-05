@@ -591,9 +591,13 @@ bool SourcePicturesProxyModel::filterAcceptsRow(int source_row, const QModelInde
     auto fi = source->GetFileInfo(index);
 
     if (fi.is_folder) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (filterRegExp().isEmpty()) {
             return false;
         }
+#else
+        // TODO(ap): qt6
+#endif
     }
     else {
         auto file = source->GetFileModel(index);

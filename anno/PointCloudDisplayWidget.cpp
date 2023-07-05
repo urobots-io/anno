@@ -6,6 +6,7 @@
 
 #include "PointCloudDisplayWidget.h"
 #include "ColoredVertexData.h"
+#include "migration_helpers.h"
 #include "PointCloudDisplayShaders.h"
 #include <QApplication>
 #include <QFileInfo>
@@ -56,7 +57,7 @@ void PointCloudDisplayWidget::keyReleaseEvent(QKeyEvent*) {
 }
 
 void PointCloudDisplayWidget::wheelEvent(QWheelEvent *event) {
-    auto degrees = double(event->delta()) / 8;
+    auto degrees = double(QtX::GetWheelDelta(event)) / 8;
     
     center_ += GetRotationMatrix() * QVector3D(0, 0, degrees * 0.05);
 

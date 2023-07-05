@@ -5,6 +5,7 @@
 // 2020-2021 (c) urobots GmbH, https://urobots.io
 
 #include "CustomPropertyTableModel.h"
+#include "migration_helpers.h"
 
 using namespace std;
 
@@ -67,7 +68,9 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
             auto p = GetProperty(index);
             return p.id;
         }
-        else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
+        else if (role == QT_BACKGROUND_COLOR_ROLE) {
+            return QColor(240, 240, 240);
+        }
         break;
 
     case 1: 

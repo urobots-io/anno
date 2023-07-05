@@ -845,7 +845,7 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
     if (url.isEmpty()) {
         return;
     }
-    
+
     QJsonObject json;
     json.insert("image_width", image.cols);
     json.insert("image_height", image.rows);
@@ -857,8 +857,16 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
 
     json.insert("image_file", filepath);
 
-    QByteArray data((char*)(image.data), image.rows * image.cols * 4);
+    auto args = get_user_data()["evaluate_url_args"];
+    if (!args.isNull() && args.isObject()) {
+        auto args_object = args.toObject();
+        for (const auto & key : args_object.keys()) {
+            json.insert(key, args_object[key]);
+        }
+    }
 
+
+    QByteArray data((char*)(image.data), image.rows * image.cols * 4);
     QByteArray response;
     try {
         response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
@@ -876,7 +884,7 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
         auto pa = pose.toArray();
         float x = float(pa[0].toDouble());
         float y = float(pa[1].toDouble());
-        float angle = float(pa[2].toDouble());
+        double angle = pa[2].toDouble();
         int category_value = pa[3].toInt();
 
         angle *= M_PI / 180.0;

@@ -835,10 +835,11 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 }
 
 
-void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &image, QPointF image_offset) {    
+bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &image, QPointF image_offset, QString & error) {    
     auto url = get_user_data()["evaluate_url"].toString();
     if (url.isEmpty()) {
-        return;
+        error = "Project user data contains no \"evaluate_url\" field.";
+        return false;
     }
 
     QJsonObject json;
@@ -876,8 +877,9 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
     try {
         response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
     }
-    catch (std::exception&) {
-        return;
+    catch (std::exception & e) {
+        error = QString::fromUtf8(e.what());
+        return false;
     }
 
     QJsonDocument document = QJsonDocument::fromJson(response);
@@ -906,5 +908,7 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
             }
         }
     }    
+
+    return true;
 }
 

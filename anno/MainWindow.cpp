@@ -506,6 +506,11 @@ void MainWindow::OnEvaluateInROI() {
 
     auto& image = ui.desktop->GetBackgroundImage();
 
+    QProgressDialog progress(tr("Evaluating..."), QString(), 0, 0, this);
+    progress.show();
+
+    QString error;
+    bool evaluate_ok;
     if (roi_label_selected) {
         auto p0 = label->GetHandles()[0]->GetPosition();
         auto p1 = label->GetHandles()[1]->GetPosition();
@@ -516,10 +521,16 @@ void MainWindow::OnEvaluateInROI() {
         int height = int(fabs(p1.y() - p0.y()));
         auto cropped_image = image.CropImage(QRect(x, y, width, height));
 
-        model_.Evaluate(selected_file_, cropped_image, QPointF(x, y));
+        evaluate_ok = model_.Evaluate(selected_file_, cropped_image, QPointF(x, y), error);
     }
     else {
-        model_.Evaluate(selected_file_, image.GetImageData(), QPointF(0, 0));
+        evaluate_ok = model_.Evaluate(selected_file_, image.GetImageData(), QPointF(0, 0), error);
+    }
+
+    progress.close();
+
+    if (!evaluate_ok) {
+        messagebox::Critical(error);
     }
 }
 

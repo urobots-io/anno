@@ -73,7 +73,7 @@ public:
     void BatchUpdate(std::shared_ptr<LabelDefinition> def, float dx, float dy, float da, bool use_label_cs);
 
     /// Evaluate on the image data using remote server.
-    void Evaluate(std::shared_ptr<FileModel>, const ImageData &image, QPointF image_offset);
+    bool Evaluate(std::shared_ptr<FileModel>, const ImageData &image, QPointF image_offset, QString & error);
 
 public slots:
 	void SetModified() { set_is_modified(true); }

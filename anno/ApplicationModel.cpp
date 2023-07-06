@@ -886,6 +886,8 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
     QJsonObject root = document.object();
 
     auto definitions = get_label_definitions()->GetDefinitions();
+
+    // TODO: replace retval poses array with labels encoded in the JSON using anno format
     auto poses = root["retval"].toArray();
     for (auto pose : poses) {
         auto pa = pose.toArray();

@@ -14,6 +14,7 @@
 #include "qjson_helpers.h"
 #include "Serialization.h"
 #include "rest.h"
+#include <QBuffer>
 #include <QDebug>
 #include <QDir>
 #include <QJsonArray>
@@ -99,7 +100,7 @@ bool ApplicationModel::OpenProject(QString filename, QStringList & errors) {
     }
     else {
         // load anno from the local file
-        if (!QFileInfo(filename).exists()) {
+        if (!QFileInfo::exists(filename)) {
             errors << tr("File does not exist: %0").arg(filename);
             return false;
         }
@@ -291,11 +292,11 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
 
     connect(get_label_definitions().get(), &LabelDefinitionsTreeModel::Changed, this, &ApplicationModel::SetModified);    
 
-    for (auto file_marker : json[K_FILES].toArray()) {
+    for (const auto & file_marker : json[K_FILES].toArray()) {
         auto filename = file_marker.toObject()[K_FILE_NAME].toString();
         auto file_model = GetFileModel(filename);
 
-        for (auto m : file_marker.toObject()[K_FILE_MARKERS].toArray()) {
+        for (const auto & m : file_marker.toObject()[K_FILE_MARKERS].toArray()) {
             auto marker = m.toObject();
             auto type_name = marker[K_MARKER_TYPE_NAME].toString();
             auto category = marker[K_MARKER_CATEGORY].toInt();
@@ -898,7 +899,7 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
 
         angle *= M_PI / 180.0;
 
-        for (auto d : definitions) {
+        for (const auto & d : definitions) {
             if (auto category = d->GetCategory(category_value)) {
                 // Create a new label
                 auto label = LabelFactory::CreateLabel(LabelType::oriented_point);

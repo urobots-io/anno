@@ -836,20 +836,12 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 
 
 void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &image, QPointF image_offset) {    
-#ifndef ANNO_USE_OPENCV
-    Q_UNUSED(file)
-    Q_UNUSED(image)
-    Q_UNUSED(image_offset)
-#else
     auto url = get_user_data()["evaluate_url"].toString();
     if (url.isEmpty()) {
         return;
     }
 
     QJsonObject json;
-    json.insert("image_width", image.cols);
-    json.insert("image_height", image.rows);
-
     QString filepath = get_filesystem()->GetLocalPath(file->get_id());
     if (filepath.isEmpty()) {
         filepath = file->get_id();
@@ -865,8 +857,21 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
         }
     }
 
+#ifdef ANNO_USE_OPENCV
+    json.insert("image_width", image.cols);
+    json.insert("image_height", image.rows);
 
     QByteArray data((char*)(image.data), image.rows * image.cols * 4);
+#else
+    json.insert("image_width", image.width());
+    json.insert("image_height", image.height());
+
+    QByteArray data;
+    QBuffer buffer(&data);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG");
+#endif
+
     QByteArray response;
     try {
         response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
@@ -900,8 +905,6 @@ void ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
                 break;
             }
         }
-    }
-    
-#endif
+    }    
 }
 

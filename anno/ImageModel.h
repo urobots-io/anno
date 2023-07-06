@@ -21,6 +21,7 @@ public:
     virtual std::vector<float> GetBackgroundPixelValues(int x, int y) = 0;
 
     const QPixmap & GetPixmap() const { return pixmap_; }
+    const ImageData & GetImageData() const { return image_; }
 
 public slots:
     void RebuildPixmap();
@@ -67,6 +68,8 @@ public:
     Q_PROPERTY(int contrast READ get_contrast WRITE set_contrast NOTIFY contrast_changed);
 
     std::vector<float> GetBackgroundPixelValues(int x, int y);
+
+    QImage CropImage(QRect rect);
 
 public slots:
     IMPLEMENT_Q_PROPERTY_WRITE(int, brightness);

@@ -494,34 +494,33 @@ void MainWindow::OnToolboxDoubleClick(std::shared_ptr<LabelCategory> category) {
 }
 
 void MainWindow::OnEvaluateInROI() {
-    if (!selected_file_) {
+    if (!selected_file_ || ui.desktop->get_is_loading_image()) {
+        messagebox::Critical("Please select an image and a rectanular ROI (optional).");
         return;
     }
 
-#ifdef ANNO_USE_OPENCV
-    auto label = ui.desktop->get_selected_label();
+    auto label = ui.desktop->get_selected_label();    
     auto definition = label ? label->GetDefinition() : nullptr;
-    if (!definition || definition->value_type != LabelType::rect) {
-        return;
-    }
 
-    if (ui.desktop->get_is_loading_image()) {
-        return;
-    }
+    bool roi_label_selected = definition && definition->value_type == LabelType::rect;
 
     auto& image = ui.desktop->GetBackgroundImage();
 
-    auto p0 = label->GetHandles()[0]->GetPosition();
-    auto p1 = label->GetHandles()[1]->GetPosition();
+    if (roi_label_selected) {
+        auto p0 = label->GetHandles()[0]->GetPosition();
+        auto p1 = label->GetHandles()[1]->GetPosition();
 
-    int x = int(min(p0.x(), p1.x()));
-    int y = int(min(p0.y(), p1.y()));
-    int width = int(fabs(p1.x() - p0.x()));
-    int height = int(fabs(p1.y() - p0.y()));    
-    auto cropped_image = image.CropImage(QRect(x, y, width, height)).clone();    
+        int x = int(min(p0.x(), p1.x()));
+        int y = int(min(p0.y(), p1.y()));
+        int width = int(fabs(p1.x() - p0.x()));
+        int height = int(fabs(p1.y() - p0.y()));
+        auto cropped_image = image.CropImage(QRect(x, y, width, height));
 
-    model_.Evaluate(selected_file_, cropped_image, QPointF(x, y));
-#endif
+        model_.Evaluate(selected_file_, cropped_image, QPointF(x, y));
+    }
+    else {
+        model_.Evaluate(selected_file_, image.GetImageData(), QPointF(0, 0));
+    }
 }
 
 

@@ -37,6 +37,14 @@ std::vector<float> ImageModelQt::GetBackgroundPixelValues(int x, int y) {
 #endif
 }
 
+QImage ImageModelQt::CropImage(QRect rect) {
+#ifndef ANNO_USE_OPENCV
+    return image_.copy(rect);
+#else
+    return {};
+#endif
+}
+
 void ImageModelQt::RebuildPixmapInternal() {
 #ifndef ANNO_USE_OPENCV
     int brightness = get_brightness();

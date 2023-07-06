@@ -587,7 +587,7 @@
   <action name="evaluate_in_roi_action">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/MainWindow/Resources/component.ico</normaloff>:/MainWindow/Resources/component.ico</iconset>
+     <normaloff>:/MainWindow/Resources/search-inside.ico</normaloff>:/MainWindow/Resources/search-inside.ico</iconset>
    </property>
    <property name="text">
     <string>Evaluate in ROI</string>

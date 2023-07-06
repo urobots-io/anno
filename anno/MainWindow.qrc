@@ -29,5 +29,6 @@
         <file>Resources/clean.ico</file>
         <file>Resources/tree_view.ico</file>
         <file>Resources/component.ico</file>
+        <file>Resources/search-inside.ico</file>
     </qresource>
 </RCC>

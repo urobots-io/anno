@@ -912,7 +912,9 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
 
         if (!definition) {
             if (!error.isEmpty()) error += "\n";
-            error += tr("Cannot find definition \"%0\" and/or category \"%1\"").arg(type_name, category);
+            error += tr("Cannot find definition \"%0\" and/or category \"%1\"")
+                         .arg(type_name)
+                         .arg(category);
             continue;
         }
 
@@ -921,7 +923,8 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
         if (!label) {
             if (!error.isEmpty()) error += "\n";
             error += tr("Failed to create label with type \"%0\" for definition \"%1\"")
-                          .arg(LabelTypeToString(definition->value_type), definition->get_type_name());
+                         .arg(LabelTypeToString(definition->value_type))
+                         .arg(definition->get_type_name());
             continue;
         }
 

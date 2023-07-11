@@ -7,7 +7,6 @@
 #include "ApplicationModel.h"
 #include "LabelFactory.h"
 #include "LocalFilesystem.h"
-#include "messagebox.h"
 #include "RestDatasetFilesystem.h"
 #include "PropertyDatabase.h"
 #include "ProxyLabel.h"
@@ -888,7 +887,69 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
 
     auto definitions = get_label_definitions()->GetDefinitions();
 
-    // TODO: replace retval poses array with labels encoded in the JSON using anno format
+#if (true)
+    auto markers = root["retval"].toObject()[K_FILE_MARKERS].toArray();
+    for (auto m : markers) {
+        auto marker = m.toObject();
+
+        auto type_name = marker[K_MARKER_TYPE_NAME].toString();
+        auto category = marker[K_MARKER_CATEGORY].toInt();
+
+        std::shared_ptr<LabelDefinition> definition;
+        if (!type_name.isEmpty()) {
+            // marker type is included, search for its definition
+            definition = get_label_definitions()->FindDefinition(type_name);
+        }
+        else {
+            // search definition with the provided category
+            for (const auto & d : definitions) {
+                if (auto c = d->GetCategory(category)) {
+                    definition = d;
+                    break;
+                }
+            }
+        }
+
+        if (!definition) {
+            if (!error.isEmpty()) error += "\n";
+            error += tr("Cannot find definition \"%0\" and/or category \"%1\"").arg(type_name, category);
+            continue;
+        }
+
+
+        std::shared_ptr<Label> label = LabelFactory::CreateLabel(definition->value_type);
+        if (!label) {
+            if (!error.isEmpty()) error += "\n";
+            error += tr("Failed to create label with type \"%0\" for definition \"%1\"")
+                          .arg(LabelTypeToString(definition->value_type), definition->get_type_name());
+            continue;
+        }
+
+        // get value of a marker
+        QStringList value = { marker[K_MARKER_VALUE].toString() };
+        auto children = marker[K_MARKER_CHILDREN].toArray();
+        for (auto child : children) {
+            value.push_back(child.toObject()[K_MARKER_VALUE].toString());
+        }
+
+        label->SetText(marker[K_MARKER_TEXT].toString());
+        label->SetCategory(definition->GetCategory(category));
+        label->ConnectSharedProperties(true, false);
+
+        if (marker.contains(K_MARKER_CUSTOM_PROPERTIES)) {
+            auto &custom_properties = label->GetCustomProperties();
+            auto jcustom_properties = marker[K_MARKER_CUSTOM_PROPERTIES].toObject();
+            for (const auto & key : jcustom_properties.keys()) {
+                custom_properties[key] = jcustom_properties[key].toVariant();
+            }
+        }
+
+        label->FromStringsList(value);
+        label->MoveBy(image_offset);
+
+        file->CreateLabel(label);
+    }
+#else
     auto poses = root["retval"].toArray();
     for (auto pose : poses) {
         auto pa = pose.toArray();
@@ -910,8 +971,8 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
                 break;
             }
         }
-    }    
-
+    }
+#endif
     return true;
 }
 

@@ -68,6 +68,7 @@ void FilenamesEditorWidget::highlightCurrentLine() {
         QColor lineColor = QColor(Qt::yellow).lighter(160);
 
         selection.format.setBackground(lineColor);
+        selection.format.setForeground(Qt::black);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
         selection.cursor = textCursor();
         selection.cursor.clearSelection();

@@ -835,10 +835,10 @@ void ApplicationModel::BatchUpdate(std::shared_ptr<LabelDefinition> def, float d
 }
 
 
-bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &image, QPointF image_offset, QString & error) {    
+bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData &image, QPointF image_offset, QStringList & errors) {
     auto url = get_user_data()["evaluate_url"].toString();
     if (url.isEmpty()) {
-        error = "Project user data contains no \"evaluate_url\" field.";
+        errors << "Project user data contains no \"evaluate_url\" field.";
         return false;
     }
 
@@ -878,7 +878,7 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
         response = rest::ExchangeData(url, json, "image", "image", data, rest::ContentType::json);
     }
     catch (std::exception & e) {
-        error = QString::fromUtf8(e.what());
+        errors << tr("REST call error: %0").arg(QString::fromUtf8(e.what()));
         return false;
     }
 
@@ -911,8 +911,7 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
         }
 
         if (!definition) {
-            if (!error.isEmpty()) error += "\n";
-            error += tr("Cannot find definition \"%0\" and/or category \"%1\"")
+            errors << tr("Cannot find definition \"%0\" and/or category \"%1\"")
                          .arg(type_name)
                          .arg(category);
             continue;
@@ -921,8 +920,7 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
 
         std::shared_ptr<Label> label = LabelFactory::CreateLabel(definition->value_type);
         if (!label) {
-            if (!error.isEmpty()) error += "\n";
-            error += tr("Failed to create label with type \"%0\" for definition \"%1\"")
+            errors << tr("Failed to create label with type \"%0\" for definition \"%1\"")
                          .arg(LabelTypeToString(definition->value_type))
                          .arg(definition->get_type_name());
             continue;

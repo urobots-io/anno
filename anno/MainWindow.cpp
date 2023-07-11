@@ -509,7 +509,7 @@ void MainWindow::OnEvaluateInROI() {
     QProgressDialog progress(tr("Evaluating..."), QString(), 0, 0, this);
     progress.show();
 
-    QString error;
+    QStringList errors;
     bool evaluate_ok;
     if (roi_label_selected) {
         auto p0 = label->GetHandles()[0]->GetPosition();
@@ -521,17 +521,22 @@ void MainWindow::OnEvaluateInROI() {
         int height = int(fabs(p1.y() - p0.y()));
         auto cropped_image = image.CropImage(QRect(x, y, width, height));
 
-        evaluate_ok = model_.Evaluate(selected_file_, cropped_image, QPointF(x, y), error);
+        evaluate_ok = model_.Evaluate(selected_file_, cropped_image, QPointF(x, y), errors);
     }
     else {
-        evaluate_ok = model_.Evaluate(selected_file_, image.GetImageData(), QPointF(0, 0), error);
+        evaluate_ok = model_.Evaluate(selected_file_, image.GetImageData(), QPointF(0, 0), errors);
     }
 
     progress.close();
 
-    if (!evaluate_ok) {
-        messagebox::Critical(error);
+    if (evaluate_ok && errors.empty()) {
+        return;
     }
+
+
+    ErrorsListDialog dialog(tr("Evaluate error"),
+                            evaluate_ok ? tr("Completed with errors:") : tr("Failed with errors"), errors);
+    dialog.exec();
 }
 
 

@@ -6,6 +6,8 @@
 
 #include "CustomPropertyTableModel.h"
 #include "migration_helpers.h"
+#include <QApplication>
+#include <QPalette>
 
 using namespace std;
 
@@ -69,7 +71,7 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
             return p.id;
         }
         else if (role == QT_BACKGROUND_COLOR_ROLE) {
-            return QColor(240, 240, 240);
+            return QApplication::palette().alternateBase();
         }
         break;
 

@@ -43,7 +43,7 @@ QVariant ImagePropertiesTableModel::data(const QModelIndex &index, int role) con
             return properties_[row].name;
         }
         else if (role == QT_BACKGROUND_COLOR_ROLE) {
-            return QColor(240, 240, 240);
+            return QApplication::palette().alternateBase();
         }
         break;
 

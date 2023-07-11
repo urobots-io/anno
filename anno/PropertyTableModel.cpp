@@ -6,9 +6,11 @@
 
 #include "PropertyTableModel.h"
 #include "migration_helpers.h"
+#include <QApplication>
 #include <QColor>
 #include <QDebug>
 #include <QMetaProperty>
+#include <QPalette>
 
 using namespace std;
 
@@ -103,7 +105,7 @@ QVariant PropertyTableModel::data(const QModelIndex &index, int role) const {
             return p.name();
         }
         else if (role == QT_BACKGROUND_COLOR_ROLE) {
-            return QColor(240, 240, 240);
+            return QApplication::palette().alternateBase();
         }
         break;
 
@@ -127,9 +129,13 @@ QVariant PropertyTableModel::data(const QModelIndex &index, int role) const {
         }
         else if (role == QT_BACKGROUND_COLOR_ROLE) {
             auto p = GetProperty(index);
+            /*
+            // TODO: fix these colors
             if (p.isConstant()) return QColor(200, 240, 200);
             else if (!p.hasNotifySignal()) return QColor(240, 210, 200);
             else if (!p.isWritable()) return QColor(240, 240, 240);
+            */
+            if (p.isConstant()) return QApplication::palette().alternateBase();
         }
         break;
 

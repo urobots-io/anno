@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "FilenamesEditorWidget.h"
 #include <QPainter>
@@ -68,6 +68,7 @@ void FilenamesEditorWidget::highlightCurrentLine() {
         QColor lineColor = QColor(Qt::yellow).lighter(160);
 
         selection.format.setBackground(lineColor);
+        selection.format.setForeground(Qt::black);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
         selection.cursor = textCursor();
         selection.cursor.clearSelection();

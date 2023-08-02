@@ -2,10 +2,11 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "stdafx.h"
 #include "ImagePropertiesTableModel.h"
+#include "migration_helpers.h"
 
 ImagePropertiesTableModel::ImagePropertiesTableModel(const ImagePropertiesList& properties, QObject *parent)
     : QAbstractTableModel(parent)
@@ -41,7 +42,9 @@ QVariant ImagePropertiesTableModel::data(const QModelIndex &index, int role) con
         if (role == Qt::DisplayRole) {
             return properties_[row].name;
         }
-        else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
+        else if (role == QT_BACKGROUND_COLOR_ROLE) {
+            return QApplication::palette().alternateBase();
+        }
         break;
 
     case 1:

@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "FileModel.h"
 #include "CreateLabelFileModelCommand.h"
@@ -99,7 +99,7 @@ std::shared_ptr<Label> FileModel::DeleteLabel(std::shared_ptr<Label> label) {
 
 void FileModel::NotifyUpdate(bool clear_selection, std::shared_ptr<Label> label_to_select) {
     set_is_modified(true);
-    file_updated(true);
+    emit file_updated(true);
     emit rendering_required();
     if (clear_selection) {
         emit select_label_required({});
@@ -192,7 +192,7 @@ set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> de
 
     set<int> result;    
     if (def->is_shared()) {
-        for (auto label : labels_) {
+        for (const auto & label : labels_) {
             if (label->GetDefinition() == def) {
                 result.insert(label->GetSharedLabelIndex());
             }
@@ -321,7 +321,7 @@ void FileModel::UpdateDefinitionCustomProperties(std::shared_ptr<LabelDefinition
         auto &label_properties = l->GetCustomProperties();
         auto old_keys = label_properties.keys();
         QStringList new_keys;
-        for (auto old : old_keys) {
+        for (const auto & old : old_keys) {
             // find new property with the same name
             auto it_new_property = find_if(props.begin(), props.end(), [&](const CustomPropertyDefinition& cpd) { return cpd.id == old; });
             if (it_new_property != props.end()) {

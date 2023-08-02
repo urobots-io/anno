@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "CustomPropertiesEditorTableItemDelegate.h"
 #include "CustomPropertiesEditorTableModel.h"
@@ -21,7 +21,7 @@ QWidget *CustomPropertiesEditorTableItemDelegate::createEditor(QWidget *parent, 
         int current_index = 0;
         for (int i = 1; i < e.keyCount(); ++i) { // 1-to skip first (Unknown) value
             combo->addItem(e.key(i));
-            if (current_value == e.value(i))
+            if (current_value == QChar(e.value(i)))
                 current_index = i;
         }
         combo->setCurrentIndex(current_index);

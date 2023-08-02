@@ -2,10 +2,11 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "LabelDefinitionsTreeModel.h"
 #include "ApplicationModel.h"
+#include "migration_helpers.h"
 #include "Serialization.h"
 
 LabelDefinitionsTreeModel::LabelDefinitionsTreeModel(ApplicationModel *parent, const std::vector<std::shared_ptr<LabelDefinition>> & definitions)
@@ -201,9 +202,9 @@ QModelIndex LabelDefinitionsTreeModel::GetSelectModeIndex() {
     return createIndex(0, 0);
 }
 
-QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {    
+QModelIndex LabelDefinitionsTreeModel::CreateMarkerType(LabelType value_type) {
     QStringList cased;
-    for (auto word : LabelTypeToString(value_type).split("_", QString::SkipEmptyParts)) {
+    for (auto word : LabelTypeToString(value_type).split("_", QT_SKIP_EMPTY_PARTS)) {
         cased << word.at(0).toUpper() + word.mid(1);
     }
     QString label_type_name = cased.join(" ");

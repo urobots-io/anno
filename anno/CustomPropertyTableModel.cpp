@@ -2,9 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "CustomPropertyTableModel.h"
+#include "migration_helpers.h"
+#include <QApplication>
+#include <QPalette>
 
 using namespace std;
 
@@ -67,7 +70,9 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
             auto p = GetProperty(index);
             return p.id;
         }
-        else if (role == Qt::BackgroundColorRole) return QColor(240, 240, 240);
+        else if (role == QT_BACKGROUND_COLOR_ROLE) {
+            return QApplication::palette().alternateBase();
+        }
         break;
 
     case 1: 

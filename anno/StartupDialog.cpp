@@ -2,9 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "StartupDialog.h"
+#include "migration_helpers.h"
 #include "ui_StartupDialog.h"
 #include <QDir>
 #include <QScrollBar>
@@ -28,7 +29,7 @@ StartupDialog::StartupDialog(QWidget *parent) :
 
         
         auto parts = QDir::toNativeSeparators(project).split(QDir::separator(),
-                QString::SkipEmptyParts);
+                QT_SKIP_EMPTY_PARTS);
 
         auto project_name = parts.last();
         auto size = parts.size();

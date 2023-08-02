@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "LabelDefinitionPropertiesDialog.h"
 #include "ApplicationModel.h"
@@ -72,7 +72,7 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     onSharedLabelsCountChanged(shared_count);
 
     QStringList filenames;
-    for (auto s: definition_->filename_filter) {
+    for (const auto & s: definition_->filename_filter) {
         filenames << s;
     }
     ui.plainTextEdit->setPlainText(filenames.join("\n"));
@@ -199,7 +199,7 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
 
     // Apply filename filter.
     vector<QString> filename_filter;
-    for (auto s : ui.plainTextEdit->toPlainText().split('\n')) {
+    for (const auto & s : ui.plainTextEdit->toPlainText().split('\n')) {
         if (!s.trimmed().isEmpty()) {
             filename_filter.push_back(s);
         }

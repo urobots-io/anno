@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // Anno Labeling Tool
-// 2020-2021 (c) urobots GmbH, https://urobots.io
+// 2020-2023 (c) urobots GmbH, https://urobots.io
 
 #include "MainWindow.h"
 #include "AboutDialog.h"
@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui.open_dataset_action, &QAction::triggered, this, &MainWindow::OnOpenDatasetProject);
     connect(ui.action3d_View, &QAction::triggered, this, &MainWindow::OnShow3dView);
 	connect(ui.project_settings_action, &QAction::triggered, this, &MainWindow::OnProjectSettings);
+    connect(ui.evaluate_in_roi_action, &QAction::triggered, this, &MainWindow::OnEvaluateInROI);
 
 	// files tree
     ui.files_tree->Init(&model_);
@@ -491,3 +492,51 @@ void MainWindow::OnToolboxDoubleClick(std::shared_ptr<LabelCategory> category) {
         }
     }
 }
+
+void MainWindow::OnEvaluateInROI() {
+    if (!selected_file_ || ui.desktop->get_is_loading_image()) {
+        messagebox::Critical("Please select an image and a rectanular ROI (optional).");
+        return;
+    }
+
+    auto label = ui.desktop->get_selected_label();    
+    auto definition = label ? label->GetDefinition() : nullptr;
+
+    bool roi_label_selected = definition && definition->value_type == LabelType::rect;
+
+    auto& image = ui.desktop->GetBackgroundImage();
+
+    QProgressDialog progress(tr("Evaluating..."), QString(), 0, 0, this);
+    progress.show();
+
+    QStringList errors;
+    bool evaluate_ok;
+    if (roi_label_selected) {
+        auto p0 = label->GetHandles()[0]->GetPosition();
+        auto p1 = label->GetHandles()[1]->GetPosition();
+
+        int x = int(min(p0.x(), p1.x()));
+        int y = int(min(p0.y(), p1.y()));
+        int width = int(fabs(p1.x() - p0.x()));
+        int height = int(fabs(p1.y() - p0.y()));
+        auto cropped_image = image.CropImage(QRect(x, y, width, height));
+
+        evaluate_ok = model_.Evaluate(selected_file_, cropped_image, QPointF(x, y), errors);
+    }
+    else {
+        evaluate_ok = model_.Evaluate(selected_file_, image.GetImageData(), QPointF(0, 0), errors);
+    }
+
+    progress.close();
+
+    if (evaluate_ok && errors.empty()) {
+        return;
+    }
+
+
+    ErrorsListDialog dialog(tr("Evaluate error"),
+                            evaluate_ok ? tr("Completed with errors:") : tr("Failed with errors"), errors);
+    dialog.exec();
+}
+
+

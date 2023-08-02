@@ -886,8 +886,6 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
     QJsonObject root = document.object();
 
     auto definitions = get_label_definitions()->GetDefinitions();
-
-#if (true)
     auto markers = root["retval"].toObject()[K_FILE_MARKERS].toArray();
     for (auto m : markers) {
         auto marker = m.toObject();
@@ -950,30 +948,7 @@ bool ApplicationModel::Evaluate(std::shared_ptr<FileModel> file, const ImageData
 
         file->CreateLabel(label);
     }
-#else
-    auto poses = root["retval"].toArray();
-    for (auto pose : poses) {
-        auto pa = pose.toArray();
-        float x = float(pa[0].toDouble());
-        float y = float(pa[1].toDouble());
-        double angle = pa[2].toDouble();
-        int category_value = pa[3].toInt();
 
-        angle *= M_PI / 180.0;
-
-        for (const auto & d : definitions) {
-            if (auto category = d->GetCategory(category_value)) {
-                // Create a new label
-                auto label = LabelFactory::CreateLabel(LabelType::oriented_point);
-                label->SetCategory(category);
-                label->MoveBy(QPointF(x, y) + image_offset);
-                label->Rotate(angle);
-                file->CreateLabel(label);
-                break;
-            }
-        }
-    }
-#endif
     return true;
 }
 

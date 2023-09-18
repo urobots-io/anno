@@ -128,8 +128,25 @@ std::vector<float> ImageModelOpenCV::GetBackgroundPixelValues(int x, int y) {
 }
 
 ImageData ImageModelOpenCV::CropImage(QRect rect) {
-    cv::Rect roi(rect.left(), rect.top(), rect.width(), rect.height());    
-    return image_(roi).clone();
+    // https://stackoverflow.com/a/60997850
+
+    // Create rects representing the image and the ROI
+    auto image_rect = cv::Rect({}, image_.size());
+    auto roi = cv::Rect(rect.left(), rect.top(), rect.width(), rect.height());
+
+    // Find intersection, i.e. valid crop region
+    auto intersection = image_rect & roi;
+    
+    // Move intersection to the result coordinate space
+    auto inter_roi = intersection - roi.tl();
+
+    // Create black image and copy intersection
+    cv::Mat crop = cv::Mat::zeros(roi.size(), image_.type());
+    if (intersection.area() > 0) {
+        image_(intersection).copyTo(crop(inter_roi));
+    }
+        
+    return crop;
 }
 
 #endif

@@ -1,5 +1,5 @@
 #define ANNO_PRODUCT_COMPANY_NAME "urobots GmbH" 
-#define ANNO_PRODUCT_LEGAL_COPYRIGHT "Copyright (c) 2023 urobots GmbH"
+#define ANNO_PRODUCT_LEGAL_COPYRIGHT "Copyright (c) 2024 urobots GmbH"
 #define ANNO_PRODUCT_NAME "anno"
 
 #define ANNO_PRODUCT_VERSION_MAJOR 1

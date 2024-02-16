@@ -83,7 +83,7 @@ QAction* SourcePicturesWidget::AddAction(QMenu *menu, QString icon, QString text
 }
 
 void SourcePicturesWidget::OnLoadedFilterChanged(bool value) {
-    if (!tree_model_->IsCompletelyLoaded()) {
+    if (!tree_model_->IsCompletelyLoaded() && value) {
         tree_model_->LoadCompletely();
     }
 
@@ -134,6 +134,10 @@ void SourcePicturesWidget::OnNewFileSystem(std::shared_ptr<FilesystemInterface> 
 
     if (filesystem) {
         ui.treeView->expand(sort_filter_model_->mapFromSource(tree_model_->GetFilesRootIndex()));
+    }
+
+    if (ui.filter_labeled_checkBox->isChecked()) {
+        ui.filter_labeled_checkBox->setChecked(false);
     }
 }
 

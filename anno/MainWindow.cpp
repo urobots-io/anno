@@ -450,12 +450,14 @@ void MainWindow::CanRedoChanged(bool value) {
 void MainWindow::OnUndo() {
     if (ui.undo_action->isEnabled()) {
         ui.undo_action->trigger();
+        ui.desktop->AbortCreation();
     }
 }
 
 void MainWindow::OnRedo() {
     if (ui.redo_action->isEnabled()) {
         ui.redo_action->trigger();
+        ui.desktop->AbortCreation();
     }
 }
 

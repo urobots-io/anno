@@ -107,6 +107,8 @@ void DesktopWidget::AbortCreation() {
     }
     else if (cursor_mode_ == CursorMode::creation_in_progress) {
         DeleteSelectedLabel();
+        SetCursorMode(CursorMode::creation_start);
+        update();
     }
 }
 
@@ -515,7 +517,9 @@ void DesktopWidget::RenderSelectCross(QPainter & painter) {
 
 void DesktopWidget::RenderCreationCross(QPainter & painter) {
     if (cursor_mode_ == CursorMode::creation_in_progress) {
-        RenderCross(painter, is_creation_to_be_completed_ ? 10 : 20, selected_label_->GetCategory()->get_color());
+        if (selected_label_) {
+            RenderCross(painter, is_creation_to_be_completed_ ? 10 : 20, selected_label_->GetCategory()->get_color());
+        }
     }
     else {
         if (!category_for_creation_) 
@@ -966,10 +970,12 @@ void DesktopWidget::DeleteLabel(std::shared_ptr<Label> label) {
     if (is_selected) {
         set_selected_label(nullptr);
         selected_handle_ = nullptr;
-        if (cursor_mode_ == CursorMode::creation_in_progress)
+        if (cursor_mode_ == CursorMode::creation_in_progress) {
             SetCursorMode(CursorMode::creation_start);
-        else if (cursor_mode_ == CursorMode::modifying)
+        }
+        else if (cursor_mode_ == CursorMode::modifying) {
             SetCursorMode(CursorMode::select);
+        }
     }
 
     update();

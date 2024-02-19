@@ -112,6 +112,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui.mouse_pos_label->setElideMode(Qt::ElideRight);
     ui.color_value_label->setElideMode(Qt::ElideRight);
 
+    // navigation
+    QWidget *spacerWidget = new QWidget(this);
+    spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    spacerWidget->setVisible(true);
+    
+    QPushButton* testButtton = new QPushButton("Test", this);
+
+    ui.mainToolBar->addSeparator();
+    ui.mainToolBar->addWidget(testButtton);
+    ui.mainToolBar->addWidget(spacerWidget);
+
+
+
+
     UpdateApplicationTitle();
     UpdateProjectControls();
 

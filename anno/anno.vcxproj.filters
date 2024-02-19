@@ -472,7 +472,7 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_LabelCategory.cpp">
-      <Filter>Generated Files\Debug</Filter>
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="FilenamesEditorWidget.cpp">
       <Filter>Source Files\UI</Filter>

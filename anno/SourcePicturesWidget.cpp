@@ -111,7 +111,7 @@ void SourcePicturesWidget::OnNavigationPathChanged(QString path) {
         is_navigation_callback_ = true;
 
         if (!path.isEmpty() && path[0] == '/') {
-            path.removeAt(0);
+            path.remove(0, 1);
         }
 
         auto index = tree_model_->index(path);

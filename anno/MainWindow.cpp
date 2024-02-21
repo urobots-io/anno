@@ -9,6 +9,7 @@
 #include "ImageSettingsWidget.h"
 #include "LabelDefinitionPropertiesWidget.h"
 #include "messagebox.h"
+#include "NavigationWidget.h"
 #include "ProjectDefinitionsDialog.h"
 #include "ProjectSettingsWidget.h"
 #include "LabelPropertiesWidget.h"
@@ -113,16 +114,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui.color_value_label->setElideMode(Qt::ElideRight);
 
     // navigation
+    ui.mainToolBar->addSeparator();
+
+    NavigationWidget* navigationWidget = new NavigationWidget(this);    
+    ui.mainToolBar->addWidget(navigationWidget);
+
+    /*
     QWidget *spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     spacerWidget->setVisible(true);
-    
-    QPushButton* testButtton = new QPushButton("Test", this);
-
-    ui.mainToolBar->addSeparator();
-    ui.mainToolBar->addWidget(testButtton);
     ui.mainToolBar->addWidget(spacerWidget);
-
+    */
 
 
 

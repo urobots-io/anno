@@ -561,6 +561,15 @@
     <ClCompile Include="ImageSettingsWidgetOpenCV.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_NavigationWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_NavigationWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationWidget.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -761,6 +770,9 @@
     <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidgetOpenCV.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_NavigationWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.ui">
@@ -936,6 +948,12 @@
     </CustomBuild>
     <CustomBuild Include="ImageSettingsWidgetOpenCV.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="NavigationWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="NavigationWidget.h">
+      <Filter>Header Files\UI</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

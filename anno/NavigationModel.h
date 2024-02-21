@@ -1,4 +1,6 @@
 #pragma once
+#include <QObject>
+#include <QString>
 #include "implement_q_property.h"
 
 class NavigationModel : public QObject {

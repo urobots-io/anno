@@ -5,7 +5,7 @@ class NavigationModel : public QObject {
     Q_OBJECT
 
 public:
-    NavigationModel(QObject *parent) {}
+    NavigationModel(QObject *parent) : QObject(parent) {}
     ~NavigationModel() {}
 
     Q_PROPERTY(QString current_path READ get_current_path WRITE set_current_path NOTIFY current_path_changed);

@@ -153,6 +153,10 @@ QVariant SourcePicturesTreeModel::headerData(int section, Qt::Orientation orient
 }
 
 QModelIndex SourcePicturesTreeModel::index(QString path) {
+    if (path.isEmpty()) {
+        return GetFilesRootIndex();
+    }
+
     auto parts = path.split('/');
 
     // search for the element startig from files

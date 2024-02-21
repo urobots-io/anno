@@ -110,6 +110,10 @@ void SourcePicturesWidget::OnNavigationPathChanged(QString path) {
     if (!is_tree_callback_) {
         is_navigation_callback_ = true;
 
+        if (!path.isEmpty() && path[0] == '/') {
+            path.removeAt(0);
+        }
+
         auto index = tree_model_->index(path);
         if (index.isValid()) {           
             ui.treeView->setCurrentIndex(sort_filter_model_->mapFromSource(index));
@@ -129,7 +133,7 @@ void SourcePicturesWidget::OnCurrentChanged(const QModelIndex &current, const QM
 
         if (!is_navigation_callback_) {
             is_tree_callback_ = true;
-            model_->get_navigation_model()->SetPath(file_info.name);
+            model_->get_navigation_model()->SetPath("/" + file_info.name);
             is_tree_callback_ = false;
         }
     }
@@ -138,7 +142,7 @@ void SourcePicturesWidget::OnCurrentChanged(const QModelIndex &current, const QM
 
         if (!is_navigation_callback_) {
             is_tree_callback_ = true;
-            model_->get_navigation_model()->SetPath({});
+            model_->get_navigation_model()->SetPath("/");
             is_tree_callback_ = false;
         }
     }

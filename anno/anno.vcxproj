@@ -190,6 +190,9 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="GeneratedFiles\Debug\moc_LabelPropertiesWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_NavigationModel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_NavigationWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -298,6 +301,9 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="GeneratedFiles\Release\moc_LabelPropertiesWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_NavigationModel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_NavigationWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -355,6 +361,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="ModifyLabelCategoryFileModelCommand.cpp" />
     <ClCompile Include="ModifyLabelGeometryFileModelCommand.cpp" />
     <ClCompile Include="ModifyLabelTextFileModelCommand.cpp" />
+    <ClCompile Include="NavigationModel.cpp" />
     <ClCompile Include="NavigationWidget.cpp" />
     <ClCompile Include="OrientedCircleLabel.cpp" />
     <ClCompile Include="OrientedPointLabel.cpp" />
@@ -541,6 +548,16 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     </CustomBuild>
     <ClInclude Include="LabelCategory.h" />
     <CustomBuild Include="NavigationWidget.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fstdafx.h" "-f../../%(Filename)%(Extension)"  -DANNO_USE_OPENCV -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_SCRIPT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_WINEXTRAS_LIB -DQT_WIDGETS_LIB -DQT_QML_LIB -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I$(ProjectDir).." "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(OPENCV_DIR)\include" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex" "-I$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtWinExtras" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQml"</Command>
+    </CustomBuild>
+    <CustomBuild Include="NavigationModel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>

@@ -66,6 +66,9 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
     folder_menu_->addSeparator();
     delete_folder_action_ = AddAction(folder_menu_, "delete.ico", tr("Delete folder"), &SourcePicturesWidget::OnDeleteFile);
     AddAction(folder_menu_, "clean.ico", tr("Remove markers"), &SourcePicturesWidget::OnRemoveMarkers);
+
+
+    connect(model_->get_navigation_model(), &NavigationModel::current_path_changed, this, &SourcePicturesWidget::OnNavigationPathChanged);
 }
 
 SourcePicturesWidget::~SourcePicturesWidget()
@@ -103,13 +106,41 @@ void SourcePicturesWidget::OnTextFilterChanged() {
 #endif
 }
 
+void SourcePicturesWidget::OnNavigationPathChanged(QString path) {
+    if (!is_tree_callback_) {
+        is_navigation_callback_ = true;
+
+        auto index = tree_model_->index(path);
+        if (index.isValid()) {           
+            ui.treeView->setCurrentIndex(sort_filter_model_->mapFromSource(index));
+        }
+
+        is_navigation_callback_ = false;
+    }
+}
+
 void SourcePicturesWidget::OnCurrentChanged(const QModelIndex &current, const QModelIndex &previous) {
     Q_UNUSED(previous)
     if (tree_model_) {
-        emit FileModelSelected(tree_model_->GetFileModel(sort_filter_model_->mapToSource(current)));        
+        auto index = sort_filter_model_->mapToSource(current);
+        auto file_info = tree_model_->GetFileInfo(index);
+        auto file = tree_model_->GetFileModel(index);
+        emit FileModelSelected(file);
+
+        if (!is_navigation_callback_) {
+            is_tree_callback_ = true;
+            model_->get_navigation_model()->SetPath(file_info.name);
+            is_tree_callback_ = false;
+        }
     }
     else {
         emit FileModelSelected({});
+
+        if (!is_navigation_callback_) {
+            is_tree_callback_ = true;
+            model_->get_navigation_model()->SetPath({});
+            is_tree_callback_ = false;
+        }
     }
 }
 
@@ -159,8 +190,9 @@ void SourcePicturesWidget::SelectFile(int offset) {
         // xxx next_index = model->root_path_index_.child(0, 0);
     }
 
-    if (next_index.isValid())
+    if (next_index.isValid()) {
         ui.treeView->setCurrentIndex(next_index);
+    }
 }
 
 void SourcePicturesWidget::SelectNextFile() {

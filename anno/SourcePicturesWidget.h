@@ -29,6 +29,8 @@ public slots:
     void OnRemoveMarkers();
     void OnCreateFolder();
 
+    void OnNavigationPathChanged(QString);
+
 private:
     void SelectFile(int offset);
 
@@ -56,4 +58,7 @@ private:
     QAction *delete_folder_action_ = nullptr;
     QAction *rename_folder_action_ = nullptr;
     QAction *remove_markers_in_folder_action_ = nullptr;
+
+    bool is_navigation_callback_ = false;
+    bool is_tree_callback_ = false;
 };

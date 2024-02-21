@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     // navigation
     ui.mainToolBar->addSeparator();
 
-    NavigationWidget* navigationWidget = new NavigationWidget(this);    
+    NavigationWidget* navigationWidget = new NavigationWidget(model_.get_navigation_model(), this);    
     ui.mainToolBar->addWidget(navigationWidget);
 
     /*

@@ -43,6 +43,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;    
 
+    QModelIndex index(QString path);
+
     std::shared_ptr<FileModel> GetFileModel(const QModelIndex &);
     FileTreeItemInfo GetFileInfo(const QModelIndex &);
 
@@ -105,7 +107,7 @@ private:
     int objects_to_copy_count_;
     int copied_objects_count_;
     QProgressDialog* current_progress_dialog_;
-    bool completely_loaded_ = false;
+    bool completely_loaded_ = false;    
 };
 
 

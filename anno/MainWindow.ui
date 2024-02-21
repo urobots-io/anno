@@ -184,30 +184,17 @@
             </widget>
            </item>
            <item>
-            <widget class="Line" name="line_2">
-             <property name="maximumSize">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
               <size>
-               <width>16777215</width>
-               <height>15</height>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="ElidedLabelWidget" name="desktop_status_label" native="true">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
+            </spacer>
            </item>
            <item>
             <widget class="QLabel" name="label">

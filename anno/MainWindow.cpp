@@ -451,8 +451,6 @@ void MainWindow::OnImageFileChanged(std::shared_ptr<FileModel> value) {
         connect(ui.undo_action, &QAction::triggered, stack, &QUndoStack::undo);
         connect(ui.redo_action, &QAction::triggered, stack, &QUndoStack::redo);
     }
-    
-    ui.desktop_status_label->setText(selected_file_ ? selected_file_->get_id() : QString());
 }
 
 void MainWindow::CanUndoChanged(bool value) {    

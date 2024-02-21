@@ -160,8 +160,6 @@ QModelIndex SourcePicturesTreeModel::index(QString path) {
     FileTreeElement *child = root_->children[0];
     FileTreeElement *parent = nullptr;
 
-    QModelIndex modelIndex = GetFilesRootIndex();
-
     for (auto s : parts) {
         parent = child;
         child = nullptr;
@@ -170,8 +168,7 @@ QModelIndex SourcePicturesTreeModel::index(QString path) {
         for (size_t t = 0; t < parent->children.size(); ++t) {
             if (parent->children[t]->name == s) {
                 child_index = int(t);
-                child = parent->children[t];
-                modelIndex = createIndex(t, 0, child);
+                child = parent->children[t];                
                 break;
             }
         }
@@ -181,7 +178,7 @@ QModelIndex SourcePicturesTreeModel::index(QString path) {
     }
 
     if (child) {
-        return modelIndex;
+        return createIndex(child_index, 0, child);
     }
     else {
         return QModelIndex();

@@ -16,6 +16,10 @@ void NavigationModel::SetPath(const QString & path) {
         paths_.removeLast();
     }
 
+    while (paths_.size() > 100) {
+        paths_.removeFirst();
+    }
+
     paths_ << path;
     index_ = paths_.size() - 1;
 

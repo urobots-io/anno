@@ -32,28 +32,76 @@ PRE_TARGETDEPS += git_rev
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AboutDialog.cpp ApplicationModel.cpp CircleLabel.cpp ColorDisplayWidget.cpp CreateLabelFileModelCommand.cpp \
+    AboutDialog.cpp \
+    ApplicationModel.cpp \
+    CircleLabel.cpp ColorDisplayWidget.cpp \
+    CreateLabelFileModelCommand.cpp \
     CustomPropertiesEditorTableItemDelegate.cpp \
     CustomPropertiesEditorTableModel.cpp \
-    CustomPropertyTableItemDelegate.cpp CustomPropertyTableModel.cpp DeleteAllLabelsFileModelCommand.cpp \
-    DeleteLabelFileModelCommand.cpp Desktop3dWindow.cpp DesktopWidget.cpp ElidedLabelWidget.cpp ErrorsListDialog.cpp FileModel.cpp Highlighter.cpp \
-    FileTreeElement.cpp FilenamesEditorWidget.cpp \
-    ImageLoader.cpp ImageModel.cpp ImageSettingsWidgetQt.cpp Label.cpp LabelCategory.cpp LabelDefinition.cpp LabelDefinitionPropertiesWidget.cpp \
+    CustomPropertyTableItemDelegate.cpp \
+    CustomPropertyTableModel.cpp \
+    DeleteAllLabelsFileModelCommand.cpp \
+    DeleteLabelFileModelCommand.cpp \
+    Desktop3dWindow.cpp DesktopWidget.cpp \
+    ElidedLabelWidget.cpp ErrorsListDialog.cpp \
+    FileModel.cpp \
+    Highlighter.cpp \
+    FileTreeElement.cpp \
+    FilenamesEditorWidget.cpp \
+    ImageLoader.cpp ImageModel.cpp \
+    ImageSettingsWidgetQt.cpp Label.cpp \
+    LabelCategory.cpp \
+    LabelDefinition.cpp \
+    LabelDefinitionPropertiesWidget.cpp \
     ImagePropertiesTableModel.cpp \
     ImagePropertiesWidget.cpp \
     ImageModelQt.cpp \
     LabelDefinitionPropertiesDialog.cpp \
-    LabelDefinitionsTreeModel.cpp LabelHandle.cpp LabelPropertiesWidget.cpp LocalFilesystem.cpp main.cpp \
-    MainWindow.cpp messagebox.cpp ModifyLabelCategoryFileModelCommand.cpp ModifyLabelGeometryFileModelCommand.cpp \
-    ModifyLabelTextFileModelCommand.cpp OrientedCircleLabel.cpp OrientedPointLabel.cpp OrientedRectLabel.cpp PointCloudDisplayWidget.cpp \
-    PointLabel.cpp PolygonLabel.cpp PolylineLabel.cpp ProjectDefinitionsDialog.cpp ProjectSettingsWidget.cpp \
-    PropertyTableModel.cpp PropertyTableItemDelegate.cpp \
-    PropertyDatabase.cpp qjson_helpers.cpp RecentActionsList.cpp RectLabel.cpp rest.cpp \
-    RestDatasetFilesystem.cpp SharedPropertiesEditorTableModel.cpp ScriptPainter.cpp settings.cpp SourcePicturesTreeModel.cpp \
+    LabelDefinitionsTreeModel.cpp \
+    LabelHandle.cpp \
+    LabelPropertiesWidget.cpp \
+    LocalFilesystem.cpp \
+    main.cpp \
+    MainWindow.cpp messagebox.cpp \
+    ModifyLabelCategoryFileModelCommand.cpp \
+    ModifyLabelGeometryFileModelCommand.cpp \
+    ModifyLabelTextFileModelCommand.cpp \
+    NavigationModel.cpp \
+    NavigationWidget.cpp \
+    OrientedCircleLabel.cpp \
+    OrientedPointLabel.cpp OrientedRectLabel.cpp \
+    PointCloudDisplayWidget.cpp \
+    PointLabel.cpp \
+    PolygonLabel.cpp \
+    PolylineLabel.cpp \
+    ProjectDefinitionsDialog.cpp \
+    ProjectSettingsWidget.cpp \
+    PropertyTableModel.cpp \
+    PropertyTableItemDelegate.cpp \
+    PropertyDatabase.cpp \
+    qjson_helpers.cpp \
+    RecentActionsList.cpp \
+    RectLabel.cpp \
+    rest.cpp \
+    RestDatasetFilesystem.cpp \
+    SharedPropertiesEditorTableModel.cpp \
+    ScriptPainter.cpp \
+    settings.cpp \
+    SourcePicturesTreeModel.cpp \
     StartupDialog.cpp \
-    stdafx.cpp Serialization.cpp StampPropertiesEditorTableModel.cpp \
-    SourcePicturesWidget.cpp ToolLabel.cpp ToolboxProxyModel.cpp ToolboxWidget.cpp win_helpers.cpp \
-    triangulation/construct.c triangulation/misc.c triangulation/monotone.c triangulation/tri.c triangulation/xtime.c
+    stdafx.cpp \
+    Serialization.cpp \
+    StampPropertiesEditorTableModel.cpp \
+    SourcePicturesWidget.cpp \
+    ToolLabel.cpp \
+    ToolboxProxyModel.cpp \
+    ToolboxWidget.cpp \
+    win_helpers.cpp \
+    triangulation/construct.c \
+    triangulation/misc.c \
+    triangulation/monotone.c \
+    triangulation/tri.c \
+    triangulation/xtime.c
 
 HEADERS += \
     CustomPropertiesEditorTableItemDelegate.h \
@@ -61,34 +109,106 @@ HEADERS += \
     ImagePropertiesWidget.h \
     LabelDefinitionPropertiesDialog.h \
     StartupDialog.h \
-    AboutDialog.h ApplicationModel.h ArcBall.h CircleLabel.h ColorDisplayWidget.h ColoredVertexData.h \
+    AboutDialog.h \
+    ApplicationModel.h \
+    ArcBall.h \
+    CircleLabel.h \
+    ColorDisplayWidget.h \
+    ColoredVertexData.h \
     ColorTransformer.h \
     CustomPropertiesEditorTableModel.h \
-    CreateLabelFileModelCommand.h CustomProperty.h CustomPropertyTableItemDelegate.h CustomPropertyTableModel.h \
-    DeleteAllLabelsFileModelCommand.h DeleteLabelFileModelCommand.h Desktop3dWindow.h DesktopWidget.h ElidedLabelWidget.h ErrorsListDialog.h \
+    CreateLabelFileModelCommand.h \
+    CustomProperty.h \
+    CustomPropertyTableItemDelegate.h \
+    CustomPropertyTableModel.h \
+    DeleteAllLabelsFileModelCommand.h \
+    DeleteLabelFileModelCommand.h \
+    Desktop3dWindow.h \
+    DesktopWidget.h \
+    ElidedLabelWidget.h \
+    ErrorsListDialog.h \
     FilenamesEditorWidget.h \
-    FileModel.h FilesystemInterface.h FileTreeItemInfo.h geometry.h Highlighter.h ImageConverter.h ImageData.h ImageLoader.h \
+    FileModel.h \
+    FilesystemInterface.h \
+    FileTreeItemInfo.h \
+    geometry.h \
+    Highlighter.h \
+    ImageConverter.h \
+    ImageData.h \
+    ImageLoader.h \
     FileTreeElement.h \
-    ImageModel.h ImageSettingsWidgetQt.h implement_q_property.h Label.h LabelCategory.h LabelDefinition.h LabelDefinitionPropertiesWidget.h \
-    LabelDefinitionsTreeModel.h LabelFactory.h LabelHandle.h LabelPropertiesWidget.h LabelType.h LocalFilesystem.h \
-    MainWindow.h messagebox.h ModifyLabelCategoryFileModelCommand.h ModifyLabelGeometryFileModelCommand.h \
-    ModifyLabelTextFileModelCommand.h OrientedCircleLabel.h OrientedPointLabel.h OrientedRectLabel.h PaintInfo.h PointCloudDisplayShaders.h \
-    PointCloudDisplayWidget.h PointLabel.h PolygonLabel.h PolylineLabel.h ProjectDefinitionsDialog.h ProjectSettingsWidget.h \
-    PropertyDatabase.h ProxyLabel.h qjson_helpers.h RecentActionsList.h RectLabel.h rest.h RestDatasetFilesystem.h \
-    PropertyTableModel.h PropertyTableItemDelegate.h \
-    ScriptPainter.h settings.h SharedPropertyDefinition.h SharedPropertiesEditorTableModel.h SourcePicturesTreeModel.h SourcePicturesWidget.h \
+    ImageModel.h \
+    ImageSettingsWidgetQt.h \
+    implement_q_property.h \
+    Label.h \
+    LabelCategory.h \
+    LabelDefinition.h \
+    LabelDefinitionPropertiesWidget.h \
+    LabelDefinitionsTreeModel.h \
+    LabelFactory.h \
+    LabelHandle.h \
+    LabelPropertiesWidget.h \
+    LabelType.h \
+    LocalFilesystem.h \
+    MainWindow.h \
+    messagebox.h \
+    ModifyLabelCategoryFileModelCommand.h \
+    ModifyLabelGeometryFileModelCommand.h \
+    ModifyLabelTextFileModelCommand.h \
+    NavigationModel.h \
+    NavigationWidget.h \
+    OrientedCircleLabel.h \
+    OrientedPointLabel.h \
+    OrientedRectLabel.h \
+    PaintInfo.h \
+    PointCloudDisplayShaders.h \
+    PointCloudDisplayWidget.h \
+    PointLabel.h \
+    PolygonLabel.h \
+    PolylineLabel.h \
+    ProjectDefinitionsDialog.h \
+    ProjectSettingsWidget.h \
+    PropertyDatabase.h \
+    ProxyLabel.h \
+    qjson_helpers.h \
+    RecentActionsList.h \
+    RectLabel.h rest.h \
+    RestDatasetFilesystem.h \
+    PropertyTableModel.h \
+    PropertyTableItemDelegate.h \
+    ScriptPainter.h \
+    settings.h SharedPropertyDefinition.h \
+    SharedPropertiesEditorTableModel.h \
+    SourcePicturesTreeModel.h \
+    SourcePicturesWidget.h \
     migration_helpers.h \
-    stdafx.h Serialization.h StampPropertiesEditorTableModel.h \
-    ToolboxProxyModel.h ToolboxWidget.h ToolLabel.h win_helpers.h WorldInfo.h \
-    triangulation/xtime.c triangulation/interface.h triangulation/triangulate.h triangulation/xtime.h
+    stdafx.h \
+    Serialization.h \
+    StampPropertiesEditorTableModel.h \
+    ToolboxProxyModel.h \
+    ToolboxWidget.h \
+    ToolLabel.h win_helpers.h\
+    WorldInfo.h \
+    triangulation/xtime.c \
+    triangulation/interface.h \
+    triangulation/triangulate.h \
+    triangulation/xtime.h
 
 FORMS += \
-    AboutDialog.ui Desktop3dWindow.ui \
-    ErrorsListDialog.ui ImageSettingsWidgetQt.ui LabelDefinitionPropertiesWidget.ui \
+    AboutDialog.ui \
+    Desktop3dWindow.ui \
+    ErrorsListDialog.ui \
+    ImageSettingsWidgetQt.ui \
+    LabelDefinitionPropertiesWidget.ui \
     ImagePropertiesWidget.ui \
     LabelDefinitionPropertiesDialog.ui \
-    LabelPropertiesWidget.ui MainWindow.ui ProjectDefinitionsDialog.ui \
-    ProjectSettingsWidget.ui SourcePicturesWidget.ui ToolboxWidget.ui \
+    LabelPropertiesWidget.ui \
+    MainWindow.ui \
+    NavigationWidget.ui \
+    ProjectDefinitionsDialog.ui \
+    ProjectSettingsWidget.ui \
+    SourcePicturesWidget.ui \
+    ToolboxWidget.ui \
     StartupDialog.ui
 
 RESOURCES += MainWindow.qrc

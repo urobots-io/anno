@@ -39,7 +39,9 @@
 using namespace std;
 
 ApplicationModel::ApplicationModel(QObject *parent)
-    : QObject(parent) {
+    : QObject(parent)
+    , navigation_model_(nullptr)
+{
 }
 
 ApplicationModel::~ApplicationModel() {
@@ -53,6 +55,8 @@ void ApplicationModel::ClearProject() {
     user_data_ = QJsonObject();
     files_loader_ = QJsonObject();
     file_models_.clear();
+
+    navigation_model_.Clear();
 
     PropertyDatabase::Instance().Clear();
     set_is_modified(false);

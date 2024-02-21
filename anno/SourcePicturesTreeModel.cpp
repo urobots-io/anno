@@ -152,6 +152,43 @@ QVariant SourcePicturesTreeModel::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
+QModelIndex SourcePicturesTreeModel::index(QString path) {
+    if (path.isEmpty()) {
+        return GetFilesRootIndex();
+    }
+
+    auto parts = path.split('/');
+
+    // search for the element startig from files
+    int child_index = 0;
+    FileTreeElement *child = root_->children[0];
+    FileTreeElement *parent = nullptr;
+
+    for (auto s : parts) {
+        parent = child;
+        child = nullptr;
+        child_index = -1;
+
+        for (size_t t = 0; t < parent->children.size(); ++t) {
+            if (parent->children[t]->name == s) {
+                child_index = int(t);
+                child = parent->children[t];                
+                break;
+            }
+        }
+
+        if (!child)
+            break;
+    }
+
+    if (child) {
+        return createIndex(child_index, 0, child);
+    }
+    else {
+        return QModelIndex();
+    }
+}
+
 QModelIndex SourcePicturesTreeModel::index(int row, int column, const QModelIndex &parent) const {
     if (!hasIndex(row, column, parent))
         return QModelIndex();

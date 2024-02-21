@@ -3,6 +3,7 @@
 #include "ImageConverter.h"
 #include "implement_q_property.h"
 #include "LabelDefinitionsTreeModel.h"
+#include "NavigationModel.h"
 #include "SourcePicturesTreeModel.h"
 #include <QObject>
 
@@ -20,6 +21,8 @@ public:
     Q_PROPERTY(std::shared_ptr<LabelDefinitionsTreeModel> label_definitions READ get_label_definitions WRITE set_label_definitions NOTIFY label_definitions_changed);
     Q_PROPERTY(std::shared_ptr<FilesystemInterface> filesystem READ get_filesystem WRITE set_filesystem NOTIFY filesystem_changed);
     Q_PROPERTY(QJsonObject user_data READ get_user_data WRITE set_user_data NOTIFY user_data_changed);
+
+    NavigationModel* get_navigation_model() { return &navigation_model_; }
 
     void NewProject(QString images_folder);
     bool OpenProject(QString filename, QStringList &errors);
@@ -118,6 +121,8 @@ private:
     QJsonObject files_loader_;
 
     QString project_script_;
+
+    NavigationModel navigation_model_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(is_modified);

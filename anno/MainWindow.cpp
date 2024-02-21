@@ -9,6 +9,7 @@
 #include "ImageSettingsWidget.h"
 #include "LabelDefinitionPropertiesWidget.h"
 #include "messagebox.h"
+#include "NavigationWidget.h"
 #include "ProjectDefinitionsDialog.h"
 #include "ProjectSettingsWidget.h"
 #include "LabelPropertiesWidget.h"
@@ -111,6 +112,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui.color_value_label->setWidthHint(120);
     ui.mouse_pos_label->setElideMode(Qt::ElideRight);
     ui.color_value_label->setElideMode(Qt::ElideRight);
+
+    // navigation
+    ui.mainToolBar->addSeparator();
+
+    NavigationWidget* navigationWidget = new NavigationWidget(model_.get_navigation_model(), this);    
+    ui.mainToolBar->addWidget(navigationWidget);
+
+    /*
+    QWidget *spacerWidget = new QWidget(this);
+    spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    spacerWidget->setVisible(true);
+    ui.mainToolBar->addWidget(spacerWidget);
+    */
+
+
 
     UpdateApplicationTitle();
     UpdateProjectControls();
@@ -435,8 +451,6 @@ void MainWindow::OnImageFileChanged(std::shared_ptr<FileModel> value) {
         connect(ui.undo_action, &QAction::triggered, stack, &QUndoStack::undo);
         connect(ui.redo_action, &QAction::triggered, stack, &QUndoStack::redo);
     }
-    
-    ui.desktop_status_label->setText(selected_file_ ? selected_file_->get_id() : QString());
 }
 
 void MainWindow::CanUndoChanged(bool value) {    

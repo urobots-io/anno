@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>526</width>
-    <height>174</height>
+    <height>192</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -136,7 +136,7 @@
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>http://www.urobots.io</string>
+         <string>https://www.urobots.io</string>
         </property>
        </widget>
       </item>

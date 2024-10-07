@@ -6,6 +6,7 @@
 #include <QInputDialog>
 #include <QMenu>
 #include <QRegExp>
+#include <QRegularExpression>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
 #ifdef Q_OS_WIN
@@ -102,7 +103,15 @@ void SourcePicturesWidget::OnTextFilterChanged() {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     sort_filter_model_->setFilterRegExp(QRegExp(text, Qt::CaseInsensitive,  QRegExp::Wildcard));
 #else
-    // TODO(ap): qt6
+    if (text.isEmpty()) {
+        sort_filter_model_->setFilterRegularExpression("");
+    }
+    else {
+        if (!text.contains("*")) {
+            text = "*" + text + "*";
+        }
+        sort_filter_model_->setFilterRegularExpression(QRegularExpression::fromWildcard(text, Qt::CaseInsensitive));
+    }
 #endif
 }
 

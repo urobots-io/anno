@@ -630,7 +630,9 @@ bool SourcePicturesProxyModel::filterAcceptsRow(int source_row, const QModelInde
             return false;
         }
 #else
-        // TODO(ap): qt6
+        if (!filterRegularExpression().isValid()) {
+            return false;
+        }
 #endif
     }
     else {

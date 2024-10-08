@@ -579,6 +579,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_NavigationModel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="git_info.cpp">
+      <Filter>Version</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -752,9 +755,6 @@
     <ClInclude Include="FileTreeElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="git_rev.h">
-      <Filter>Version</Filter>
-    </ClInclude>
     <ClInclude Include="Serialization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -781,6 +781,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_NavigationWidget.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="git_info.h">
+      <Filter>Version</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -994,6 +997,12 @@
     </None>
     <None Include="data\examples\custom_properties.anno">
       <Filter>data\examples</Filter>
+    </None>
+    <None Include="gen_git_rev_windows.bat">
+      <Filter>Version</Filter>
+    </None>
+    <None Include="gen_git_rev_x.sh">
+      <Filter>Version</Filter>
     </None>
   </ItemGroup>
 </Project>

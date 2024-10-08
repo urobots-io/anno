@@ -43,3 +43,4 @@ build-anno*/
 anno/git_rev.h
 # Mac files
 *.DS_Store
+anno/git_info.cpp

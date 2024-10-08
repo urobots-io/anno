@@ -343,6 +343,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClCompile Include="GeneratedFiles\Release\moc_ToolboxWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="git_info.cpp" />
     <ClCompile Include="Highlighter.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImageModel.cpp" />
@@ -514,7 +515,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
     <ClInclude Include="GeneratedFiles\ui_ImageSettingsWidgetQt.h" />
     <ClInclude Include="GeneratedFiles\ui_NavigationWidget.h" />
     <ClInclude Include="GeneratedFiles\ui_StartupDialog.h" />
-    <ClInclude Include="git_rev.h" />
+    <ClInclude Include="git_info.h" />
     <CustomBuild Include="ImagePropertiesWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
@@ -1160,6 +1161,8 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
       <SubType>Designer</SubType>
     </CustomBuild>
+    <None Include="gen_git_rev_windows.bat" />
+    <None Include="gen_git_rev_x.sh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

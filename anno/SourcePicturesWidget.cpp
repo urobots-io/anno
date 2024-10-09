@@ -31,8 +31,7 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
         this, &SourcePicturesWidget::OnCustomContextMenu);
 
     // initialize filter
-    sort_filter_model_ = new SourcePicturesProxyModel(this);
-    sort_filter_model_->setRecursiveFilteringEnabled(true);
+    sort_filter_model_ = new SourcePicturesProxyModel(this);    
     ui.treeView->setModel(sort_filter_model_);
 
     connect(ui.filter_lineEdit, &QLineEdit::textChanged, this, &SourcePicturesWidget::OnTextFilterChanged);

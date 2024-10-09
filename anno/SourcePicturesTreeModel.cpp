@@ -600,6 +600,14 @@ void SourcePicturesTreeModel::OnFileModelModified(bool) {
     }
 }
 
+SourcePicturesProxyModel::SourcePicturesProxyModel(QObject *parent) 
+: QSortFilterProxyModel(parent)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    setRecursiveFilteringEnabled(true);
+#endif
+}
+
 void SourcePicturesProxyModel::set_show_labeled_only(bool value) {
     if (value != show_labeled_only_) {
         show_labeled_only_ = value;
@@ -608,18 +616,52 @@ void SourcePicturesProxyModel::set_show_labeled_only(bool value) {
     }
 }
 
+bool SourcePicturesProxyModel::filterAcceptsRowInt(int source_row, const QModelIndex &source_parent) const {
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+    // https://www.qtcentre.org/threads/71767-setRecursiveFilteringEnabled()-not-available-in-qt4
+    // Manually perform recursion
+
+    // Default QSortFilterProxyModel behavior for an empty regexp
+    if (filterRegExp().isEmpty())
+        return true;
+
+    QModelIndex index0 = sourceModel()->index(source_row, 0, source_parent);
+
+    // If column0 at the current level matches, return true
+    if (sourceModel()->data(index0, Qt::DisplayRole).toString().contains(filterRegExp())) {
+        return true;
+    }
+    // The current level doesn't match but if it has children, recurse to look at them
+    else if (sourceModel()->hasChildren(index0)) {
+        bool bResult = false;
+        int nRows = sourceModel()->rowCount(index0);
+
+        // Look at each child row.  If any one of them matches (bResult == true) then the loop will exit
+        for (int nRow = 0; nRow < nRows && !bResult; ++nRow)
+        {
+            bResult = filterAcceptsRow(nRow, index0);
+        }
+
+        // Return whatever the loop result was.  If any child matches, this is true, otherwise it is false.
+        return bResult;
+    }
+    return false;
+#else
+    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+#endif
+}
+
 
 bool SourcePicturesProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+    auto result = filterAcceptsRowInt(source_row, source_parent);
     if (!get_show_labeled_only()) {
-        return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+        return result;
     }
 
     if (!source_parent.isValid()) {
         return true;
     }
 
-    auto result = QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
-    
     auto source = (SourcePicturesTreeModel*)sourceModel();
     auto index = source->index(source_row, 0, source_parent);
     auto fi = source->GetFileInfo(index);

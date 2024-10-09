@@ -117,11 +117,12 @@ class SourcePicturesProxyModel : public QSortFilterProxyModel {
 public:
     Q_PROPERTY(bool show_labeled_only READ get_show_labeled_only WRITE set_show_labeled_only NOTIFY show_labeled_only_changed);
 
-    SourcePicturesProxyModel(QObject *parent) : QSortFilterProxyModel(parent) 
-    {
-    }
+    SourcePicturesProxyModel(QObject *parent);
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+
+private:
+    bool filterAcceptsRowInt(int source_row, const QModelIndex &source_parent) const;
 
 public slots:
     DECLARE_Q_PROPERTY_WRITE(bool, show_labeled_only);

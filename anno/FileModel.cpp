@@ -161,11 +161,11 @@ std::shared_ptr<Label> FileModel::GetHandleOwner(std::shared_ptr<LabelHandle> ha
 
 void FileModel::CreateDefaultSharedLabel(shared_ptr<LabelCategory> category) {
     auto def = category->GetDefinition();
-    assert(def);
+    Q_ASSERT(def);
     if (!def)
         return;
 
-    assert(def->is_shared());
+    Q_ASSERT(def->is_shared());
     if (!def->is_shared())
         return;
 
@@ -185,7 +185,7 @@ void FileModel::CreateDefaultSharedLabel(shared_ptr<LabelCategory> category) {
 }
 
 set<int> FileModel::GetExistingSharedIndexes(std::shared_ptr<LabelDefinition> def) {
-    assert(def->is_shared());
+    Q_ASSERT(def->is_shared());
 
     set<int> result;    
     if (def->is_shared()) {

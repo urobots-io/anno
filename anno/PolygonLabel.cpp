@@ -3,7 +3,7 @@
 
 #include "PolygonLabel.h"
 #include "geometry.h"
-#include "earcut.hpp"
+#include "earcut/earcut.hpp"
 
 namespace mapbox {
 namespace util {

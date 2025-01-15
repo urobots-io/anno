@@ -185,7 +185,7 @@ HEADERS += \
     ToolboxWidget.h \
     ToolLabel.h win_helpers.h\
     WorldInfo.h \
-    earcut.hpp
+    earcut/earcut.hpp
 
 FORMS += \
     AboutDialog.ui \

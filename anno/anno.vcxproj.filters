@@ -755,9 +755,6 @@
     <ClInclude Include="git_info.h">
       <Filter>Version</Filter>
     </ClInclude>
-    <ClInclude Include="earcut.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.ui">

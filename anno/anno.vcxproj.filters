@@ -73,6 +73,9 @@
     <Filter Include="Source Files\FileModelCommands">
       <UniqueIdentifier>{5a35f131-3774-4377-af17-cbed4b6694b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\EarCut">
+      <UniqueIdentifier>{920572f7-b924-4ba6-8858-b837328548c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
@@ -754,6 +757,9 @@
     </ClInclude>
     <ClInclude Include="git_info.h">
       <Filter>Version</Filter>
+    </ClInclude>
+    <ClInclude Include="earcut\earcut.hpp">
+      <Filter>Header Files\EarCut</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

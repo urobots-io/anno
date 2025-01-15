@@ -64,7 +64,7 @@
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
-call gen_git_rev_windows.bat
+call scripts/generate_git_info.bat
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER)d.dll "$(OutDir)"
@@ -96,7 +96,7 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
 
-call gen_git_rev_windows.bat
+call scripts/generate_git_info.bat
 
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER).dll "$(OutDir)"
@@ -1139,8 +1139,8 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
       <SubType>Designer</SubType>
     </CustomBuild>
-    <None Include="gen_git_rev_windows.bat" />
-    <None Include="gen_git_rev_x.sh" />
+    <None Include="scripts\generate_git_info.bat" />
+    <None Include="scripts\generate_git_info.sh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

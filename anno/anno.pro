@@ -18,13 +18,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER = stdafx.h
 
-# generate git_rev.h
-versionTarget.target = git_rev
-win32: versionTarget.commands += call "$$PWD/gen_git_rev_windows.bat"
-else: versionTarget.commands += bash "$$PWD/gen_git_rev_x.sh"
-versionTarget.depends =
+# generate git_info.cpp
+versionTarget.target = git_info.cpp
+win32: versionTarget.commands += cd $$PWD && call scripts/generate_git_info.bat
+else: versionTarget.commands += cd $$PWD && bash scripts/generate_git_info.sh
+versionTarget.depends = FORCE
 QMAKE_EXTRA_TARGETS += versionTarget
-PRE_TARGETDEPS += git_rev
+PRE_TARGETDEPS += git_info.cpp
+
 
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

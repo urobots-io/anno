@@ -76,6 +76,9 @@
     <Filter Include="Header Files\EarCut">
       <UniqueIdentifier>{920572f7-b924-4ba6-8858-b837328548c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Version\scripts">
+      <UniqueIdentifier>{eed3fed3-6013-42cb-93e1-0735f1e76df5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
@@ -974,11 +977,11 @@
     <None Include="data\examples\custom_properties.anno">
       <Filter>data\examples</Filter>
     </None>
-    <None Include="gen_git_rev_windows.bat">
-      <Filter>Version</Filter>
+    <None Include="scripts\generate_git_info.bat">
+      <Filter>Version\scripts</Filter>
     </None>
-    <None Include="gen_git_rev_x.sh">
-      <Filter>Version</Filter>
+    <None Include="scripts\generate_git_info.sh">
+      <Filter>Version\scripts</Filter>
     </None>
   </ItemGroup>
 </Project>

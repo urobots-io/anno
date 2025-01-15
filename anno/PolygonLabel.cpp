@@ -3,7 +3,24 @@
 
 #include "PolygonLabel.h"
 #include "geometry.h"
-#include "triangulation/interface.h"
+#include "earcut.hpp"
+
+namespace mapbox {
+namespace util {
+template <>
+struct nth<0, QPointF> {
+    inline static auto get(const QPointF &t) {
+        return t.x();
+    };
+};
+template <>
+struct nth<1, QPointF> {
+    inline static auto get(const QPointF &t) {
+        return t.y();
+    };
+};
+} // namespace util
+}
 
 using namespace std;
 
@@ -304,6 +321,21 @@ void PolygonLabel::HandlePositionChanged(LabelHandle *, const QPointF &) {
 	Triangulate();
 }
 
+namespace {
+QPointF GetPolygonsPoint(const std::vector<std::vector<QPointF>> & polygons, int index) {
+    size_t i = size_t(index);
+    for (auto & poly: polygons) {
+        if (i >= poly.size()) {
+            i -= poly.size();
+        }
+        else {
+            return poly[i];
+        }
+    }
+    throw std::invalid_argument("invalid index");
+}
+}
+
 void PolygonLabel::Triangulate() {
     triangles_.clear();
 
@@ -357,35 +389,23 @@ void PolygonLabel::Triangulate() {
 	}
 
 
-	// triangulate 
-	double vertexes[500][2]; // TODO(ap): why 500? dynamic allocation?
-	int triangles[500][3];
-	int number_points[500];
+    // Fill polygon structure with actual data. Any winding order works.
+    std::vector<std::vector<QPointF>> polygons;
+    for (auto c : contours_) {
+        std::vector<QPointF> polygon;
+        for (auto h : *c) {
+            polygon.push_back(h->GetPosition());
+        }
+        polygons.push_back(polygon);
+    }
 
-	memset(triangles, 0, sizeof(triangles));
-	memset(vertexes, 0, sizeof(vertexes));
-	memset(number_points, 0, sizeof(number_points));
 
-	int index = 1;
-	int c_index = 0;
-	for (auto c : contours_) {
-		number_points[c_index++] = int(c->size());
-		for (auto h : *c) {
-			vertexes[index][0] = h->GetPosition().x();
-			vertexes[index][1] = h->GetPosition().y();
-			++index;
-		}
-	}
+    auto indices = mapbox::earcut<uint32_t>(polygons);
 
-	triangulate_polygon(int(contours_.size()), number_points, vertexes, triangles);
-
-	for (int i = 0; triangles[i][0]; ++i) {
-		for (int j = 0; j < 3; ++j) {
-			QPointF p;
-			p.setX(vertexes[triangles[i][j]][0]);
-			p.setY(vertexes[triangles[i][j]][1]);
-			triangles_.push_back(p);
-		}
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        triangles_.push_back(GetPolygonsPoint(polygons, indices[i + 0]));
+        triangles_.push_back(GetPolygonsPoint(polygons, indices[i + 1]));
+        triangles_.push_back(GetPolygonsPoint(polygons, indices[i + 2]));
 	}
 
     area_ = 0;    

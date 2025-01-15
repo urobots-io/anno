@@ -73,12 +73,6 @@
     <Filter Include="Source Files\FileModelCommands">
       <UniqueIdentifier>{5a35f131-3774-4377-af17-cbed4b6694b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Triangulation">
-      <UniqueIdentifier>{6b7b2845-1d62-42f1-92bc-a21bb469510e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Triangulation">
-      <UniqueIdentifier>{9cd8a6c5-2cf9-4309-a002-f83f210f5433}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
@@ -383,21 +377,6 @@
     </ClCompile>
     <ClCompile Include="ModifyLabelTextFileModelCommand.cpp">
       <Filter>Source Files\FileModelCommands</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\construct.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\misc.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\monotone.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\tri.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\xtime.c">
-      <Filter>Source Files\Triangulation</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ScriptPainter.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -737,15 +716,6 @@
     <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="triangulation\interface.h">
-      <Filter>Header Files\Triangulation</Filter>
-    </ClInclude>
-    <ClInclude Include="triangulation\triangulate.h">
-      <Filter>Header Files\Triangulation</Filter>
-    </ClInclude>
-    <ClInclude Include="triangulation\xtime.h">
-      <Filter>Header Files\Triangulation</Filter>
-    </ClInclude>
     <ClInclude Include="ColorTransformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -784,6 +754,9 @@
     </ClInclude>
     <ClInclude Include="git_info.h">
       <Filter>Version</Filter>
+    </ClInclude>
+    <ClInclude Include="earcut.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

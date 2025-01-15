@@ -97,12 +97,7 @@ SOURCES += \
     ToolLabel.cpp \
     ToolboxProxyModel.cpp \
     ToolboxWidget.cpp \
-    win_helpers.cpp \
-    triangulation/construct.c \
-    triangulation/misc.c \
-    triangulation/monotone.c \
-    triangulation/tri.c \
-    triangulation/xtime.c
+    win_helpers.cpp
 
 HEADERS += \
     CustomPropertiesEditorTableItemDelegate.h \
@@ -190,10 +185,7 @@ HEADERS += \
     ToolboxWidget.h \
     ToolLabel.h win_helpers.h\
     WorldInfo.h \
-    triangulation/xtime.c \
-    triangulation/interface.h \
-    triangulation/triangulate.h \
-    triangulation/xtime.h
+    earcut.hpp
 
 FORMS += \
     AboutDialog.ui \

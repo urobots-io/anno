@@ -1,3 +1,4 @@
+#!/bin/bash
 OUTPUT_FILE=git_info.cpp
 
 # Read branch name *******************************************

@@ -20,8 +20,8 @@ PRECOMPILED_HEADER = stdafx.h
 
 # generate git_rev.h
 versionTarget.target = git_rev
-win32: versionTarget.commands += call ../anno/gen_git_rev_windows.bat
-else: versionTarget.commands += bash ../anno/gen_git_rev_x.sh
+win32: versionTarget.commands += call "$$PWD/gen_git_rev_windows.bat"
+else: versionTarget.commands += bash "$$PWD/gen_git_rev_x.sh"
 versionTarget.depends =
 QMAKE_EXTRA_TARGETS += versionTarget
 PRE_TARGETDEPS += git_rev

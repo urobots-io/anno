@@ -21,7 +21,7 @@ PRECOMPILED_HEADER = stdafx.h
 # generate git_info.cpp
 versionTarget.target = git_info.cpp
 win32: versionTarget.commands += cd $$PWD && call scripts/generate_git_info.bat
-else: versionTarget.commands += cd $$PWD && bash scripts/generate_git_info.sh
+else: versionTarget.commands += cd $$PWD; bash scripts/generate_git_info.sh
 versionTarget.depends = FORCE
 QMAKE_EXTRA_TARGETS += versionTarget
 PRE_TARGETDEPS += git_info.cpp

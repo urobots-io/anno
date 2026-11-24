@@ -85,7 +85,7 @@ QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) co
             return pixmap;
         }
         else if (!item.first) {
-            return QPixmap(":/MainWindow/Resources/select.png");
+            return QIcon(":/MainWindow/Resources/select.ico");
         }
     }
     return QVariant();

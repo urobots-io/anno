@@ -41,6 +41,11 @@ There are two options:
 - Pre-built binaries from [the release section](https://github.com/urobots-io/anno/releases).
 - Cross-platform build is possible with Qt Creator from the open source [Qt setup](https://www.qt.io/).
 
+## Credits
+The application icons are [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons)
+by Microsoft, MIT license ([anno/Resources/LICENSE-fluentui-system-icons.txt](anno/Resources/LICENSE-fluentui-system-icons.txt)).
+They are generated with [anno/scripts/generate_icons.py](anno/scripts/generate_icons.py).
+
 ## Specifications
 Project file format:
 ```jsonc

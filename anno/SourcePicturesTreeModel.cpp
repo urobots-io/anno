@@ -86,7 +86,7 @@ QVariant SourcePicturesTreeModel::data(const QModelIndex &index, int role) const
             }
             else {
                 if(item->GetFileModel()->HaveLabels())
-                    return QIcon(":/MainWindow/Resources/file_blue.ico");
+                    return QIcon(":/MainWindow/Resources/file_labeled.ico");
                 else
                     return QIcon(":/MainWindow/Resources/file.ico");
             }

@@ -14,12 +14,12 @@
     <file>Resources/refresh.ico</file>
     <file>Resources/configuration.ico</file>
     <file>Resources/folder_network.ico</file>
-    <file>Resources/file_blue.ico</file>
+    <file>Resources/file_labeled.ico</file>
     <file>Resources/add.ico</file>
     <file>Resources/fit_to_size.ico</file>
     <file>Resources/fix.ico</file>
     <file>Resources/restart.ico</file>
-    <file>Resources/select.png</file>
+    <file>Resources/select.ico</file>
     <file>Resources/anno.ico</file>
     <file>Resources/new.ico</file>
     <file>Resources/copy.ico</file>
@@ -31,5 +31,10 @@
     <file>Resources/tree_view.ico</file>
     <file>Resources/component.ico</file>
     <file>Resources/search-inside.ico</file>
+    <file>Resources/copy_light.ico</file>
+    <file>Resources/paste_light.ico</file>
+    <file>Resources/configuration_light.ico</file>
+    <file>Resources/add_light.ico</file>
+    <file>Resources/tree_view_light.ico</file>
   </qresource>
 </RCC>

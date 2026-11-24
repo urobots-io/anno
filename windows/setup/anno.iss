@@ -60,6 +60,7 @@ Root: HKCR; Subkey: "anno\shell\open\command"; ValueType: string; ValueName: "";
 [Files]
 Source: "temp/*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "{#MyAppIcon}"; DestDir: "{app}";
+Source: "..\..\anno\Resources\LICENSE-fluentui-system-icons.txt"; DestDir: "{app}";
 ; data
 Source: "..\..\anno\data\examples\*"; DestDir: "{app}\examples"; Flags: ignoreversion recursesubdirs
 ; Open CV

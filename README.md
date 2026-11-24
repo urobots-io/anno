@@ -5,7 +5,8 @@ Cross-platform tool for labeling image data.
 <img src="https://user-images.githubusercontent.com/9085494/89163912-a8055380-d576-11ea-8f8d-da664c6f4687.png"/>
 
 ## Features
-- Supports a wide range of marker types:
+- Supports a wide range of marker types
+  (example: [labels.anno](anno/data/examples/labels.anno)):
   - Point
   - Oriented point
   - Circle
@@ -14,12 +15,21 @@ Cross-platform tool for labeling image data.
   - Rectangle with rotation
   - Polygon (with holes)
   - Polyline
-  - Measuring tool (distance and angle)
-- Configurable rendering of all marker types, including custom rendering scripts, see [Marker rendering](#marker-rendering).
-- Configurable dependencies between properties of markers, e.g. markers can share their width, height, radius, angle or their whole geometry.
+  - Measuring tool (distance and angle), example: [tools.anno](anno/data/examples/tools.anno)
+- Configurable rendering of all marker types, including custom rendering scripts, see [Marker rendering](#marker-rendering)
+  (example: [scripting.anno](anno/data/examples/scripting.anno)).
+- Configurable dependencies between properties of markers, e.g. markers can share their width, height, radius, angle or their whole geometry
+  (examples: [shared_properties.anno](anno/data/examples/shared_properties.anno),
+  [shared_markers.anno](anno/data/examples/shared_markers.anno),
+  [multi_shared.anno](anno/data/examples/multi_shared.anno)).
+- Custom properties of markers: numbers, text, flags and selection lists
+  (example: [custom_properties.anno](anno/data/examples/custom_properties.anno)).
 - Supports a wide variety of image formats. The pre-built Windows version supports the EXR format.
 - The project file is a JSON file which contains project-specific marker definitions and labeling information.
 - The user interface is optimized for fast sub-pixel accurate labeling.
+
+The example projects are in [anno/data/examples](anno/data/examples) together with their images.
+Open them with *File > Open Local Project...*.
 
 <img src="https://user-images.githubusercontent.com/9085494/89164042-d5520180-d576-11ea-8a74-f4a13a6716d7.gif"/>
 

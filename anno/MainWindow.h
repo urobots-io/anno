@@ -51,6 +51,7 @@ public slots:
 
 private:	
 	bool CloseActiveProject();
+    void InitToolbars();
 
 private:
 	Ui::MainWindowClass ui;

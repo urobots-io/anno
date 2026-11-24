@@ -421,37 +421,6 @@
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <property name="styleSheet">
-    <string notr="true">QToolBar {
-	border: none;
-}
-</string>
-   </property>
-   <property name="movable">
-    <bool>false</bool>
-   </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonIconOnly</enum>
-   </property>
-   <property name="floatable">
-    <bool>false</bool>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="open_action"/>
-   <addaction name="open_dataset_action"/>
-   <addaction name="save_action"/>
-   <addaction name="separator"/>
-   <addaction name="undo_action"/>
-   <addaction name="redo_action"/>
-   <addaction name="separator"/>
-   <addaction name="evaluate_in_roi_action"/>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="save_action">
    <property name="icon">

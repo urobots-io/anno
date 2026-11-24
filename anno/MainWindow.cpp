@@ -21,6 +21,8 @@
 #include <QSettings>
 #include <QShortcut>
 #include <QStringBuilder>
+#include <QToolBar>
+#include <QHBoxLayout>
 
 using namespace std;
 using namespace urobots::qt_helpers;
@@ -113,19 +115,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui.mouse_pos_label->setElideMode(Qt::ElideRight);
     ui.color_value_label->setElideMode(Qt::ElideRight);
 
-    // navigation
-    ui.mainToolBar->addSeparator();
-
-    NavigationWidget* navigationWidget = new NavigationWidget(model_.get_navigation_model(), this);    
-    ui.mainToolBar->addWidget(navigationWidget);
-
-    /*
-    QWidget *spacerWidget = new QWidget(this);
-    spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    spacerWidget->setVisible(true);
-    ui.mainToolBar->addWidget(spacerWidget);
-    */
-
+    InitToolbars();
 
 
     UpdateApplicationTitle();
@@ -142,6 +132,52 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
 	model_.ClearProject();
+}
+
+void MainWindow::InitToolbars() {
+    // toolbar above the image: evaluate, back / forward and the current file path
+    auto image_toolbar = new QToolBar(this);
+    image_toolbar->setStyleSheet("QToolBar { border: none; background: palette(base); }");
+    image_toolbar->addAction(ui.evaluate_in_roi_action);
+    image_toolbar->addSeparator();
+    image_toolbar->addWidget(new NavigationWidget(model_.get_navigation_model(), image_toolbar));
+    ui.center_verticalLayout->insertWidget(0, image_toolbar);
+
+    // project and undo / redo buttons with small icons, in the menu bar line
+    auto menu_toolbar = new QToolBar(this);
+    menu_toolbar->setIconSize(QSize(16, 16));
+    menu_toolbar->setStyleSheet("QToolBar { border: none; background: transparent; }");
+    menu_toolbar->addSeparator();
+    menu_toolbar->addAction(ui.open_action);
+    menu_toolbar->addAction(ui.open_dataset_action);
+    menu_toolbar->addAction(ui.save_action);
+    menu_toolbar->addSeparator();
+    menu_toolbar->addAction(ui.undo_action);
+    menu_toolbar->addAction(ui.redo_action);
+
+    if (ui.menuBar->isNativeMenuBar()) {
+        // a native menu bar (macOS) cannot contain widgets, use a regular toolbar
+        menu_toolbar->setMovable(false);
+        addToolBar(Qt::TopToolBarArea, menu_toolbar);
+    }
+    else {
+        // menu row: menu bar, toolbar, free space
+        auto menu_row = new QWidget(this);
+        menu_row->setBackgroundRole(QPalette::Base);
+        menu_row->setAutoFillBackground(true);
+        auto row_layout = new QHBoxLayout(menu_row);
+        row_layout->setContentsMargins(0, 0, 0, 0);
+        row_layout->setSpacing(0);
+
+        // detach the menu bar from the main window layout first,
+        // otherwise setMenuWidget() deletes it
+        layout()->setMenuBar(nullptr);
+        ui.menuBar->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        row_layout->addWidget(ui.menuBar);
+        row_layout->addWidget(menu_toolbar);
+        row_layout->addStretch();
+        setMenuWidget(menu_row);
+    }
 }
 
 void MainWindow::ShowAboutDialog() {

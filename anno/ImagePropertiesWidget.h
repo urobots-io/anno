@@ -1,5 +1,6 @@
 #pragma once
 #include "ImageData.h"
+#include <QLabel>
 #include <QWidget>
 #include "ui_ImagePropertiesWidget.h"
 
@@ -16,4 +17,5 @@ public slots:
 
 private:
     Ui::ImagePropertiesWidget ui;
+    QLabel *empty_label_ = nullptr;
 };

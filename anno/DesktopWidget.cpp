@@ -154,6 +154,8 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
     }
     else {
         current_loader_ = nullptr;
+        // no image selected (folder or nothing), clear the properties of the previous image
+        set_image_properties({});
     }
 
     update();

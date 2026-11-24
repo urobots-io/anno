@@ -8,14 +8,17 @@ Cross-platform tool for labeling image data.
 - Supports a wide range of marker types:
   - Point
   - Oriented point
-  - Axis aligned rectangle
+  - Circle
+  - Oriented circle
+  - Axis-aligned rectangle
   - Rectangle with rotation
-  - Polygon
+  - Polygon (with holes)
   - Polyline
+  - Measuring tool (distance and angle)
 - Configurable rendering of all marker types, including custom rendering scripts, see [Marker rendering](#marker-rendering).
-- Configurable dependencies between properties of markers: i.e. some markers can share width or height or position on image.
-- Supports a wide variety of image formats. Pre-build Windows version supports EXR format.
-- The project file is JSON file wich contains project-specific marker definitions and labeling information.
+- Configurable dependencies between properties of markers, e.g. markers can share their width, height, radius, angle or their whole geometry.
+- Supports a wide variety of image formats. The pre-built Windows version supports the EXR format.
+- The project file is a JSON file which contains project-specific marker definitions and labeling information.
 - The user interface is optimized for fast sub-pixel accurate labeling.
 
 <img src="https://user-images.githubusercontent.com/9085494/89164042-d5520180-d576-11ea-8a74-f4a13a6716d7.gif"/>
@@ -24,8 +27,8 @@ Cross-platform tool for labeling image data.
 - Windows / macOS / Ubuntu
 
 ## Installation
-There are options:
-- Pre-build binaries from [the release section](https://github.com/urobots-io/anno/releases).
+There are two options:
+- Pre-built binaries from [the release section](https://github.com/urobots-io/anno/releases).
 - Cross-platform build is possible with Qt Creator from the open source [Qt setup](https://www.qt.io/).
 
 ## Specifications
@@ -36,13 +39,13 @@ Project file format:
     "definitions": {
         /** Folder with images, absolute path or relative path to the project file. */
         "files_root_dir": "c:/images",
-        /** A dictionary with marker types definitions. */
+        /** A dictionary with marker type definitions. */
         "marker_types": {
             /** Key represents a unique marker type name. */
             "my_marker_type": {
                 /** Optional description of the marker type. */
                 "description": "use carefully",
-                /** Type of the marker. Following types are supported:
+                /** Type of the marker. The following types are supported:
                     - circle
                     - oriented_circle
                     - oriented_point
@@ -59,7 +62,7 @@ Project file format:
                     {
                         /** Numerical id of the category */
                         "id": 0,
-                        /** Human name of the category */
+                        /** Human-readable name of the category */
                         "name": "Ok",
                         /** Color of the category */
                         "color": "red"
@@ -67,19 +70,20 @@ Project file format:
                 ],
                 
                 /** Optional width of lines used to draw the marker. 
-                    Negative value defines scale independed width in screen pixels,
-                    positive value defines width in image pixels */
+                    A negative value defines a scale-independent width in screen pixels,
+                    a positive value defines a width in image pixels. */
                 "line_width": -3,
                 
                 /** Advanced parameters: stamp, stamp_parameters, axis_length, 
-                    rendering_script, shared_count, 
+                    rendering_script, shared, shared_count, 
                     filename_filter, shared_properties, 
-                    custom_properties
+                    custom_properties (see the JSON Schema below)
                 */
             }
         },
-        /** Optional object, can be used to store user information accosiated with
-            the project. Anno does not process or modify it. */
+        /** Optional object, can be used to store user information associated with
+            the project. anno stores it unchanged; only the optional fields
+            "evaluate_url" and "evaluate_url_args" are used by the Evaluate function. */
         "user_data": {
         }
     },
@@ -92,12 +96,15 @@ Project file format:
             /** List of all markers present on the image. */
             "markers": [
                 {
-                    /** Marker category. */
+                    /** Category id of the marker. */
                     "category": 0,
                     /** Marker type name. */
                     "type": "my_marker_type",
-                    /** Marker data. */
-                    "value": "789.886 627.372 146.942 93.1009 -0.486899"
+                    /** Marker geometry, see below. */
+                    "value": "642.9 580.2 936.8 674.4"
+
+                    /** Optional fields: text, shared_index, children, custom_properties
+                        (see the JSON Schema below) */
                 }
             ]
         }
@@ -105,7 +112,7 @@ Project file format:
 }
 ```
 
-The format of the marker data depends on the type of marker value:
+The format of the marker geometry depends on the `value_type` of the marker type:
 * circle: ```center_x center_y radius```
 * oriented_circle: ```center_x center_y angle radius```
 * oriented_point: ```x y angle```
@@ -114,9 +121,10 @@ The format of the marker data depends on the type of marker value:
 * polygon: ```x0 y0 x1 y1 ... xN yN```
 * polyline: ```x0 y0 x1 y1 ... xN yN```
 * rect: ```x0 y0 x1 y1```
-* tool: ```x0 y0 x1 y1 ... xN yN```
+* tool: ```x0 y0 x1 y1 ... xN yN``` (2 points: distance, 3 points: angle, 4 points: angle between two lines)
 
 All coordinates are in image pixels, angles are in radians.
+Additional contours of a polygon (holes) are stored in `children`, every child has its own `value`.
 
 ### Marker rendering
 Every marker type has a default rendering: anno draws the geometry of the marker (rectangle, circle, polygon, ...)
@@ -204,7 +212,7 @@ Variables available to the script:
 #### Project script
 `definitions.project_script` has the same format and runs once every time the image is drawn, before the markers,
 in image coordinates (*Project* tab, field *Project Script*).
-It can draw overlays with `SetPen` and the drawing functions; functions which refer to a marker have no effect.
+It can draw overlays with `SetPen` and the drawing functions; functions which refer to a marker do nothing there.
 Functions and variables defined in the project script can be used in the rendering scripts.
 
 Example: a crosshair in the image center.

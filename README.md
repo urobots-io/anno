@@ -12,7 +12,7 @@ Cross-platform tool for labeling image data.
   - Rectangle with rotation
   - Polygon
   - Polyline
-- Configurable rendering of all marker types.
+- Configurable rendering of all marker types, including custom rendering scripts, see [Marker rendering](#marker-rendering).
 - Configurable dependencies between properties of markers: i.e. some markers can share width or height or position on image.
 - Supports a wide variety of image formats. Pre-build Windows version supports EXR format.
 - The project file is JSON file wich contains project-specific marker definitions and labeling information.
@@ -117,6 +117,104 @@ The format of the marker data depends on the type of marker value:
 * tool: ```x0 y0 x1 y1 ... xN yN```
 
 All coordinates are in image pixels, angles are in radians.
+
+### Marker rendering
+Every marker type has a default rendering: anno draws the geometry of the marker (rectangle, circle, polygon, ...)
+in the color of its category. The default rendering can be adjusted with the fields below,
+or completely overwritten with a custom [rendering script](#rendering-script).
+
+How markers are drawn is configured per marker type in `definitions.marker_types`:
+
+| Field | Effect |
+|---|---|
+| `categories[].color` | Color of the marker. Without it, a standard color is chosen by category id. |
+| `line_width` | Line width. Negative: in screen pixels, independent of the zoom (default `-3`). Positive: in image pixels. |
+| `axis_length` | `[x, y]` lengths of the axes of `oriented_point` and `oriented_circle` markers in image pixels (default `50`). `0` hides the axis. |
+| `rendering_script` | JavaScript which draws the marker instead of the default rendering, see below. |
+
+With the default pen, the selected marker is drawn semi-transparent and the marker under the mouse cursor with a dotted line.
+Marker handles are always drawn by anno and are not affected by the rendering configuration.
+
+#### Rendering script
+`rendering_script` is JavaScript source code, stored as an array of lines.
+It can also be edited in the application: select the marker type and open the *Definition* tab, field *Rendering Script*.
+The script runs every time the marker is drawn and replaces the default rendering; call `RenderBase()` to draw the default graphics as well.
+If the script fails, drawing stops at the error and no message is shown.
+
+Example: an `oriented_rect` drawn as a rectangle with an arrow along its x axis and a label which keeps its size when zooming:
+```json
+"rendering_script": [
+    "SetBaseTransform(true, true)",
+    "SetDefaultPen()",
+    "DrawRect(-1, -1, 2, 2)",
+    "DrawLine(0, 0, 1.2, 0)",
+    "SetBaseTransformCosmetic(true)",
+    "DrawText(5, -5, category_name + ' ' + text, 10)"
+]
+```
+
+The script starts in image coordinates: pixels, origin in the top left corner of the image, y axis pointing down.
+`SetBaseTransform(scale, rotate)` moves the origin to the marker:
+
+| Marker type | Origin | `rotate = true` | `scale = true` |
+|---|---|---|---|
+| `rect` | first corner `x0 y0` | no effect | the rectangle becomes `(0, 0)`–`(1, 1)` |
+| `oriented_rect` | center | x axis along the marker angle | the rectangle becomes `(-1, -1)`–`(1, 1)` |
+| `circle` | center | no effect | the circle gets radius `1` |
+| `oriented_circle` | center | x axis along the marker angle | no effect |
+| `oriented_point` | the point | x axis along the marker angle | no effect |
+| `point` | the point | no effect | no effect |
+| `polygon`, `polyline`, `tool` | first point | no effect | no effect |
+
+Functions available to the script:
+
+| Function | Description |
+|---|---|
+| `SetBaseTransform(scale, rotate)` | Marker coordinate system, see the table above. |
+| `SetBaseTransformCosmetic(rotate)` | Marker origin (and rotation), units are screen pixels: drawings keep their size when zooming. |
+| `ResetTransform()` | Back to image coordinates. |
+| `Translate(dx, dy)`, `Rotate(degrees)` | Move or rotate the current coordinate system. |
+| `SetDefaultPen()`, `SetDefaultPen(width)` | Pen in the category color, with the marker type `line_width` or the given width. |
+| `SetPen(r, g, b, width)` | Solid pen with the given color, components `0`–`255`. |
+| `DrawLine(x0, y0, x1, y1)` | Line. |
+| `DrawRect(left, top, width, height)` | Rectangle outline. |
+| `DrawEllipse(left, top, width, height)` | Ellipse inscribed into the rectangle. |
+| `DrawCircle(x, y, radius)` | Circle. |
+| `DrawArc(left, top, width, height, start, end)` | Arc of the ellipse inscribed into the rectangle; angles in degrees, `0` is the x axis direction, positive is counter-clockwise. |
+| `DrawText(x, y, text, font_size)` | Bold text with its baseline starting at `x, y`; the font size is scaled together with the coordinate system. |
+| `RenderBase()` | Default rendering of the marker. |
+| `Property(name)` | Geometry value of the marker: `"width"`, `"height"`, `"radius"` or `"angle"` (radians), depending on the marker type. |
+| `PropertyDefinition(name)` | Linear transform `{a, b}` of a shared property (see `shared_properties`). |
+| `Custom(name)` | Value of a custom property of the marker (see `custom_properties`). |
+
+A width argument follows the `line_width` rule: negative is in screen pixels, positive in the current coordinate units.
+All functions are also available with a `p.` prefix (`p.DrawLine(...)`), as used by older projects.
+
+Variables available to the script:
+
+| Variable | Description |
+|---|---|
+| `category` | Category id of the marker. |
+| `category_name` | Category name of the marker. |
+| `marker_type` | Marker type name. |
+| `text` | Text of the marker. |
+| `shared_index` | Shared instance index of the marker. |
+| `cols`, `rows` | Width and height of the image in pixels. |
+
+#### Project script
+`definitions.project_script` has the same format and runs once every time the image is drawn, before the markers,
+in image coordinates (*Project* tab, field *Project Script*).
+It can draw overlays with `SetPen` and the drawing functions; functions which refer to a marker have no effect.
+Functions and variables defined in the project script can be used in the rendering scripts.
+
+Example: a crosshair in the image center.
+```json
+"project_script": [
+    "SetPen(255, 255, 0, -1)",
+    "DrawLine(cols / 2, 0, cols / 2, rows)",
+    "DrawLine(0, rows / 2, cols, rows / 2)"
+]
+```
 
 ### JSON Schema
 The complete project file format is described by a [JSON Schema](https://json-schema.org/) (draft-07):
@@ -319,7 +417,7 @@ Use it in VS Code, `settings.json`:
           ]
         },
         "axis_length": {
-          "description": "Lengths of the drawn x and y axes in screen pixels (oriented_point and oriented_circle).",
+          "description": "Lengths of the x and y axes of oriented_point and oriented_circle markers in image pixels (default 50). 0 hides the axis, a negative value means the default.",
           "type": "array",
           "items": { "type": "integer" },
           "maxItems": 2

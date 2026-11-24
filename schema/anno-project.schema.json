@@ -165,7 +165,7 @@
           ]
         },
         "axis_length": {
-          "description": "Lengths of the drawn x and y axes in screen pixels (oriented_point and oriented_circle).",
+          "description": "Lengths of the x and y axes of oriented_point and oriented_circle markers in image pixels (default 50). 0 hides the axis, a negative value means the default.",
           "type": "array",
           "items": { "type": "integer" },
           "maxItems": 2

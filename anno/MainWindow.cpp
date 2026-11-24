@@ -206,7 +206,8 @@ QString FormatVideoTime(double seconds) {
 void MainWindow::InitVideoControls() {
     video_controls_ = new QWidget(this);
     auto layout = new QHBoxLayout(video_controls_);
-    layout->setContentsMargins(4, 2, 4, 2);
+    // 5 extra pixels at the bottom separate the marker band from the scale bar
+    layout->setContentsMargins(4, 2, 4, 2 + 5);
     layout->setSpacing(4);
 
     auto prev_button = new QToolButton(video_controls_);

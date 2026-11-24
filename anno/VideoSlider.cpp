@@ -2,15 +2,16 @@
 // 2020-2026 (c) urobots GmbH, https://urobots.io/en/portfolio/anno/
 
 #include "VideoSlider.h"
+#include <QCursor>
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOptionSlider>
+#include <QStylePainter>
 #include <algorithm>
 
 VideoSlider::VideoSlider(QWidget *parent)
     : QSlider(Qt::Horizontal, parent)
 {
-    setMinimumHeight(sizeHint().height() + band_height + 2);
 }
 
 void VideoSlider::SetMarkerCounts(std::vector<int> counts) {
@@ -19,16 +20,37 @@ void VideoSlider::SetMarkerCounts(std::vector<int> counts) {
 }
 
 void VideoSlider::paintEvent(QPaintEvent *event) {
-    QSlider::paintEvent(event);
+    Q_UNUSED(event)
 
+    // paint in three steps: groove, marker band in the middle of the groove, handle on top
+    QStylePainter painter(this);
+    QStyleOptionSlider option;
+    initStyleOption(&option);
+
+    option.subControls = QStyle::SC_SliderGroove;
+    painter.drawComplexControl(QStyle::CC_Slider, option);
+
+    PaintMarkerBand(painter, option);
+
+    option.subControls = QStyle::SC_SliderHandle;
+    auto handle = style()->subControlRect(QStyle::CC_Slider, &option, QStyle::SC_SliderHandle, this);
+    if (isSliderDown()) {
+        option.activeSubControls = QStyle::SC_SliderHandle;
+        option.state |= QStyle::State_Sunken;
+    }
+    else if (underMouse() && handle.contains(mapFromGlobal(QCursor::pos()))) {
+        option.activeSubControls = QStyle::SC_SliderHandle;
+    }
+    painter.drawComplexControl(QStyle::CC_Slider, option);
+}
+
+void VideoSlider::PaintMarkerBand(QPainter &painter, const QStyleOptionSlider &option) {
     int max_count = counts_.empty() ? 0 : *std::max_element(counts_.begin(), counts_.end());
     if (max_count <= 0) {
         return;
     }
 
     // same mapping from frames to pixels as the slider handle
-    QStyleOptionSlider option;
-    initStyleOption(&option);
     auto groove = style()->subControlRect(QStyle::CC_Slider, &option, QStyle::SC_SliderGroove, this);
     auto handle = style()->subControlRect(QStyle::CC_Slider, &option, QStyle::SC_SliderHandle, this);
     int span = std::max(1, groove.width() - handle.width());
@@ -51,9 +73,9 @@ void VideoSlider::paintEvent(QPaintEvent *event) {
         }
     }
 
-    QPainter painter(this);
+    // vertically centered on the groove
     const QColor base(0x0F, 0x6C, 0xBD);
-    int y = height() - band_height;
+    int y = groove.center().y() - band_height / 2;
     for (int x = 0; x <= span; ++x) {
         if (columns[x]) {
             QColor color = base;

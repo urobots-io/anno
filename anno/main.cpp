@@ -22,6 +22,13 @@ int main(int argc, char *argv[]) {
 
 	QApplication a(argc, argv);
 
+#if defined(Q_OS_WIN) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    // Qt 5 uses the legacy GUI font ("MS Shell Dlg 2") as default font, which can be
+    // larger than the Windows UI font used by menus and lists. Use the Windows
+    // message font (Segoe UI) for all widgets, like Qt 6 does.
+    QApplication::setFont(QApplication::font("QMessageBox"));
+#endif
+
 #if defined(Q_OS_WIN) && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     // Qt 6.7+ picks the "windows11" style on Windows 11 (and follows the
     // system dark mode), which changes the palette colors the UI relies on.

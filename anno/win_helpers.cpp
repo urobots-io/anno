@@ -5,6 +5,10 @@
 #include <QtGlobal>
 #include <sstream>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 namespace win_helpers {
 
 void ShowStartupErrorBox(const char * appName, const char * message) {

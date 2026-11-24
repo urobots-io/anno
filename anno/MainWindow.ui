@@ -350,16 +350,6 @@
                 <string>Project</string>
                </attribute>
               </widget>
-              <widget class="ImagePropertiesWidget" name="image_properties">
-               <attribute name="title">
-                <string>Image</string>
-               </attribute>
-              </widget>
-              <widget class="ImageSettingsWidget" name="image_settings">
-               <attribute name="title">
-                <string>Display</string>
-               </attribute>
-              </widget>
              </widget>
             </widget>
            </item>

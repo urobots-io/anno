@@ -6,6 +6,7 @@
 #include "ToolboxWidget.h"
 #include "Desktop3dWindow.h"
 #include "ErrorsListDialog.h"
+#include "ImagePropertiesWidget.h"
 #include "ImageSettingsWidget.h"
 #include "LabelDefinitionPropertiesWidget.h"
 #include "messagebox.h"
@@ -21,8 +22,11 @@
 #include <QSettings>
 #include <QShortcut>
 #include <QStringBuilder>
-#include <QToolBar>
 #include <QHBoxLayout>
+#include <QMenu>
+#include <QToolBar>
+#include <QToolButton>
+#include <QWidgetAction>
 
 using namespace std;
 using namespace urobots::qt_helpers;
@@ -102,13 +106,9 @@ MainWindow::MainWindow(QWidget *parent)
 	// selected label
     connect(ui.desktop, &DesktopWidget::selected_label_changed, ui.label_editor, &LabelPropertiesWidget::OnSelectedLabelChanged);
     connect(ui.label_editor, &LabelPropertiesWidget::DeleteLabel, ui.desktop, &DesktopWidget::DeleteLabel);
-    connect(ui.desktop, &DesktopWidget::image_properties_changed, ui.image_properties, &ImagePropertiesWidget::setProperties);
 
     // project settings
     ui.project_settings->Init(&model_);
-
-    // image settings
-    ui.image_settings->Init(&ui.desktop->GetBackgroundImage());
 
     ui.mouse_pos_label->setWidthHint(120);
     ui.color_value_label->setWidthHint(120);
@@ -142,6 +142,34 @@ void MainWindow::InitToolbars() {
     image_toolbar->addSeparator();
     image_toolbar->addWidget(new NavigationWidget(model_.get_navigation_model(), image_toolbar));
     ui.center_verticalLayout->insertWidget(0, image_toolbar);
+
+    // image properties: panel in the top right corner of the image, shown by a toggle button
+    auto image_properties = new ImagePropertiesWidget(ui.desktop);
+    image_properties->hide();
+    ui.verticalLayout_2->setContentsMargins(8, 8, 8, 8);
+    ui.verticalLayout_2->addWidget(image_properties, 0, Qt::AlignTop | Qt::AlignRight);
+    connect(ui.desktop, &DesktopWidget::image_properties_changed, image_properties, &ImagePropertiesWidget::setProperties);
+
+    auto image_properties_action = new QAction(QIcon(":/MainWindow/Resources/image_info.ico"), tr("Image properties"), this);
+    image_properties_action->setCheckable(true);
+    connect(image_properties_action, &QAction::toggled, image_properties, &QWidget::setVisible);
+    image_toolbar->addSeparator();
+    image_toolbar->addAction(image_properties_action);
+
+    // display settings (contrast, brightness, ...) in a drop-down
+    auto display_button = new QToolButton(image_toolbar);
+    display_button->setIcon(QIcon(":/MainWindow/Resources/image_display.ico"));
+    display_button->setToolTip(tr("Display settings"));
+    display_button->setPopupMode(QToolButton::InstantPopup);
+    auto display_menu = new QMenu(display_button);
+    auto image_settings = new ImageSettingsWidget(display_menu);
+    image_settings->setMinimumWidth(360);
+    image_settings->Init(&ui.desktop->GetBackgroundImage());
+    auto display_action = new QWidgetAction(display_menu);
+    display_action->setDefaultWidget(image_settings);
+    display_menu->addAction(display_action);
+    display_button->setMenu(display_menu);
+    image_toolbar->addWidget(display_button);
 
     // project and undo / redo buttons with small icons, in the menu bar line
     auto menu_toolbar = new QToolBar(this);

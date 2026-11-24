@@ -36,5 +36,7 @@
     <file>Resources/configuration_light.ico</file>
     <file>Resources/add_light.ico</file>
     <file>Resources/tree_view_light.ico</file>
+    <file>Resources/image_info.ico</file>
+    <file>Resources/image_display.ico</file>
   </qresource>
 </RCC>

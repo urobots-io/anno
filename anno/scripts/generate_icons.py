@@ -67,6 +67,9 @@ ICONS = {
     # image files in the file tree: without and with markers
     "file.ico": ("document", GRAY),
     "file_labeled.ico": ("document", GRAY, "markers"),
+    # image toolbar: image properties overlay, display settings
+    "image_info.ico": ("info", GRAY),
+    "image_display.ico": ("brightness_high", GRAY),
     # Toolbox header buttons, drawn on a dark background
     "copy_light.ico": ("copy", LIGHT),
     "paste_light.ico": ("clipboard_paste", LIGHT),

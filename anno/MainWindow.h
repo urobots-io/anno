@@ -4,6 +4,8 @@
 #include "ui_MainWindow.h"
 #include "settings.h"
 #include <QtWidgets/QMainWindow>
+#include <QLabel>
+#include <QPlainTextEdit>
 
 class LabelDefinitionPropertiesWidget;
 class SourcePicturesWidget;
@@ -52,6 +54,10 @@ public slots:
 private:	
 	bool CloseActiveProject();
     void InitToolbars();
+    void InitTextViewer();
+
+    /// Shows the text file instead of the image view, or the image view if file_id is empty.
+    void ShowTextFile(QString file_id);
 
 private:
 	Ui::MainWindowClass ui;
@@ -61,4 +67,8 @@ private:
 	RecentActionsList recent_projects_;
 
     std::shared_ptr<FileModel> selected_file_;
+
+    // read-only viewer for text files, shown instead of the image view
+    QPlainTextEdit *text_view_ = nullptr;
+    QLabel *text_message_ = nullptr;
 };

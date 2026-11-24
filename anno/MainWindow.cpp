@@ -22,7 +22,10 @@
 #include <QSettings>
 #include <QShortcut>
 #include <QStringBuilder>
+#include <QFileInfo>
+#include <QFontDatabase>
 #include <QHBoxLayout>
+#include <QSet>
 #include <QMenu>
 #include <QToolBar>
 #include <QToolButton>
@@ -116,6 +119,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui.color_value_label->setElideMode(Qt::ElideRight);
 
     InitToolbars();
+    InitTextViewer();
 
 
     UpdateApplicationTitle();
@@ -132,6 +136,92 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
 	model_.ClearProject();
+}
+
+namespace {
+// files larger than this are not shown in the text viewer
+const qint64 max_text_file_size = 1024 * 1024;
+
+bool IsTextFile(const QString &file_id) {
+    static const QSet<QString> text_suffixes = {
+        "txt", "log", "md", "markdown", "rst", "csv", "tsv",
+        "json", "anno", "xml", "yaml", "yml", "ini", "cfg", "conf", "toml",
+        "c", "cc", "cpp", "cxx", "h", "hh", "hpp", "hxx", "py", "js", "ts", "java", "cs",
+        "pro", "pri", "cmake", "bat", "cmd", "sh", "ps1",
+        "html", "htm", "css"
+    };
+    return text_suffixes.contains(QFileInfo(file_id).suffix().toLower());
+}
+
+QString FormatFileSize(qint64 size) {
+    if (size >= 1024 * 1024) {
+        return QString("%1 MB").arg(size / (1024.0 * 1024.0), 0, 'f', 1);
+    }
+    if (size >= 1024) {
+        return QString("%1 KB").arg(size / 1024.0, 0, 'f', 1);
+    }
+    return QString("%1 bytes").arg(size);
+}
+}
+
+void MainWindow::InitTextViewer() {
+    text_view_ = new QPlainTextEdit(this);
+    text_view_->setReadOnly(true);
+    text_view_->setLineWrapMode(QPlainTextEdit::NoWrap);
+    text_view_->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    text_view_->hide();
+
+    text_message_ = new QLabel(this);
+    text_message_->setAlignment(Qt::AlignCenter);
+    text_message_->setWordWrap(true);
+    text_message_->setBackgroundRole(QPalette::Mid);
+    text_message_->setAutoFillBackground(true);
+    text_message_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    text_message_->hide();
+
+    // below the image view, which is hidden while a text file is shown
+    int index = ui.center_verticalLayout->indexOf(ui.desktop);
+    ui.center_verticalLayout->insertWidget(index + 1, text_view_);
+    ui.center_verticalLayout->insertWidget(index + 2, text_message_);
+}
+
+void MainWindow::ShowTextFile(QString file_id) {
+    const bool show_text = !file_id.isEmpty();
+    ui.desktop->setVisible(!show_text);
+    ui.desktop_controls_widget->setVisible(!show_text);
+    text_view_->hide();
+    text_message_->hide();
+    text_view_->clear();
+
+    auto filesystem = model_.get_filesystem();
+    if (!show_text || !filesystem) {
+        return;
+    }
+
+    // check the size before loading local files, they may be huge
+    qint64 size = -1;
+    auto local_path = filesystem->GetLocalPath(file_id);
+    if (!local_path.isEmpty()) {
+        size = QFileInfo(local_path).size();
+    }
+
+    QByteArray content;
+    if (size <= max_text_file_size) {
+        content = filesystem->LoadFile(file_id);
+        size = content.size();
+    }
+
+    if (size > max_text_file_size) {
+        text_message_->setText(tr("%1 is too large to display (%2, the limit is %3).")
+            .arg(QFileInfo(file_id).fileName())
+            .arg(FormatFileSize(size))
+            .arg(FormatFileSize(max_text_file_size)));
+        text_message_->show();
+        return;
+    }
+
+    text_view_->setPlainText(QString::fromUtf8(content));
+    text_view_->show();
 }
 
 void MainWindow::InitToolbars() {
@@ -502,7 +592,11 @@ void MainWindow::OnImageFileChanged(std::shared_ptr<FileModel> value) {
     }   
 
     selected_file_ = value;
-    ui.desktop->SetFile(value);
+
+    // text files are shown in the text viewer, everything else as image
+    const bool is_text = value && IsTextFile(value->get_id());
+    ui.desktop->SetFile(is_text ? nullptr : value);
+    ShowTextFile(is_text ? value->get_id() : QString());
 
     if (selected_file_) {
         auto stack = selected_file_->GetUndoStack();

@@ -142,13 +142,25 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
     }
 
 #ifdef ANNO_USE_OPENCV
-    if (file_ && file_->IsVideo()) {
+    // videos and animations (GIF, WebP with more than one frame) are shown with the frame slider
+    bool is_video = false;
+    if (file_) {
+        file_->SetAnimated(false);
+        if (FileModel::IsVideoFile(file_->get_id())) {
+            OpenVideo();
+            is_video = true;
+        }
+        else if (FileModel::IsAnimationFile(file_->get_id())) {
+            is_video = OpenAnimation();
+        }
+    }
+
+    if (is_video) {
         current_loader_ = nullptr;
         for (auto l : file_->labels_) {
             l->UpdateSharedProperties();
             l->SetComputeVisualisationData(true);
         }
-        OpenVideo();
     }
     else
 #endif
@@ -178,17 +190,29 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
 }
 
 void DesktopWidget::CloseVideo() {
+    const bool was_open = !video_frame_times_.empty();
 #ifdef ANNO_USE_OPENCV
-    const bool was_open = video_ != nullptr;
     video_.reset();
-#else
-    const bool was_open = false;
+    animation_frames_.clear();
 #endif
-    video_frame_count_ = 0;
-    video_fps_ = 0;
+    video_frame_times_.clear();
+    video_duration_ = 0;
     video_frame_ = -1;
     if (was_open) {
-        emit video_loaded(0, 0);
+        emit video_loaded(0);
+    }
+}
+
+void DesktopWidget::ShowInitialVideoFrame() {
+    emit video_loaded(GetVideoFrameCount());
+
+    // continue at the last position of this file: the last frame starting at or before that time
+    const auto &times = video_frame_times_;
+    int frame = int(std::upper_bound(times.begin(), times.end(), file_->GetVideoTime() + 1e-6) - times.begin()) - 1;
+    SetVideoFrame(std::max(0, frame));
+
+    if (get_fit_to_view_on_load()) {
+        FitBackgroundToView();
     }
 }
 
@@ -212,11 +236,18 @@ void DesktopWidget::OpenVideo() {
         return;
     }
 
-    video_fps_ = video_->get(cv::CAP_PROP_FPS);
-    if (!(video_fps_ > 0)) {
-        video_fps_ = 25;
+    double fps = video_->get(cv::CAP_PROP_FPS);
+    if (!(fps > 0)) {
+        fps = 25;
     }
-    video_frame_count_ = std::max(1, int(video_->get(cv::CAP_PROP_FRAME_COUNT)));
+    int frame_count = std::max(1, int(video_->get(cv::CAP_PROP_FRAME_COUNT)));
+
+    // constant frame rate
+    video_frame_times_.resize(frame_count);
+    for (int i = 0; i < frame_count; ++i) {
+        video_frame_times_[i] = i / fps;
+    }
+    video_duration_ = frame_count / fps;
 
     int fourcc = int(video_->get(cv::CAP_PROP_FOURCC));
     QString codec;
@@ -228,44 +259,99 @@ void DesktopWidget::OpenVideo() {
     properties.push_back({ "Size", QString("%0 bytes").arg(QFileInfo(path).size()) });
     properties.push_back({ "Width", QString("%0 pix").arg(int(video_->get(cv::CAP_PROP_FRAME_WIDTH))) });
     properties.push_back({ "Height", QString("%0 pix").arg(int(video_->get(cv::CAP_PROP_FRAME_HEIGHT))) });
-    properties.push_back({ "Frames", QString::number(video_frame_count_) });
-    properties.push_back({ "FPS", QString::number(video_fps_, 'f', 3) });
-    properties.push_back({ "Duration", QString("%0 s").arg(video_frame_count_ / video_fps_, 0, 'f', 3) });
+    properties.push_back({ "Frames", QString::number(frame_count) });
+    properties.push_back({ "FPS", QString::number(fps, 'f', 3) });
+    properties.push_back({ "Duration", QString("%0 s").arg(video_duration_, 0, 'f', 3) });
     properties.push_back({ "Codec", codec.trimmed() });
     set_image_properties(properties);
     set_status({});
 
-    emit video_loaded(video_frame_count_, video_fps_);
+    ShowInitialVideoFrame();
+#endif
+}
 
-    // continue at the last position of this file
-    SetVideoFrame(int(std::lround(file_->GetVideoTime() * video_fps_)));
-    if (get_fit_to_view_on_load()) {
-        FitBackgroundToView();
+bool DesktopWidget::OpenAnimation() {
+#ifdef ANNO_USE_OPENCV
+    auto buffer = model_->get_filesystem()->LoadFile(file_->get_id());
+    if (buffer.isEmpty()) {
+        return false;
     }
+
+    cv::Mat raw(1, int(buffer.size()), CV_8UC1, (void*)buffer.data());
+    cv::Animation animation;
+    try {
+        // decode two frames first: files with a single frame are shown as image
+        if (!cv::imdecodeanimation(raw, animation, 0, 2) || animation.frames.size() < 2) {
+            return false;
+        }
+        animation = cv::Animation();
+        if (!cv::imdecodeanimation(raw, animation) || animation.frames.size() < 2) {
+            return false;
+        }
+    }
+    catch (const cv::Exception &) {
+        return false;
+    }
+
+    // frames have individual durations (milliseconds)
+    double time = 0;
+    for (size_t i = 0; i < animation.frames.size(); ++i) {
+        cv::Mat frame = animation.frames[i];
+        if (frame.channels() == 4) {
+            cv::cvtColor(frame, frame, cv::COLOR_BGRA2BGR);
+        }
+        animation_frames_.push_back(frame);
+        video_frame_times_.push_back(time);
+        int duration_ms = i < animation.durations.size() ? animation.durations[i] : 0;
+        time += (duration_ms > 0 ? duration_ms : 100) / 1000.0;
+    }
+    video_duration_ = time;
+    file_->SetAnimated(true);
+
+    ImagePropertiesList properties;
+    properties.push_back({ "Size", QString("%0 bytes").arg(buffer.size()) });
+    properties.push_back({ "Width", QString("%0 pix").arg(animation_frames_[0].cols) });
+    properties.push_back({ "Height", QString("%0 pix").arg(animation_frames_[0].rows) });
+    properties.push_back({ "Frames", QString::number(animation_frames_.size()) });
+    properties.push_back({ "Duration", QString("%0 s").arg(video_duration_, 0, 'f', 3) });
+    properties.push_back({ "Loops", animation.loop_count ? QString::number(animation.loop_count) : tr("infinite") });
+    properties.push_back({ "Format", QFileInfo(file_->get_id()).suffix().toUpper() + tr(" animation") });
+    set_image_properties(properties);
+    set_status({});
+
+    ShowInitialVideoFrame();
+    return true;
+#else
+    return false;
 #endif
 }
 
 void DesktopWidget::SetVideoFrame(int frame) {
 #ifdef ANNO_USE_OPENCV
-    if (!video_ || !file_) {
+    if (!file_ || video_frame_times_.empty()) {
         return;
     }
 
-    frame = std::max(0, std::min(frame, video_frame_count_ - 1));
+    frame = std::max(0, std::min(frame, GetVideoFrameCount() - 1));
     if (frame == video_frame_) {
         return;
     }
 
     cv::Mat image;
-    try {
-        // reading the next frame does not need seeking
-        if (frame != video_frame_ + 1) {
-            video_->set(cv::CAP_PROP_POS_FRAMES, frame);
-        }
-        video_->read(image);
+    if (!animation_frames_.empty()) {
+        image = animation_frames_[frame];
     }
-    catch (const cv::Exception &) {
-        image = cv::Mat();
+    else if (video_) {
+        try {
+            // reading the next frame does not need seeking
+            if (frame != video_frame_ + 1) {
+                video_->set(cv::CAP_PROP_POS_FRAMES, frame);
+            }
+            video_->read(image);
+        }
+        catch (const cv::Exception &) {
+            image = cv::Mat();
+        }
     }
 
     if (image.empty()) {
@@ -276,7 +362,7 @@ void DesktopWidget::SetVideoFrame(int frame) {
     }
 
     video_frame_ = frame;
-    file_->SetVideoTime(frame / video_fps_);
+    file_->SetVideoTime(video_frame_times_[frame]);
     image_.Load(image);
 
     // labels of other times are hidden and cannot stay selected or hovered

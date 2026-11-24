@@ -39,7 +39,13 @@ public:
 
     /// true if the file name has a video file extension
     static bool IsVideoFile(const QString &file_id);
-    bool IsVideo() const { return IsVideoFile(id_); }
+
+    /// true if the file can be an animation (GIF, WebP); it is a video if it has more than one frame
+    static bool IsAnimationFile(const QString &file_id);
+    void SetAnimated(bool value) { animated_ = value; }
+
+    /// true for video files and animations with more than one frame
+    bool IsVideo() const { return animated_ || IsVideoFile(id_); }
 
     /// Video files: current time of the video in seconds, new labels start at this time
     double GetVideoTime() const { return video_time_; }
@@ -84,6 +90,7 @@ private:
     bool is_modified_ = false;
     QString id_;
     double video_time_ = 0;
+    bool animated_ = false;
     QUndoStack undo_stack_;
 
 public:

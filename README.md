@@ -25,7 +25,7 @@ Cross-platform tool for labeling image data.
 - Custom properties of markers: numbers, text, flags and selection lists
   (example: [custom_properties.anno](anno/data/examples/custom_properties.anno)).
 - Supports a wide variety of image formats. The pre-built Windows version supports the EXR format.
-- Labeling of videos (mp4, mov, avi, mkv, ...): a slider below the image selects the frame,
+- Labeling of videos (mp4, mov, avi, mkv, ...) and animated GIF / WebP images: a slider below the image selects the frame,
   markers have a start time and a duration, see [Video markers](#video-markers). Requires the OpenCV build.
 - Text files (txt, json, log, md, source code, ...) of the image folder are shown in a read-only text viewer.
 - The project file is a JSON file which contains project-specific marker definitions and labeling information.

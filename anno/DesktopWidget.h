@@ -95,9 +95,14 @@ private:
     void CreateStampLabel();
     
 public:
-    /// Video files: number of frames and frames per second, 0 if no video is loaded
-    int GetVideoFrameCount() const { return video_frame_count_; }
-    double GetVideoFps() const { return video_fps_; }
+    /// Video files and animations: number of frames, 0 if no video is loaded
+    int GetVideoFrameCount() const { return int(video_frame_times_.size()); }
+
+    /// Video files and animations: start time of every frame in seconds
+    const std::vector<double> &GetVideoFrameTimes() const { return video_frame_times_; }
+
+    /// Video files and animations: total duration in seconds
+    double GetVideoDuration() const { return video_duration_; }
 
 public slots:
     void SetFile(std::shared_ptr<FileModel>);
@@ -145,13 +150,19 @@ signals:
     void status_changed(QString);
     void image_properties_changed(const ImagePropertiesList&);
 
-    /// Video file loaded (frame_count > 0) or closed (frame_count == 0)
-    void video_loaded(int frame_count, double fps);
+    /// Video file or animation loaded (frame_count > 0) or closed (frame_count == 0)
+    void video_loaded(int frame_count);
     void video_frame_changed(int frame);
 
 private:
     void OpenVideo();
     void CloseVideo();
+
+    /// GIF / WebP: returns true and shows the file as video if it has more than one frame
+    bool OpenAnimation();
+
+    /// shows the first frame or the frame of the current time of the file
+    void ShowInitialVideoFrame();
 
     void SetCategoryValueForSelectedLabel(int category_value);
     
@@ -254,12 +265,13 @@ private:
 	ImageLoader* current_loader_ = nullptr;
 	std::vector<ImageLoader*> loaders_;
 
-    // video file
+    // video file (FFmpeg) or animation (GIF, WebP, all frames in memory)
 #ifdef ANNO_USE_OPENCV
     std::unique_ptr<cv::VideoCapture> video_;
+    std::vector<cv::Mat> animation_frames_;
 #endif
-    int video_frame_count_ = 0;
-    double video_fps_ = 0;
+    std::vector<double> video_frame_times_;
+    double video_duration_ = 0;
     int video_frame_ = -1;
 
     /// Current status

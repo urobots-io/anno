@@ -240,7 +240,7 @@ void MainWindow::InitVideoControls() {
     connect(prev_button, &QToolButton::clicked, this, [this] { video_slider_->setValue(video_slider_->value() - 1); });
     connect(next_button, &QToolButton::clicked, this, [this] { video_slider_->setValue(video_slider_->value() + 1); });
 
-    connect(ui.desktop, &DesktopWidget::video_loaded, this, [this](int frame_count, double) {
+    connect(ui.desktop, &DesktopWidget::video_loaded, this, [this](int frame_count) {
         video_controls_->setVisible(frame_count > 0);
         QSignalBlocker blocker(video_slider_);
         video_slider_->setRange(0, std::max(0, frame_count - 1));
@@ -256,17 +256,21 @@ void MainWindow::InitVideoControls() {
 
 void MainWindow::UpdateVideoMarkerCounts() {
     std::vector<int> counts;
-    int frames = ui.desktop->GetVideoFrameCount();
-    double fps = ui.desktop->GetVideoFps();
-    if (selected_file_ && frames > 0 && fps > 0) {
-        // frame f shows a marker if start <= f / fps < start + duration (see Label::IsActiveAt)
+    const auto &times = ui.desktop->GetVideoFrameTimes();
+    int frames = int(times.size());
+    if (selected_file_ && frames > 0) {
+        // a frame shows a marker if start <= frame time < start + duration (see Label::IsActiveAt);
+        // frame times are sorted, the markers cover a continuous range of frames
         const double eps = 1e-6;
+        auto first_frame_at = [&](double time) {
+            return int(std::lower_bound(times.begin(), times.end(), time - eps) - times.begin());
+        };
         std::vector<int> delta(frames + 1, 0);
         for (const auto &label : selected_file_->labels_) {
             double start = label->GetStartTime();
             double duration = label->GetDuration();
-            int first = qBound(0, int(std::ceil(start * fps - eps)), frames);
-            int end = duration < 0 ? frames : qBound(0, int(std::ceil((start + duration) * fps - eps)), frames);
+            int first = first_frame_at(start);
+            int end = duration < 0 ? frames : first_frame_at(start + duration);
             if (end > first) {
                 ++delta[first];
                 --delta[end];
@@ -283,15 +287,15 @@ void MainWindow::UpdateVideoMarkerCounts() {
 }
 
 void MainWindow::UpdateVideoTimeLabel(int frame) {
-    auto fps = ui.desktop->GetVideoFps();
-    auto frames = ui.desktop->GetVideoFrameCount();
-    if (fps <= 0 || frames <= 0) {
+    const auto &times = ui.desktop->GetVideoFrameTimes();
+    int frames = int(times.size());
+    if (frame < 0 || frame >= frames) {
         video_time_label_->clear();
         return;
     }
     video_time_label_->setText(tr("%1 / %2   frame %3 / %4")
-        .arg(FormatVideoTime(frame / fps))
-        .arg(FormatVideoTime(frames / fps))
+        .arg(FormatVideoTime(times[frame]))
+        .arg(FormatVideoTime(ui.desktop->GetVideoDuration()))
         .arg(frame)
         .arg(frames - 1));
 }

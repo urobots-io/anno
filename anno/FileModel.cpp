@@ -82,6 +82,11 @@ bool FileModel::IsVideoFile(const QString &file_id) {
     return video_suffixes.contains(QFileInfo(file_id).suffix().toLower());
 }
 
+bool FileModel::IsAnimationFile(const QString &file_id) {
+    auto suffix = QFileInfo(file_id).suffix().toLower();
+    return suffix == "gif" || suffix == "webp";
+}
+
 std::shared_ptr<Label> FileModel::CreateLabel(std::shared_ptr<Label> label) {
     if (IsVideo()) {
         // video labels start at the current time and last until the end of the video

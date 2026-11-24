@@ -8,6 +8,7 @@
 #include "settings.h"
 #include "StartupDialog.h"
 #include <QtWidgets/QApplication>
+#include <QStyleHints>
 
 namespace {
     const char *APP_MUTEX_NAME = "C8F8B7AE-2E70-4B3D-BD87-59D8C74CBA72";
@@ -20,7 +21,17 @@ int main(int argc, char *argv[]) {
     }
 
 	QApplication a(argc, argv);
-	
+
+#if defined(Q_OS_WIN) && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Qt 6.7+ picks the "windows11" style on Windows 11 (and follows the
+    // system dark mode), which changes the palette colors the UI relies on.
+    // Keep the classic Qt 5 look.
+    QApplication::setStyle("windowsvista");
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
+#endif
+#endif
+
 	urobots::qt_helpers::settings::Initialize("anno");
 
     MainWindow w;

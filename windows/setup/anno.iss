@@ -63,8 +63,12 @@ Source: "{#MyAppIcon}"; DestDir: "{app}";
 Source: "..\..\anno\Resources\LICENSE-fluentui-system-icons.txt"; DestDir: "{app}";
 ; data
 Source: "..\..\anno\data\examples\*"; DestDir: "{app}\examples"; Flags: ignoreversion recursesubdirs
-; Open CV
+; OpenCV, OpenEXR, Imath
 Source: "{#ProductReleaseFolder}opencv_*.dll"; DestDir: {app};
+Source: "{#ProductReleaseFolder}OpenEXR*.dll"; DestDir: {app};
+Source: "{#ProductReleaseFolder}Iex-*.dll"; DestDir: {app};
+Source: "{#ProductReleaseFolder}IlmThread-*.dll"; DestDir: {app};
+Source: "{#ProductReleaseFolder}Imath-*.dll"; DestDir: {app};
 ; External installations
 Source: "vc_redist.x64.exe"; DestDir: {tmp}; DestName:"vs_redist_setup.exe"; Flags: deleteafterinstall
 

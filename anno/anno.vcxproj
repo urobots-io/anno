@@ -42,8 +42,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>ANNO_USE_OPENCV;UNICODE;WIN32;WIN64;QT_SCRIPT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WINEXTRAS_LIB;QT_WIDGETS_LIB;QT_QML_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;$(ProjectDir)..;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(OPENCV_DIR)\include;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANNO_USE_OPENCV;OPENEXR_DLL;IMATH_DLL;UNICODE;WIN32;WIN64;QT_SCRIPT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WINEXTRAS_LIB;QT_WIDGETS_LIB;QT_QML_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;$(ProjectDir)..;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(OPENCV_DIR)\include;$(OPENEXR_DIR)\include;$(OPENEXR_DIR)\include\OpenEXR;$(OPENEXR_DIR)\include\Imath;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -57,9 +57,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OPENCV_LIB_DIR);$(OPENCV_DIR)\..\3rdparty\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OPENCV_LIB_DIR);$(OPENEXR_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>IlmImfd.lib;zlibd.lib;qtmaind.lib;opencv_core$(OPENCV_VER)d.lib;opencv_imgproc$(OPENCV_VER)d.lib;opencv_imgcodecs$(OPENCV_VER)d.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5WinExtrasd.lib;Qt5Widgetsd.lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenEXR-$(OPENEXR_SUFFIX)_d.lib;Iex-$(OPENEXR_SUFFIX)_d.lib;qtmaind.lib;opencv_core$(OPENCV_VER)d.lib;opencv_imgproc$(OPENCV_VER)d.lib;opencv_imgcodecs$(OPENCV_VER)d.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5WinExtrasd.lib;Qt5Widgetsd.lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
@@ -70,13 +70,18 @@ echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER)d.dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgproc$(OPENCV_VER)d.dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_geometry$(OPENCV_VER)d.dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_flann$(OPENCV_VER)d.dll "$(OutDir)"
+echo Copy OpenEXR binaries to target
+for %%f in (OpenEXR OpenEXRCore Iex IlmThread) do xcopy /D /Y "$(OPENEXR_BIN_DIR)\%%f-$(OPENEXR_SUFFIX)_d.dll" "$(OutDir)"
+xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX)_d.dll" "$(OutDir)"
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>ANNO_USE_OPENCV;UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_SCRIPT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WINEXTRAS_LIB;QT_WIDGETS_LIB;QT_QML_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;$(ProjectDir)..;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(OPENCV_DIR)\include;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\IlmImf;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Half;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Iex;$(OPENCV_DIR)\..\..\opencv\3rdparty\openexr\Imath;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANNO_USE_OPENCV;OPENEXR_DLL;IMATH_DLL;UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_SCRIPT_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WINEXTRAS_LIB;QT_WIDGETS_LIB;QT_QML_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;$(ProjectDir)..;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(OPENCV_DIR)\include;$(OPENEXR_DIR)\include;$(OPENEXR_DIR)\include\OpenEXR;$(OPENEXR_DIR)\include\Imath;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -89,9 +94,9 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OPENCV_LIB_DIR);$(OPENCV_DIR)\..\3rdparty\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OPENCV_LIB_DIR);$(OPENEXR_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>IlmImf.lib;zlib.lib;qtmain.lib;opencv_core$(OPENCV_VER).lib;opencv_imgproc$(OPENCV_VER).lib;opencv_imgcodecs$(OPENCV_VER).lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5WinExtras.lib;Qt5Widgets.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenEXR-$(OPENEXR_SUFFIX).lib;Iex-$(OPENEXR_SUFFIX).lib;qtmain.lib;opencv_core$(OPENCV_VER).lib;opencv_imgproc$(OPENCV_VER).lib;opencv_imgcodecs$(OPENCV_VER).lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5WinExtras.lib;Qt5Widgets.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
@@ -101,7 +106,12 @@ call scripts/generate_git_info.bat
 echo Copy opencv binaries to target
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_core$(OPENCV_VER).dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgproc$(OPENCV_VER).dll "$(OutDir)"
-xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)"</Command>
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_geometry$(OPENCV_VER).dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_flann$(OPENCV_VER).dll "$(OutDir)"
+echo Copy OpenEXR binaries to target
+for %%f in (OpenEXR OpenEXRCore Iex IlmThread) do xcopy /D /Y "$(OPENEXR_BIN_DIR)\%%f-$(OPENEXR_SUFFIX).dll" "$(OutDir)"
+xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX).dll" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

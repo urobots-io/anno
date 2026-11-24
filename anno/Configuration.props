@@ -2,34 +2,35 @@
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
+  <!--
+    Third-party libraries, built with windows\build_dependencies.bat.
+    OPENCV_DIR and OPENEXR_DIR are taken from environment variables of the same name,
+    otherwise they are expected below UR_LIB_DIR.
+  -->
   <PropertyGroup Label="UserMacros">
-    <BOOST_VER>1_64</BOOST_VER>
-    <BOOST_DIR>$(UR_LIB_DIR)\boost_1_64_0</BOOST_DIR>
-    <BOOST_TOOLSET_VER>vc140</BOOST_TOOLSET_VER>
-    <BOOST_LIB_DIR>$(BOOST_DIR)\lib64-msvc-14.0</BOOST_LIB_DIR>
-    <OPENCV_DIR>$(UR_LIB_DIR)\opencv-3.2.0\build-x64-vc14\install</OPENCV_DIR>
-    <OPENCV_VER>320</OPENCV_VER>
-    <OPENCV_LIB_DIR>$(OPENCV_DIR)\$(Platform)\vc14\lib</OPENCV_LIB_DIR>
-    <OPENCV_BIN_DIR>$(OPENCV_DIR)\$(Platform)\vc14\bin</OPENCV_BIN_DIR>
+    <OPENCV_VERSION>5.1.0</OPENCV_VERSION>
+    <OPENCV_VER>510</OPENCV_VER>
+    <OPENCV_TOOLSET>vc18</OPENCV_TOOLSET>
+    <OPENEXR_VERSION>3.5.5</OPENEXR_VERSION>
+    <OPENEXR_SUFFIX>3_5</OPENEXR_SUFFIX>
+    <IMATH_SUFFIX>3_2</IMATH_SUFFIX>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OPENCV_DIR)'==''">
+    <OPENCV_DIR>$(UR_LIB_DIR)\opencv-$(OPENCV_VERSION)\install</OPENCV_DIR>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OPENEXR_DIR)'==''">
+    <OPENEXR_DIR>$(UR_LIB_DIR)\openexr-$(OPENEXR_VERSION)\install</OPENEXR_DIR>
   </PropertyGroup>
   <PropertyGroup>
+    <OPENCV_LIB_DIR>$(OPENCV_DIR)\x64\$(OPENCV_TOOLSET)\lib</OPENCV_LIB_DIR>
+    <OPENCV_BIN_DIR>$(OPENCV_DIR)\x64\$(OPENCV_TOOLSET)\bin</OPENCV_BIN_DIR>
+    <OPENEXR_LIB_DIR>$(OPENEXR_DIR)\lib</OPENEXR_LIB_DIR>
+    <OPENEXR_BIN_DIR>$(OPENEXR_DIR)\bin</OPENEXR_BIN_DIR>
     <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
     <_PropertySheetDisplayName>Configuration</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup>
-    <BuildMacro Include="BOOST_VER">
-      <Value>$(BOOST_VER)</Value>
-    </BuildMacro>
-    <BuildMacro Include="BOOST_DIR">
-      <Value>$(BOOST_DIR)</Value>
-    </BuildMacro>
-    <BuildMacro Include="BOOST_TOOLSET_VER">
-      <Value>$(BOOST_TOOLSET_VER)</Value>
-    </BuildMacro>
-    <BuildMacro Include="BOOST_LIB_DIR">
-      <Value>$(BOOST_LIB_DIR)</Value>
-    </BuildMacro>
     <BuildMacro Include="OPENCV_DIR">
       <Value>$(OPENCV_DIR)</Value>
     </BuildMacro>
@@ -41,6 +42,15 @@
     </BuildMacro>
     <BuildMacro Include="OPENCV_BIN_DIR">
       <Value>$(OPENCV_BIN_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENEXR_DIR">
+      <Value>$(OPENEXR_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENEXR_LIB_DIR">
+      <Value>$(OPENEXR_LIB_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENEXR_BIN_DIR">
+      <Value>$(OPENEXR_BIN_DIR)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

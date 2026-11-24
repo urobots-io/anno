@@ -39,7 +39,38 @@ Open them with *File > Open Local Project...*.
 ## Installation
 There are two options:
 - Pre-built binaries from [the release section](https://github.com/urobots-io/anno/releases).
-- Cross-platform build is possible with Qt Creator from the open source [Qt setup](https://www.qt.io/).
+- Build from source, see below.
+
+## Building from source
+anno is a Qt application (Qt 5.15 or Qt 6). Images are loaded with [OpenCV](https://opencv.org/),
+EXR images with [OpenEXR](https://openexr.com/).
+Without OpenCV, the qmake build falls back to Qt image loading (no EXR support).
+
+### Windows
+Requirements: Visual Studio 2026 with C++, [Qt](https://www.qt.io/) for MSVC 64-bit, Git.
+
+1. Build OpenCV and OpenEXR (once, takes 20-40 minutes):
+   ```
+   windows\build_dependencies.bat D:\lib
+   ```
+   It clones and builds Imath, OpenEXR 3.5.5 and OpenCV 5.1.0 (Release and Debug) into the given folder
+   (default: `%UR_LIB_DIR%`). Both build systems below find the libraries in one of these ways:
+   - environment variable `UR_LIB_DIR` set to that folder, or
+   - environment variables `OPENCV_DIR` and `OPENEXR_DIR` set to the `install` folders printed at the end.
+2. Build anno with one of:
+   - **Qt Creator**: open `anno/anno.pro`, choose a Qt MSVC 64-bit kit and build.
+     The OpenCV and OpenEXR DLLs are copied next to `anno.exe`, so it can be started directly.
+   - **Visual Studio**: set the environment variable `QTDIR` to the Qt folder (for example `C:\Qt\5.15.2\msvc2019_64`),
+     open `windows/anno.sln` and build `Release|x64`. The project uses Qt 5.
+3. Installer (optional): build the Visual Studio `Release` configuration, copy `vc_redist.x64.exe`
+   from Visual Studio (`VC\Redist\MSVC\<version>\`) into `windows/setup` and compile `windows/setup/anno.iss`
+   with [Inno Setup 6](https://jrsoftware.org/isinfo.php). The setup is written to `windows/setup/Output`.
+
+### Linux and macOS
+Install Qt, OpenCV and OpenEXR from the system packages, for example
+`sudo apt install qtbase5-dev libqt5opengl5-dev qtdeclarative5-dev libopencv-dev libopenexr-dev` on Ubuntu or
+`brew install qt opencv openexr` on macOS, then build `anno/anno.pro` with Qt Creator or `qmake && make`.
+OpenCV and OpenEXR are found with `pkg-config`.
 
 ## Credits
 The application icons are [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons)

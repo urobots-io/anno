@@ -59,6 +59,12 @@ std::vector<float> GetChannelValues(cv::Mat &m, int x, int y) {
 }
 
 void ImageModelOpenCV::RebuildPixmapInternal() {
+    if (image_.empty()) {
+        // no image (e.g. the file is not an image): OpenCV matrix expressions throw on empty matrices
+        pixmap_ = QPixmap();
+        return;
+    }
+
     auto type = image_.type();
     uchar depth = type & CV_MAT_DEPTH_MASK;
     uchar chans = 1 + (type >> CV_CN_SHIFT);

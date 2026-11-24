@@ -58,6 +58,8 @@ SOURCES += \
     ImagePropertiesTableModel.cpp \
     ImagePropertiesWidget.cpp \
     ImageModelQt.cpp \
+    ImageModelOpenCV.cpp \
+    ImageSettingsWidgetOpenCV.cpp \
     LabelDefinitionPropertiesDialog.cpp \
     LabelDefinitionsTreeModel.cpp \
     LabelHandle.cpp \
@@ -136,6 +138,7 @@ HEADERS += \
     FileTreeElement.h \
     ImageModel.h \
     ImageSettingsWidgetQt.h \
+    ImageSettingsWidgetOpenCV.h \
     implement_q_property.h \
     Label.h \
     LabelCategory.h \
@@ -193,6 +196,7 @@ FORMS += \
     Desktop3dWindow.ui \
     ErrorsListDialog.ui \
     ImageSettingsWidgetQt.ui \
+    ImageSettingsWidgetOpenCV.ui \
     LabelDefinitionPropertiesWidget.ui \
     ImagePropertiesWidget.ui \
     LabelDefinitionPropertiesDialog.ui \
@@ -211,6 +215,9 @@ RESOURCES += MainWindow.qrc
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+# OpenCV and OpenEXR (optional, see opencv.pri)
+include(opencv.pri)
 
 # Windows libs
 win32  {

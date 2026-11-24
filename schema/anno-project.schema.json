@@ -1,0 +1,318 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/urobots-io/anno/master/schema/anno-project.schema.json",
+  "title": "anno project file",
+  "description": "Project file of the anno labeling tool (*.anno). Contains the marker type definitions of the project and the markers placed on every labeled image.",
+  "type": "object",
+  "required": ["definitions"],
+  "additionalProperties": false,
+  "properties": {
+    "definitions": {
+      "$ref": "#/definitions/projectDefinitions"
+    },
+    "files": {
+      "description": "List of all labeled files with their markers. Files without markers are not stored.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/file" }
+    }
+  },
+
+  "definitions": {
+    "projectDefinitions": {
+      "description": "Project definitions.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "files_root_dir": {
+          "description": "Folder with images: an absolute path, or a path relative to the project file.",
+          "type": "string",
+          "examples": ["c:/images", "images"]
+        },
+        "marker_types": {
+          "description": "Marker type definitions. Each key is a unique marker type name, referenced by the \"type\" field of the markers.",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/markerType" }
+        },
+        "user_data": {
+          "description": "User information associated with the project. anno stores it as is, except for the optional fields listed here, which are used by the \"Evaluate\" function.",
+          "type": "object",
+          "properties": {
+            "evaluate_url": {
+              "description": "URL of a REST service which receives the current image and returns markers for it.",
+              "type": "string"
+            },
+            "evaluate_url_args": {
+              "description": "Additional fields sent to the evaluate_url service with every request.",
+              "type": "object"
+            }
+          }
+        },
+        "project_script": {
+          "$ref": "#/definitions/script",
+          "description": "JavaScript executed every time an image is rendered, before the markers are drawn. Can be used to draw overlays on the image. The image size is available as \"cols\" and \"rows\"."
+        },
+        "image_script": {
+          "$ref": "#/definitions/script",
+          "description": "Deprecated name of \"project_script\". Read only if \"project_script\" is absent; anno saves it as \"project_script\".",
+          "deprecated": true
+        },
+        "files_loader": {
+          "description": "Reserved for custom image loaders. Stored as is, not used by anno at the moment.",
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "params": { "type": "object" }
+          }
+        }
+      }
+    },
+
+    "markerType": {
+      "description": "Definition of a marker type.",
+      "type": "object",
+      "required": ["value_type", "categories"],
+      "additionalProperties": false,
+      "properties": {
+        "value_type": {
+          "description": "Geometry of the marker. Defines the format of the marker \"value\".",
+          "type": "string",
+          "enum": [
+            "circle",
+            "oriented_circle",
+            "oriented_point",
+            "oriented_rect",
+            "point",
+            "polygon",
+            "polyline",
+            "rect",
+            "tool"
+          ]
+        },
+        "description": {
+          "description": "Optional human-readable description of the marker type.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Deprecated name of \"description\". Read only if \"description\" is absent.",
+          "type": "string",
+          "deprecated": true
+        },
+        "categories": {
+          "description": "Categories of the marker type. Markers reference them by id.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/category" }
+        },
+        "line_width": {
+          "description": "Width of lines used to draw the marker. A negative value is a scale-independent width in screen pixels, a positive value is a width in image pixels.",
+          "type": "integer",
+          "default": -3
+        },
+        "rendering_script": {
+          "$ref": "#/definitions/script",
+          "description": "JavaScript which draws the marker instead of the default rendering."
+        },
+        "stamp": {
+          "description": "If true, new markers of this type are created with one click, using the sizes from \"stamp_parameters\".",
+          "type": "boolean",
+          "default": false
+        },
+        "stamp_parameters": {
+          "description": "Initial geometry of stamped markers. Keys are geometry properties of the value type: \"width\", \"height\" (rect, oriented_rect), \"radius\" (circle, oriented_circle), \"angle\" (oriented_point, oriented_rect, oriented_circle).",
+          "type": "object",
+          "propertyNames": { "$ref": "#/definitions/geometryPropertyName" },
+          "additionalProperties": { "type": ["number", "null"] }
+        },
+        "shared": {
+          "description": "If true, all markers of this type share the same geometry (equivalent to \"shared_count\": 1).",
+          "type": "boolean",
+          "default": false
+        },
+        "shared_count": {
+          "description": "Number of shared marker instances. Markers select one of them with \"shared_index\". Overrides \"shared\".",
+          "type": "integer",
+          "minimum": 0
+        },
+        "shared_properties": {
+          "description": "Geometry properties shared with other markers through a named project-wide value. Keys are geometry properties of the value type (\"width\", \"height\", \"radius\", \"angle\"). A string value is the name of the shared value; an object additionally defines a linear transform: property = a * shared_value + b.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/definitions/geometryPropertyName" },
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["name"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string", "description": "Name of the shared value." },
+                  "a": { "type": "number", "default": 1 },
+                  "b": { "type": "number", "default": 0 }
+                }
+              }
+            ]
+          }
+        },
+        "custom_properties": {
+          "description": "Additional user-defined properties of the markers. Keys are property names.",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/customPropertyDefinition" }
+        },
+        "filename_filter": {
+          "description": "Regular expression(s) matched against the image file name (relative to files_root_dir). The marker type can be used only on matching files. For shared markers, the n-th expression applies to the n-th shared instance; the last expression applies to all remaining ones.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "axis_length": {
+          "description": "Lengths of the drawn x and y axes in screen pixels (oriented_point and oriented_circle).",
+          "type": "array",
+          "items": { "type": "integer" },
+          "maxItems": 2
+        }
+      }
+    },
+
+    "category": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Numerical id of the category, unique within the marker type.",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Human-readable name of the category.",
+          "type": "string"
+        },
+        "color": {
+          "description": "Color of the category: \"#rrggbb\", \"#aarrggbb\" or an SVG color name such as \"red\". If absent, a standard color is chosen by id.",
+          "type": "string",
+          "examples": ["#ff0000", "red"]
+        }
+      }
+    },
+
+    "customPropertyDefinition": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Type of the property value.",
+          "type": "string",
+          "enum": ["int", "double", "string", "bool", "selector"]
+        },
+        "default": {
+          "description": "Default value of the property, or null."
+        },
+        "cases": {
+          "description": "Allowed values of a \"selector\" property.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "int" } } },
+          "then": { "properties": { "default": { "type": ["integer", "null"] } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "double" } } },
+          "then": { "properties": { "default": { "type": ["number", "null"] } } }
+        },
+        {
+          "if": { "properties": { "type": { "enum": ["string", "selector"] } } },
+          "then": { "properties": { "default": { "type": ["string", "null"] } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "bool" } } },
+          "then": { "properties": { "default": { "type": ["boolean", "null"] } } }
+        }
+      ]
+    },
+
+    "file": {
+      "description": "A labeled image.",
+      "type": "object",
+      "required": ["name", "markers"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "Path to the image, relative to files_root_dir.",
+          "type": "string"
+        },
+        "markers": {
+          "description": "List of all markers present on the image.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/marker" }
+        }
+      }
+    },
+
+    "marker": {
+      "type": "object",
+      "required": ["type", "category", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Marker type name, a key of definitions.marker_types.",
+          "type": "string"
+        },
+        "category": {
+          "description": "Category id, one of the categories of the marker type.",
+          "type": "integer"
+        },
+        "value": {
+          "$ref": "#/definitions/markerValue"
+        },
+        "children": {
+          "description": "Additional values of the marker. Used by polygons: every child is one more contour (e.g. a hole).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value"],
+            "additionalProperties": false,
+            "properties": {
+              "value": { "$ref": "#/definitions/markerValue" }
+            }
+          }
+        },
+        "text": {
+          "description": "Optional free text attached to the marker.",
+          "type": "string"
+        },
+        "shared_index": {
+          "description": "Index of the shared marker instance (only for shared marker types).",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "custom_properties": {
+          "description": "Values of the custom properties defined by the marker type.",
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+        }
+      }
+    },
+
+    "markerValue": {
+      "description": "Marker geometry as space-separated numbers. All coordinates are in image pixels, angles are in radians. Format by value type:\n- circle: center_x center_y radius\n- oriented_circle: center_x center_y angle radius\n- oriented_point: x y angle\n- oriented_rect: center_x center_y width height angle\n- point: x y\n- polygon: x0 y0 x1 y1 ... xN yN\n- polyline, tool: x0 y0 x1 y1 ... xN yN\n- rect: x0 y0 x1 y1",
+      "type": "string",
+      "pattern": "^\\s*[-+]?(\\d+\\.?\\d*|\\.\\d+)([eE][-+]?\\d+)?(\\s+[-+]?(\\d+\\.?\\d*|\\.\\d+)([eE][-+]?\\d+)?)*\\s*$",
+      "examples": ["789.886 627.372 146.942 93.1009 -0.486899"]
+    },
+
+    "script": {
+      "description": "JavaScript source code, one array element per line.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "geometryPropertyName": {
+      "type": "string",
+      "enum": ["width", "height", "radius", "angle"]
+    }
+  }
+}

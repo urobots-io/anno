@@ -44,9 +44,7 @@ void LabelDefinitionPropertiesWidget::OnRenderingScriptTextChanged() {
 }
 
 void LabelDefinitionPropertiesWidget::UpdateCategoryData() {
-    QPixmap pixmap(10, 10);
-    pixmap.fill(category_->get_color());
-    ui.category_color_label->setPixmap(pixmap);
+    ui.category_color_label->setPixmap(LabelCategory::CreateColorIcon(category_->get_color()).pixmap(QSize(16, 16)));
     ui.category_value_lineEdit->setText(QString("%0").arg(category_->get_value()));
 }
 

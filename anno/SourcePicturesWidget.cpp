@@ -186,7 +186,7 @@ void SourcePicturesWidget::RebuildTypesFilterTree() {
                 auto key = std::make_pair(type_name, category->get_value());
                 auto item = new QTreeWidgetItem(type_item);
                 item->setText(0, QString("%0 (%1)").arg(category->get_name()).arg(category_counts[key]));
-                item->setData(0, Qt::DecorationRole, category->get_color());
+                item->setIcon(0, LabelCategory::CreateColorIcon(category->get_color()));
                 item->setData(0, Qt::UserRole, type_name);
                 item->setData(0, Qt::UserRole + 1, category->get_value());
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable);

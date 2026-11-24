@@ -79,10 +79,7 @@ QVariant LabelDefinitionsTreeModel::data(const QModelIndex & index, int role) co
     }
     else if (role == Qt::DecorationRole) {
         if (item.second) {
-            int size = 14;
-            QPixmap pixmap(size, size);
-            pixmap.fill(item.second->get_color());
-            return pixmap;
+            return LabelCategory::CreateColorIcon(item.second->get_color());
         }
         else if (!item.first) {
             return QIcon(":/MainWindow/Resources/select.ico");

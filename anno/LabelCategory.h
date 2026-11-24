@@ -1,5 +1,6 @@
 #include "implement_q_property.h"
 #include <QColor>
+#include <QIcon>
 #include <QObject>
 #include <QString>
 #include <memory>
@@ -22,6 +23,9 @@ public:
     std::shared_ptr<LabelDefinition> GetDefinition() const { return definition_.lock(); };
 
     static QColor GetStandardColor(int index);
+
+    /// Icon showing a category color: rounded rectangle with a slightly darker border
+    static QIcon CreateColorIcon(const QColor &color);
 
     IMPLEMENT_Q_PROPERTY_WRITE(int, value);
     IMPLEMENT_Q_PROPERTY_WRITE(QString, name);

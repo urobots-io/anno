@@ -2,6 +2,8 @@
 // 2020-2024 (c) urobots GmbH, https://urobots.io/en/portfolio/anno/
 
 #include "LabelCategory.h"
+#include <QPainter>
+#include <QPixmap>
 
 using namespace std;
 
@@ -11,6 +13,24 @@ LabelCategory::LabelCategory(shared_ptr<LabelDefinition> definition, int value, 
     , name_(name)
     , color_(color)
 {
+}
+
+QIcon LabelCategory::CreateColorIcon(const QColor &color) {
+    QIcon icon;
+    // 16 px for 100 % display scaling, 32 px for 200 %
+    for (int size : { 16, 32 }) {
+        double s = size / 16.0;
+        QPixmap pixmap(size, size);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(QPen(color.darker(135), s));
+        painter.setBrush(color);
+        painter.drawRoundedRect(QRectF(1.5 * s, 1.5 * s, 13 * s, 13 * s), 3 * s, 3 * s);
+        painter.end();
+        icon.addPixmap(pixmap);
+    }
+    return icon;
 }
 
 QColor LabelCategory::GetStandardColor(int index) {

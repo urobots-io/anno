@@ -48,6 +48,9 @@ public:
     /// Test function
     std::shared_ptr<FileModel> GetFirstFileModel();
 
+    /// all file models of the project, by file id
+    const std::map<QString, std::shared_ptr<FileModel>> &GetFileModels() const { return file_models_; }
+
     /// Update all shared properties
     void UpdateSharedProperties(bool forced_update = false);
 

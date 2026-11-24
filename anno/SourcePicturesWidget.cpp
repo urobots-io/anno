@@ -3,12 +3,19 @@
 
 #include "SourcePicturesWidget.h"
 #include "messagebox.h"
+#include <QHBoxLayout>
 #include <QInputDialog>
 #include <QMenu>
+#include <QPushButton>
 #include <QRegExp>
 #include <QRegularExpression>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
+#include <QTimer>
+#include <QVBoxLayout>
+#include <QWidgetAction>
+#include <map>
+#include <set>
 #ifdef Q_OS_WIN
 #include <Shlobj.h>
 #endif
@@ -31,8 +38,9 @@ void SourcePicturesWidget::Init(ApplicationModel *model) {
         this, &SourcePicturesWidget::OnCustomContextMenu);
 
     // initialize filter
-    sort_filter_model_ = new SourcePicturesProxyModel(this);    
+    sort_filter_model_ = new SourcePicturesProxyModel(this);
     ui.treeView->setModel(sort_filter_model_);
+    InitTypesFilter();
 
     connect(ui.filter_lineEdit, &QLineEdit::textChanged, this, &SourcePicturesWidget::OnTextFilterChanged);
     connect(ui.filter_labeled_checkBox, &QCheckBox::stateChanged, this, &SourcePicturesWidget::OnLoadedFilterChanged);
@@ -91,6 +99,160 @@ void SourcePicturesWidget::OnLoadedFilterChanged(bool value) {
     }
 
     sort_filter_model_->set_show_labeled_only(value);
+    ui.filter_types_toolButton->setEnabled(value);
+}
+
+void SourcePicturesWidget::InitTypesFilter() {
+    // popup content: tree of marker types and their categories + All / None buttons
+    auto popup = new QWidget(this);
+    auto layout = new QVBoxLayout(popup);
+    layout->setContentsMargins(4, 4, 4, 4);
+    layout->setSpacing(3);
+
+    types_filter_tree_ = new QTreeWidget(popup);
+    types_filter_tree_->setHeaderHidden(true);
+    types_filter_tree_->setSelectionMode(QAbstractItemView::NoSelection);
+    types_filter_tree_->setMinimumSize(240, 220);
+    layout->addWidget(types_filter_tree_);
+
+    auto buttons_layout = new QHBoxLayout();
+    auto all_button = new QPushButton(tr("All"), popup);
+    auto none_button = new QPushButton(tr("None"), popup);
+    buttons_layout->addWidget(all_button);
+    buttons_layout->addWidget(none_button);
+    buttons_layout->addStretch();
+    layout->addLayout(buttons_layout);
+
+    auto menu = new QMenu(this);
+    auto action = new QWidgetAction(menu);
+    action->setDefaultWidget(popup);
+    menu->addAction(action);
+    ui.filter_types_toolButton->setMenu(menu);
+
+    connect(menu, &QMenu::aboutToShow, this, &SourcePicturesWidget::RebuildTypesFilterTree);
+    connect(all_button, &QPushButton::clicked, this, [this] { SetAllTypesFilterItems(true); });
+    connect(none_button, &QPushButton::clicked, this, [this] { SetAllTypesFilterItems(false); });
+
+    connect(types_filter_tree_, &QTreeWidget::itemChanged, this, [this](QTreeWidgetItem *, int) {
+        if (types_filter_tree_updating_ || types_filter_apply_pending_) {
+            return;
+        }
+        // checking a marker type changes all its categories, apply them at once
+        types_filter_apply_pending_ = true;
+        QTimer::singleShot(0, this, [this] {
+            types_filter_apply_pending_ = false;
+            ApplyTypesFilter();
+        });
+    });
+
+    connect(model_, &ApplicationModel::label_definitions_changed, this, [this] { UpdateTypesFilterButton(); });
+}
+
+void SourcePicturesWidget::RebuildTypesFilterTree() {
+    types_filter_tree_updating_ = true;
+    types_filter_tree_->clear();
+
+    // number of images with markers of every type and category
+    std::map<QString, int> type_counts;
+    std::map<std::pair<QString, int>, int> category_counts;
+    for (const auto &file : model_->GetFileModels()) {
+        std::set<QString> types;
+        std::set<std::pair<QString, int>> categories;
+        for (const auto &label : file.second->labels_) {
+            auto category = label->GetCategory();
+            auto definition = category ? category->GetDefinition() : nullptr;
+            if (definition) {
+                types.insert(definition->get_type_name());
+                categories.insert({ definition->get_type_name(), category->get_value() });
+            }
+        }
+        for (const auto &t : types) ++type_counts[t];
+        for (const auto &c : categories) ++category_counts[c];
+    }
+
+    const auto &excluded = sort_filter_model_->GetExcludedCategories();
+    if (auto definitions = model_->get_label_definitions()) {
+        for (const auto &definition : definitions->GetDefinitions()) {
+            if (definition->categories.empty()) {
+                continue;
+            }
+
+            auto type_name = definition->get_type_name();
+            auto type_item = new QTreeWidgetItem(types_filter_tree_);
+            type_item->setText(0, QString("%0 (%1)").arg(type_name).arg(type_counts[type_name]));
+            type_item->setFlags(type_item->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsAutoTristate);
+
+            for (const auto &category : definition->categories) {
+                auto key = std::make_pair(type_name, category->get_value());
+                auto item = new QTreeWidgetItem(type_item);
+                item->setText(0, QString("%0 (%1)").arg(category->get_name()).arg(category_counts[key]));
+                item->setData(0, Qt::DecorationRole, category->get_color());
+                item->setData(0, Qt::UserRole, type_name);
+                item->setData(0, Qt::UserRole + 1, category->get_value());
+                item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+                item->setCheckState(0, excluded.count(key) ? Qt::Unchecked : Qt::Checked);
+            }
+        }
+    }
+
+    types_filter_tree_->expandAll();
+    types_filter_tree_updating_ = false;
+}
+
+void SourcePicturesWidget::SetAllTypesFilterItems(bool checked) {
+    types_filter_tree_updating_ = true;
+    for (int i = 0; i < types_filter_tree_->topLevelItemCount(); ++i) {
+        auto type_item = types_filter_tree_->topLevelItem(i);
+        for (int j = 0; j < type_item->childCount(); ++j) {
+            type_item->child(j)->setCheckState(0, checked ? Qt::Checked : Qt::Unchecked);
+        }
+    }
+    types_filter_tree_updating_ = false;
+    ApplyTypesFilter();
+}
+
+void SourcePicturesWidget::ApplyTypesFilter() {
+    std::set<std::pair<QString, int>> excluded;
+    for (int i = 0; i < types_filter_tree_->topLevelItemCount(); ++i) {
+        auto type_item = types_filter_tree_->topLevelItem(i);
+        for (int j = 0; j < type_item->childCount(); ++j) {
+            auto item = type_item->child(j);
+            if (item->checkState(0) != Qt::Checked) {
+                excluded.insert({ item->data(0, Qt::UserRole).toString(), item->data(0, Qt::UserRole + 1).toInt() });
+            }
+        }
+    }
+
+    sort_filter_model_->SetExcludedCategories(excluded);
+    UpdateTypesFilterButton();
+}
+
+void SourcePicturesWidget::UpdateTypesFilterButton() {
+    int total = 0;
+    int selected = 0;
+    const auto &excluded = sort_filter_model_->GetExcludedCategories();
+    if (auto definitions = model_->get_label_definitions()) {
+        for (const auto &definition : definitions->GetDefinitions()) {
+            for (const auto &category : definition->categories) {
+                ++total;
+                if (!excluded.count({ definition->get_type_name(), category->get_value() })) {
+                    ++selected;
+                }
+            }
+        }
+    }
+
+    QString text;
+    if (selected == total) {
+        text = tr("All");
+    }
+    else if (selected == 0) {
+        text = tr("None");
+    }
+    else {
+        text = tr("%0 of %1").arg(selected).arg(total);
+    }
+    ui.filter_types_toolButton->setText(text);
 }
 
 void SourcePicturesWidget::OnTextFilterChanged() {
@@ -182,6 +344,10 @@ void SourcePicturesWidget::OnNewFileSystem(std::shared_ptr<FilesystemInterface> 
     if (ui.filter_labeled_checkBox->isChecked()) {
         ui.filter_labeled_checkBox->setChecked(false);
     }
+
+    // the marker types filter is not stored, reset it for every project
+    sort_filter_model_->SetExcludedCategories({});
+    UpdateTypesFilterButton();
 }
 
 void SourcePicturesWidget::SelectFile(int offset) {

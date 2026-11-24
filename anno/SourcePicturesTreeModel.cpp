@@ -616,6 +616,30 @@ void SourcePicturesProxyModel::set_show_labeled_only(bool value) {
     }
 }
 
+void SourcePicturesProxyModel::SetExcludedCategories(const std::set<std::pair<QString, int>> &excluded) {
+    if (excluded != excluded_categories_) {
+        excluded_categories_ = excluded;
+        if (show_labeled_only_) {
+            invalidateFilter();
+        }
+    }
+}
+
+bool SourcePicturesProxyModel::HasAcceptedLabels(const FileModel &file) const {
+    if (excluded_categories_.empty()) {
+        return file.HaveLabels();
+    }
+
+    for (const auto &label : file.labels_) {
+        auto category = label->GetCategory();
+        auto definition = category ? category->GetDefinition() : nullptr;
+        if (definition && !excluded_categories_.count({ definition->get_type_name(), category->get_value() })) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool SourcePicturesProxyModel::filterAcceptsRowInt(int source_row, const QModelIndex &source_parent) const {
 #if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
     // https://www.qtcentre.org/threads/71767-setRecursiveFilteringEnabled()-not-available-in-qt4
@@ -679,7 +703,7 @@ bool SourcePicturesProxyModel::filterAcceptsRow(int source_row, const QModelInde
     }
     else {
         auto file = source->GetFileModel(index);
-        if (!file || !file->HaveLabels()) {
+        if (!file || !HasAcceptedLabels(*file)) {
             return false;
         }
     }

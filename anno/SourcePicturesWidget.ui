@@ -98,11 +98,50 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QCheckBox" name="filter_labeled_checkBox">
-        <property name="text">
-         <string>Show only labeled images</string>
+       <layout class="QHBoxLayout" name="filter_labeled_layout">
+        <property name="spacing">
+         <number>3</number>
         </property>
-       </widget>
+        <item>
+         <widget class="QCheckBox" name="filter_labeled_checkBox">
+          <property name="text">
+           <string>Show only labeled images</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="filter_types_toolButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Show only images with markers of the selected types and categories</string>
+          </property>
+          <property name="text">
+           <string>All</string>
+          </property>
+          <property name="popupMode">
+           <enum>QToolButton::InstantPopup</enum>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextOnly</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="filter_labeled_spacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

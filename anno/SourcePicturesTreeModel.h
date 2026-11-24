@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QProgressDialog>
 #include <QSortFilterProxyModel>
+#include <set>
+#include <utility>
 
 struct FileModelProviderInterface {
     /// Get file model defined by the path.
@@ -121,8 +123,14 @@ public:
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
+    /// Marker categories (marker type name, category id) ignored by the "labeled only" filter:
+    /// a file is shown only if it has at least one marker of a category not in this set.
+    void SetExcludedCategories(const std::set<std::pair<QString, int>> &excluded);
+    const std::set<std::pair<QString, int>> &GetExcludedCategories() const { return excluded_categories_; }
+
 private:
     bool filterAcceptsRowInt(int source_row, const QModelIndex &source_parent) const;
+    bool HasAcceptedLabels(const FileModel &file) const;
 
 public slots:
     DECLARE_Q_PROPERTY_WRITE(bool, show_labeled_only);
@@ -132,6 +140,7 @@ signals:
 
 private:
     bool show_labeled_only_ = false;
+    std::set<std::pair<QString, int>> excluded_categories_;
 
 public:
     IMPLEMENT_Q_PROPERTY_READ(show_labeled_only)

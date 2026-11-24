@@ -1,6 +1,7 @@
 #pragma once
 #include "ApplicationModel.h"
 #include "ui_SourcePicturesWidget.h"
+#include <QTreeWidget>
 #include <QWidget>
 
 class SourcePicturesWidget : public QWidget
@@ -37,6 +38,13 @@ private:
     template<class T>
     QAction* AddAction(QMenu *menu, QString icon, QString text, T callback);
 
+private:
+    void InitTypesFilter();
+    void RebuildTypesFilterTree();
+    void SetAllTypesFilterItems(bool checked);
+    void ApplyTypesFilter();
+    void UpdateTypesFilterButton();
+
 private slots:
     void OnTextFilterChanged();
     void OnLoadedFilterChanged(bool);
@@ -61,4 +69,9 @@ private:
 
     bool is_navigation_callback_ = false;
     bool is_tree_callback_ = false;
+
+    // marker types / categories filter of "Show only labeled images"
+    QTreeWidget *types_filter_tree_ = nullptr;
+    bool types_filter_tree_updating_ = false;
+    bool types_filter_apply_pending_ = false;
 };

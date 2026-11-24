@@ -6,11 +6,11 @@
 #include <QtWidgets/QMainWindow>
 #include <QLabel>
 #include <QPlainTextEdit>
-#include <QSlider>
 
 class LabelDefinitionPropertiesWidget;
 class SourcePicturesWidget;
 class ToolboxWidget;
+class VideoSlider;
 
 class MainWindow : public QMainWindow
 {
@@ -58,6 +58,7 @@ private:
     void InitTextViewer();
     void InitVideoControls();
     void UpdateVideoTimeLabel(int frame);
+    void UpdateVideoMarkerCounts();
 
     /// Shows the text file instead of the image view, or the image view if file_id is empty.
     void ShowTextFile(QString file_id);
@@ -77,6 +78,6 @@ private:
 
     // video files: frame slider below the image
     QWidget *video_controls_ = nullptr;
-    QSlider *video_slider_ = nullptr;
+    VideoSlider *video_slider_ = nullptr;
     QLabel *video_time_label_ = nullptr;
 };

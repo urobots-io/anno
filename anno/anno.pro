@@ -100,6 +100,7 @@ SOURCES += \
     ToolLabel.cpp \
     ToolboxProxyModel.cpp \
     ToolboxWidget.cpp \
+    VideoSlider.cpp \
     win_helpers.cpp
 
 HEADERS += \
@@ -188,6 +189,7 @@ HEADERS += \
     ToolboxProxyModel.h \
     ToolboxWidget.h \
     ToolLabel.h win_helpers.h\
+    VideoSlider.h \
     WorldInfo.h \
     earcut/earcut.hpp
 

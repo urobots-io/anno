@@ -402,6 +402,9 @@
     <ClCompile Include="ElidedLabelWidget.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="VideoSlider.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ToolboxProxyModel.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -603,6 +606,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoSlider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_Desktop3dWindow.h">

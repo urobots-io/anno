@@ -15,6 +15,7 @@
 #include "ProjectSettingsWidget.h"
 #include "LabelPropertiesWidget.h"
 #include "SourcePicturesWidget.h"
+#include "VideoSlider.h"
 #include <QCloseEvent>
 #include <QDockWidget>
 #include <QFileDialog>
@@ -26,6 +27,8 @@
 #include <QFontDatabase>
 #include <QHBoxLayout>
 #include <QSet>
+#include <algorithm>
+#include <cmath>
 #include <QMenu>
 #include <QToolBar>
 #include <QToolButton>
@@ -211,7 +214,7 @@ void MainWindow::InitVideoControls() {
     prev_button->setToolTip(tr("Previous frame"));
     prev_button->setAutoRaise(true);
 
-    video_slider_ = new QSlider(Qt::Horizontal, video_controls_);
+    video_slider_ = new VideoSlider(video_controls_);
 
     auto next_button = new QToolButton(video_controls_);
     next_button->setIcon(QIcon(":/MainWindow/Resources/video_next.ico"));
@@ -242,12 +245,41 @@ void MainWindow::InitVideoControls() {
         QSignalBlocker blocker(video_slider_);
         video_slider_->setRange(0, std::max(0, frame_count - 1));
         video_slider_->setPageStep(std::max(1, frame_count / 20));
+        UpdateVideoMarkerCounts();
     });
     connect(ui.desktop, &DesktopWidget::video_frame_changed, this, [this](int frame) {
         QSignalBlocker blocker(video_slider_);
         video_slider_->setValue(frame);
         UpdateVideoTimeLabel(frame);
     });
+}
+
+void MainWindow::UpdateVideoMarkerCounts() {
+    std::vector<int> counts;
+    int frames = ui.desktop->GetVideoFrameCount();
+    double fps = ui.desktop->GetVideoFps();
+    if (selected_file_ && frames > 0 && fps > 0) {
+        // frame f shows a marker if start <= f / fps < start + duration (see Label::IsActiveAt)
+        const double eps = 1e-6;
+        std::vector<int> delta(frames + 1, 0);
+        for (const auto &label : selected_file_->labels_) {
+            double start = label->GetStartTime();
+            double duration = label->GetDuration();
+            int first = qBound(0, int(std::ceil(start * fps - eps)), frames);
+            int end = duration < 0 ? frames : qBound(0, int(std::ceil((start + duration) * fps - eps)), frames);
+            if (end > first) {
+                ++delta[first];
+                --delta[end];
+            }
+        }
+        counts.resize(frames);
+        int count = 0;
+        for (int i = 0; i < frames; ++i) {
+            count += delta[i];
+            counts[i] = count;
+        }
+    }
+    video_slider_->SetMarkerCounts(std::move(counts));
 }
 
 void MainWindow::UpdateVideoTimeLabel(int frame) {
@@ -668,9 +700,15 @@ void MainWindow::OnImageFileChanged(std::shared_ptr<FileModel> value) {
         selected_file_->GetUndoStack()->disconnect(this);
         ui.undo_action->disconnect(selected_file_->GetUndoStack());
         ui.redo_action->disconnect(selected_file_->GetUndoStack());
-    }   
+        disconnect(selected_file_.get(), &FileModel::file_updated, this, nullptr);
+    }
 
     selected_file_ = value;
+
+    if (selected_file_) {
+        // markers changed: update the marker band of the video slider
+        connect(selected_file_.get(), &FileModel::file_updated, this, [this](bool) { UpdateVideoMarkerCounts(); });
+    }
 
     // text files are shown in the text viewer, everything else as image
     const bool is_text = value && IsTextFile(value->get_id());

@@ -461,6 +461,7 @@ xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX).dll" "$(OutDir)"</Command>
     <ClCompile Include="ToolboxWidget.cpp" />
     <ClCompile Include="ToolLabel.cpp" />
     <ClCompile Include="win_helpers.cpp" />
+    <ClCompile Include="VideoSlider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Desktop3dWindow.h">
@@ -630,6 +631,7 @@ xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX).dll" "$(OutDir)"</Command>
     <ClInclude Include="GeneratedFiles\ui_ProjectDefinitionsDialog.h" />
     <ClInclude Include="GeneratedFiles\ui_ToolboxWidget.h" />
     <ClInclude Include="geometry.h" />
+    <ClInclude Include="VideoSlider.h" />
     <CustomBuild Include="ImageModel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>

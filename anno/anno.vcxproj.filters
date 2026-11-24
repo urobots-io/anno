@@ -73,11 +73,11 @@
     <Filter Include="Source Files\FileModelCommands">
       <UniqueIdentifier>{5a35f131-3774-4377-af17-cbed4b6694b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Triangulation">
-      <UniqueIdentifier>{6b7b2845-1d62-42f1-92bc-a21bb469510e}</UniqueIdentifier>
+    <Filter Include="Header Files\EarCut">
+      <UniqueIdentifier>{920572f7-b924-4ba6-8858-b837328548c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Triangulation">
-      <UniqueIdentifier>{9cd8a6c5-2cf9-4309-a002-f83f210f5433}</UniqueIdentifier>
+    <Filter Include="Version\scripts">
+      <UniqueIdentifier>{eed3fed3-6013-42cb-93e1-0735f1e76df5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -384,21 +384,6 @@
     <ClCompile Include="ModifyLabelTextFileModelCommand.cpp">
       <Filter>Source Files\FileModelCommands</Filter>
     </ClCompile>
-    <ClCompile Include="triangulation\construct.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\misc.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\monotone.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\tri.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="triangulation\xtime.c">
-      <Filter>Source Files\Triangulation</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ScriptPainter.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -579,6 +564,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_NavigationModel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="git_info.cpp">
+      <Filter>Version</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
@@ -734,15 +722,6 @@
     <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="triangulation\interface.h">
-      <Filter>Header Files\Triangulation</Filter>
-    </ClInclude>
-    <ClInclude Include="triangulation\triangulate.h">
-      <Filter>Header Files\Triangulation</Filter>
-    </ClInclude>
-    <ClInclude Include="triangulation\xtime.h">
-      <Filter>Header Files\Triangulation</Filter>
-    </ClInclude>
     <ClInclude Include="ColorTransformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -751,9 +730,6 @@
     </ClInclude>
     <ClInclude Include="FileTreeElement.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="git_rev.h">
-      <Filter>Version</Filter>
     </ClInclude>
     <ClInclude Include="Serialization.h">
       <Filter>Header Files</Filter>
@@ -781,6 +757,12 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_NavigationWidget.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="git_info.h">
+      <Filter>Version</Filter>
+    </ClInclude>
+    <ClInclude Include="earcut\earcut.hpp">
+      <Filter>Header Files\EarCut</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -994,6 +976,12 @@
     </None>
     <None Include="data\examples\custom_properties.anno">
       <Filter>data\examples</Filter>
+    </None>
+    <None Include="scripts\generate_git_info.bat">
+      <Filter>Version\scripts</Filter>
+    </None>
+    <None Include="scripts\generate_git_info.sh">
+      <Filter>Version\scripts</Filter>
     </None>
   </ItemGroup>
 </Project>

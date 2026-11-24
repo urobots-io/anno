@@ -434,7 +434,12 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
             auto pos = t.map(QPointF(0, 0));
 
             const int border = 3;
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+            int rw = fm.width(hint.text) + border * 2;
+#else
             int rw = fm.horizontalAdvance(hint.text) + border * 2;
+#endif
             int rh = fm.height() + border * 2;
 
             auto rectangle = QRectF(pos.x() - rw/2, pos.y() - rh/2, rw, rh);

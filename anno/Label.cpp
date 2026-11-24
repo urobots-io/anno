@@ -18,7 +18,7 @@ void Label::SetCategory(shared_ptr<LabelCategory> category) {
     auto old_definition = category_ ? category_->GetDefinition() : nullptr;
     auto new_definition = category ? category->GetDefinition() : nullptr;
 
-    assert(category);
+    Q_ASSERT(category);
     category_ = category;
 
     if (old_definition != new_definition) {
@@ -27,15 +27,15 @@ void Label::SetCategory(shared_ptr<LabelCategory> category) {
 }
 
 shared_ptr<LabelCategory> Label::GetCategory() const {
-    assert(category_);
+    Q_ASSERT(category_);
     return category_;
 }
 
 shared_ptr<LabelDefinition> Label::GetDefinition() const {
-    assert(category_);
+    Q_ASSERT(category_);
     if (category_) {
         auto definition = category_->GetDefinition();
-        assert(definition);
+        Q_ASSERT(definition);
         return definition;
     }
     return {};

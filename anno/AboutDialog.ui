@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>526</width>
-    <height>174</height>
+    <width>549</width>
+    <height>192</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -120,9 +120,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="build_time_label">
+       <widget class="QLabel" name="repo_url_label">
         <property name="text">
-         <string>Build Time</string>
+         <string>Repository</string>
         </property>
        </widget>
       </item>
@@ -134,9 +134,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="build_time_label">
+        <property name="text">
+         <string>Build Time</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>http://www.urobots.io</string>
+         <string>https://www.urobots.io</string>
         </property>
        </widget>
       </item>

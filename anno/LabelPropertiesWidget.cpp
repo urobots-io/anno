@@ -74,8 +74,15 @@ void LabelPropertiesWidget::OnSelectedLabelChanged(std::shared_ptr<FileModel> fi
         auto cat = label->GetCategory();
         if (auto def = cat->GetDefinition()) {
             ui.type_name_lineEdit->setText(def->get_type_name());
+        }        
+        
+        auto category_name = cat->get_name();
+        if (category_name.length()) {
+            ui.category_lineEdit->setText(QString("%0 (%1)").arg(category_name).arg(cat->get_value()));
         }
-        ui.category_lineEdit->setText(cat->get_name());
+        else {
+            ui.category_lineEdit->setText(QString("%0").arg(cat->get_value()));
+        }
         ui.text_lineEdit->setText(label->GetText());
 
         if (label->IsProxyLabel()) {

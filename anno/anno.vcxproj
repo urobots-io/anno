@@ -59,7 +59,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OPENCV_LIB_DIR);$(OPENEXR_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OpenEXR-$(OPENEXR_SUFFIX)_d.lib;Iex-$(OPENEXR_SUFFIX)_d.lib;qtmaind.lib;opencv_core$(OPENCV_VER)d.lib;opencv_imgproc$(OPENCV_VER)d.lib;opencv_imgcodecs$(OPENCV_VER)d.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5WinExtrasd.lib;Qt5Widgetsd.lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenEXR-$(OPENEXR_SUFFIX)_d.lib;Iex-$(OPENEXR_SUFFIX)_d.lib;qtmaind.lib;opencv_core$(OPENCV_VER)d.lib;opencv_imgproc$(OPENCV_VER)d.lib;opencv_imgcodecs$(OPENCV_VER)d.lib;opencv_videoio$(OPENCV_VER)d.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5WinExtrasd.lib;Qt5Widgetsd.lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
@@ -72,6 +72,8 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgproc$(OPENCV_VER)d.dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER)d.dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_geometry$(OPENCV_VER)d.dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_flann$(OPENCV_VER)d.dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio$(OPENCV_VER)d.dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio_ffmpeg$(OPENCV_VER)_64.dll "$(OutDir)"
 echo Copy OpenEXR binaries to target
 for %%f in (OpenEXR OpenEXRCore Iex IlmThread) do xcopy /D /Y "$(OPENEXR_BIN_DIR)\%%f-$(OPENEXR_SUFFIX)_d.dll" "$(OutDir)"
 xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX)_d.dll" "$(OutDir)"
@@ -96,7 +98,7 @@ xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX)_d.dll" "$(OutDir)"
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OPENCV_LIB_DIR);$(OPENEXR_LIB_DIR);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>OpenEXR-$(OPENEXR_SUFFIX).lib;Iex-$(OPENEXR_SUFFIX).lib;qtmain.lib;opencv_core$(OPENCV_VER).lib;opencv_imgproc$(OPENCV_VER).lib;opencv_imgcodecs$(OPENCV_VER).lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5WinExtras.lib;Qt5Widgets.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenEXR-$(OPENEXR_SUFFIX).lib;Iex-$(OPENEXR_SUFFIX).lib;qtmain.lib;opencv_core$(OPENCV_VER).lib;opencv_imgproc$(OPENCV_VER).lib;opencv_imgcodecs$(OPENCV_VER).lib;opencv_videoio$(OPENCV_VER).lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5WinExtras.lib;Qt5Widgets.lib;Qt5Qml.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>echo $(QTDIR)&gt; "$(OutDir)_qt_path.txt"
@@ -109,6 +111,8 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgproc$(OPENCV_VER).dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_imgcodecs$(OPENCV_VER).dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_geometry$(OPENCV_VER).dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_flann$(OPENCV_VER).dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio$(OPENCV_VER).dll "$(OutDir)"
+xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio_ffmpeg$(OPENCV_VER)_64.dll "$(OutDir)"
 echo Copy OpenEXR binaries to target
 for %%f in (OpenEXR OpenEXRCore Iex IlmThread) do xcopy /D /Y "$(OPENEXR_BIN_DIR)\%%f-$(OPENEXR_SUFFIX).dll" "$(OutDir)"
 xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX).dll" "$(OutDir)"</Command>

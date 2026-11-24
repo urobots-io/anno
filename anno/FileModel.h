@@ -37,6 +37,17 @@ public:
 
     bool HaveLabels() const { return !labels_.empty(); }
 
+    /// true if the file name has a video file extension
+    static bool IsVideoFile(const QString &file_id);
+    bool IsVideo() const { return IsVideoFile(id_); }
+
+    /// Video files: current time of the video in seconds, new labels start at this time
+    double GetVideoTime() const { return video_time_; }
+    void SetVideoTime(double time) { video_time_ = time; }
+
+    /// true if the label is shown: always for images, for videos only at its time range
+    bool IsLabelActive(const Label &label) const { return !IsVideo() || label.IsActiveAt(video_time_); }
+
     /// Return Proxy of the <label> or label itself, if it has no proxy
     std::shared_ptr<Label> GetOwner(std::shared_ptr<Label> label);
 
@@ -72,6 +83,7 @@ signals:
 private:
     bool is_modified_ = false;
     QString id_;
+    double video_time_ = 0;
     QUndoStack undo_stack_;
 
 public:

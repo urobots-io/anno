@@ -120,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     InitToolbars();
     InitTextViewer();
+    InitVideoControls();
 
 
     UpdateApplicationTitle();
@@ -183,6 +184,84 @@ void MainWindow::InitTextViewer() {
     int index = ui.center_verticalLayout->indexOf(ui.desktop);
     ui.center_verticalLayout->insertWidget(index + 1, text_view_);
     ui.center_verticalLayout->insertWidget(index + 2, text_message_);
+}
+
+namespace {
+QString FormatVideoTime(double seconds) {
+    int ms = int(std::lround(seconds * 1000));
+    int h = ms / 3600000;
+    int m = (ms / 60000) % 60;
+    int s = (ms / 1000) % 60;
+    QString text = QString("%1:%2.%3")
+        .arg(m, 2, 10, QChar('0'))
+        .arg(s, 2, 10, QChar('0'))
+        .arg(ms % 1000, 3, 10, QChar('0'));
+    return h ? QString("%1:%2").arg(h).arg(text) : text;
+}
+}
+
+void MainWindow::InitVideoControls() {
+    video_controls_ = new QWidget(this);
+    auto layout = new QHBoxLayout(video_controls_);
+    layout->setContentsMargins(4, 2, 4, 2);
+    layout->setSpacing(4);
+
+    auto prev_button = new QToolButton(video_controls_);
+    prev_button->setIcon(QIcon(":/MainWindow/Resources/video_prev.ico"));
+    prev_button->setToolTip(tr("Previous frame"));
+    prev_button->setAutoRaise(true);
+
+    video_slider_ = new QSlider(Qt::Horizontal, video_controls_);
+
+    auto next_button = new QToolButton(video_controls_);
+    next_button->setIcon(QIcon(":/MainWindow/Resources/video_next.ico"));
+    next_button->setToolTip(tr("Next frame"));
+    next_button->setAutoRaise(true);
+
+    video_time_label_ = new QLabel(video_controls_);
+    video_time_label_->setMinimumWidth(video_time_label_->fontMetrics().horizontalAdvance("00:00.000 / 00:00.000   frame 000000 / 000000"));
+
+    layout->addWidget(prev_button);
+    layout->addWidget(video_slider_, 1);
+    layout->addWidget(next_button);
+    layout->addWidget(video_time_label_);
+
+    video_controls_->setBackgroundRole(QPalette::Base);
+    video_controls_->setAutoFillBackground(true);
+    video_controls_->hide();
+
+    // between the image and the scale / pixel value bar
+    ui.center_verticalLayout->insertWidget(ui.center_verticalLayout->indexOf(ui.desktop) + 1, video_controls_);
+
+    connect(video_slider_, &QSlider::valueChanged, ui.desktop, &DesktopWidget::SetVideoFrame);
+    connect(prev_button, &QToolButton::clicked, this, [this] { video_slider_->setValue(video_slider_->value() - 1); });
+    connect(next_button, &QToolButton::clicked, this, [this] { video_slider_->setValue(video_slider_->value() + 1); });
+
+    connect(ui.desktop, &DesktopWidget::video_loaded, this, [this](int frame_count, double) {
+        video_controls_->setVisible(frame_count > 0);
+        QSignalBlocker blocker(video_slider_);
+        video_slider_->setRange(0, std::max(0, frame_count - 1));
+        video_slider_->setPageStep(std::max(1, frame_count / 20));
+    });
+    connect(ui.desktop, &DesktopWidget::video_frame_changed, this, [this](int frame) {
+        QSignalBlocker blocker(video_slider_);
+        video_slider_->setValue(frame);
+        UpdateVideoTimeLabel(frame);
+    });
+}
+
+void MainWindow::UpdateVideoTimeLabel(int frame) {
+    auto fps = ui.desktop->GetVideoFps();
+    auto frames = ui.desktop->GetVideoFrameCount();
+    if (fps <= 0 || frames <= 0) {
+        video_time_label_->clear();
+        return;
+    }
+    video_time_label_->setText(tr("%1 / %2   frame %3 / %4")
+        .arg(FormatVideoTime(frame / fps))
+        .arg(FormatVideoTime(frames / fps))
+        .arg(frame)
+        .arg(frames - 1));
 }
 
 void MainWindow::ShowTextFile(QString file_id) {

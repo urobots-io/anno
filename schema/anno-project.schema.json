@@ -283,6 +283,17 @@
           "description": "Optional free text attached to the marker.",
           "type": "string"
         },
+        "start": {
+          "description": "Video files: time of the video in seconds where the marker starts to be shown.",
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "duration": {
+          "description": "Video files: duration in seconds the marker is shown. If absent, the marker is shown until the end of the video.",
+          "type": "number",
+          "minimum": 0
+        },
         "shared_index": {
           "description": "Index of the shared marker instance (only for shared marker types).",
           "type": "integer",

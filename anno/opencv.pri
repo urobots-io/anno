@@ -52,7 +52,8 @@ win32 {
         LIBS += -L$$OPENCV_LIB_DIR \
             -lopencv_core$${OPENCV_VER}$${CV_D} \
             -lopencv_imgproc$${OPENCV_VER}$${CV_D} \
-            -lopencv_imgcodecs$${OPENCV_VER}$${CV_D}
+            -lopencv_imgcodecs$${OPENCV_VER}$${CV_D} \
+            -lopencv_videoio$${OPENCV_VER}$${CV_D}
         LIBS += -L$$OPENEXR_DIR/lib \
             -lOpenEXR-$${OPENEXR_SUFFIX}$${EXR_D} \
             -lIex-$${OPENEXR_SUFFIX}$${EXR_D}
@@ -61,6 +62,7 @@ win32 {
         # copy the DLLs next to anno.exe, so that it can be started from Qt Creator
         OUT_DIR = $$shell_path($$OUT_PWD/$$OUT_SUBDIR)
         QMAKE_POST_LINK += $$QMAKE_COPY $$shell_quote($$shell_path($$OPENCV_BIN_DIR/opencv_*$${OPENCV_VER}$${CV_D}.dll)) $$shell_quote($$OUT_DIR) $$escape_expand(\\n\\t)
+        QMAKE_POST_LINK += $$QMAKE_COPY $$shell_quote($$shell_path($$OPENCV_BIN_DIR/opencv_videoio_ffmpeg$${OPENCV_VER}_64.dll)) $$shell_quote($$OUT_DIR) $$escape_expand(\\n\\t)
         EXR_DLLS = OpenEXR-$$OPENEXR_SUFFIX OpenEXRCore-$$OPENEXR_SUFFIX Iex-$$OPENEXR_SUFFIX IlmThread-$$OPENEXR_SUFFIX Imath-$$IMATH_SUFFIX
         for (dll, EXR_DLLS) {
             QMAKE_POST_LINK += $$QMAKE_COPY $$shell_quote($$shell_path($$OPENEXR_DIR/bin/$${dll}$${EXR_D}.dll)) $$shell_quote($$OUT_DIR) $$escape_expand(\\n\\t)

@@ -35,6 +35,8 @@
 #define K_MARKER_VALUE "value"
 #define K_MARKER_CHILDREN "children"
 #define K_MARKER_CUSTOM_PROPERTIES "custom_properties"
+#define K_MARKER_START "start"
+#define K_MARKER_DURATION "duration"
 
 using namespace std;
 
@@ -350,6 +352,8 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             }
         
             label->SetText(marker[K_MARKER_TEXT].toString(""));
+            label->SetStartTime(marker[K_MARKER_START].toDouble(0));
+            label->SetDuration(marker[K_MARKER_DURATION].toDouble(-1));
             label->SetCategory(definition->GetCategory(category));
             label->ConnectSharedProperties(true, false);
 
@@ -446,6 +450,12 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
             auto text = label->GetText();
             if (!text.isEmpty())
                 marker.insert(K_MARKER_TEXT, QJsonValue::fromVariant(text));
+
+            // video labels: save start and duration only if not default (0, until the end)
+            if (label->GetStartTime() != 0)
+                marker.insert(K_MARKER_START, label->GetStartTime());
+            if (label->GetDuration() >= 0)
+                marker.insert(K_MARKER_DURATION, label->GetDuration());
 
             auto shared_index = label->GetSharedLabelIndex();
             if (shared_index)

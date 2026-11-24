@@ -25,6 +25,9 @@ Cross-platform tool for labeling image data.
 - Custom properties of markers: numbers, text, flags and selection lists
   (example: [custom_properties.anno](anno/data/examples/custom_properties.anno)).
 - Supports a wide variety of image formats. The pre-built Windows version supports the EXR format.
+- Labeling of videos (mp4, mov, avi, mkv, ...): a slider below the image selects the frame,
+  markers have a start time and a duration, see [Video markers](#video-markers). Requires the OpenCV build.
+- Text files (txt, json, log, md, source code, ...) of the image folder are shown in a read-only text viewer.
 - The project file is a JSON file which contains project-specific marker definitions and labeling information.
 - The user interface is optimized for fast sub-pixel accurate labeling.
 
@@ -149,7 +152,8 @@ Project file format:
                     /** Marker geometry, see below. */
                     "value": "642.9 580.2 936.8 674.4"
 
-                    /** Optional fields: text, shared_index, children, custom_properties
+                    /** Optional fields: text, shared_index, children, custom_properties,
+                        start, duration (video files)
                         (see the JSON Schema below) */
                 }
             ]
@@ -171,6 +175,18 @@ The format of the marker geometry depends on the `value_type` of the marker type
 
 All coordinates are in image pixels, angles are in radians.
 Additional contours of a polygon (holes) are stored in `children`, every child has its own `value`.
+
+### Video markers
+Markers of video files are shown only during a time range of the video:
+- `start`: time of the video in seconds where the marker starts (default `0`),
+- `duration`: duration in seconds; if absent, the marker is shown until the end of the video.
+
+A new marker starts at the current time of the video and lasts until the end.
+Start and duration can be changed in the *Label* tab (rows `start (s)` and `duration (s)`;
+a negative duration means until the end). The time slider below the video shows the current time and frame number.
+```jsonc
+{ "type": "my_marker_type", "category": 0, "value": "20 20 300 90", "start": 2.5, "duration": 1.2 }
+```
 
 ### Marker rendering
 Every marker type has a default rendering: anno draws the geometry of the marker (rectangle, circle, polygon, ...)
@@ -588,6 +604,17 @@ Use it in VS Code, `settings.json`:
         "text": {
           "description": "Optional free text attached to the marker.",
           "type": "string"
+        },
+        "start": {
+          "description": "Video files: time of the video in seconds where the marker starts to be shown.",
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "duration": {
+          "description": "Video files: duration in seconds the marker is shown. If absent, the marker is shown until the end of the video.",
+          "type": "number",
+          "minimum": 0
         },
         "shared_index": {
           "description": "Index of the shared marker instance (only for shared marker types).",

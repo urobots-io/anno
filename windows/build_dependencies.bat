@@ -1,6 +1,7 @@
 @echo off
 rem Builds the third-party libraries of anno for Windows (Visual Studio, x64):
-rem   Imath + OpenEXR (EXR images) and OpenCV (image loading and processing).
+rem   Imath + OpenEXR (EXR images) and OpenCV (image and video loading, processing).
+rem   OpenCV downloads its prebuilt FFmpeg DLL (opencv_videoio_ffmpeg) for video decoding.
 rem
 rem Usage:   build_dependencies.bat [target folder]
 rem Default target folder: %UR_LIB_DIR%, or ..\..\anno-deps next to the repository.
@@ -65,11 +66,11 @@ call :clone https://github.com/opencv/opencv.git %OPENCV_VERSION% "%CV_ROOT%\src
 "%CMAKE%" -S "%CV_ROOT%\src" -B "%CV_ROOT%\build" -A x64 ^
     -DCMAKE_INSTALL_PREFIX="%CV_INSTALL%" ^
     -DCMAKE_PREFIX_PATH="%EXR_INSTALL%" ^
-    -DBUILD_LIST=core,imgproc,imgcodecs ^
+    -DBUILD_LIST=core,imgproc,imgcodecs,videoio -DBUILD_opencv_videoio=ON ^
     -DBUILD_SHARED_LIBS=ON -DWITH_OPENEXR=ON ^
     -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_opencv_apps=OFF ^
     -DBUILD_DOCS=OFF -DBUILD_JAVA=OFF -DBUILD_opencv_python3=OFF ^
-    -DWITH_FFMPEG=OFF -DWITH_CUDA=OFF -DWITH_PROTOBUF=OFF -DBUILD_PROTOBUF=OFF || goto :error
+    -DWITH_FFMPEG=ON -DWITH_CUDA=OFF -DWITH_PROTOBUF=OFF -DBUILD_PROTOBUF=OFF || goto :error
 call :build_install "%CV_ROOT%\build" || goto :error
 
 echo.

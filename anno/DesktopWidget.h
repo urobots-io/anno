@@ -6,6 +6,11 @@
 #include "implement_q_property.h"
 #include <QJSEngine>
 #include <QWidget>
+#include <memory>
+
+#ifdef ANNO_USE_OPENCV
+namespace cv { class VideoCapture; }
+#endif
 
 class DesktopWidget : public QWidget
 {
@@ -89,9 +94,17 @@ private:
     // Create stamp label for selected <category_for_creation>
     void CreateStampLabel();
     
+public:
+    /// Video files: number of frames and frames per second, 0 if no video is loaded
+    int GetVideoFrameCount() const { return video_frame_count_; }
+    double GetVideoFps() const { return video_fps_; }
+
 public slots:
     void SetFile(std::shared_ptr<FileModel>);
     void ImageLoaded();
+
+    /// Video files: show the frame with the given index
+    void SetVideoFrame(int frame);
 	
     void OnRerenderFile();
     void OnSelectLabel(std::shared_ptr<Label>);
@@ -131,8 +144,15 @@ signals:
     void selected_label_changed(std::shared_ptr<FileModel>, std::shared_ptr<Label>);
     void status_changed(QString);
     void image_properties_changed(const ImagePropertiesList&);
-	    
+
+    /// Video file loaded (frame_count > 0) or closed (frame_count == 0)
+    void video_loaded(int frame_count, double fps);
+    void video_frame_changed(int frame);
+
 private:
+    void OpenVideo();
+    void CloseVideo();
+
     void SetCategoryValueForSelectedLabel(int category_value);
     
     void ChangeCurrentCategory(int category_value);    
@@ -233,6 +253,14 @@ private:
     /// Loaders
 	ImageLoader* current_loader_ = nullptr;
 	std::vector<ImageLoader*> loaders_;
+
+    // video file
+#ifdef ANNO_USE_OPENCV
+    std::unique_ptr<cv::VideoCapture> video_;
+#endif
+    int video_frame_count_ = 0;
+    double video_fps_ = 0;
+    int video_frame_ = -1;
 
     /// Current status
     QString status_;

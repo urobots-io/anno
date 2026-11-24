@@ -17,6 +17,9 @@
 #include <QTransform>
 #include <algorithm>
 #include <cmath>
+#ifdef ANNO_USE_OPENCV
+#include <opencv2/videoio.hpp>
+#endif
 
 struct PaintExtraFunctionsDW : public PaintExtraFunctions {
     struct Hint {
@@ -125,6 +128,7 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
     }
 
     image_.Clear();
+    CloseVideo();
 
     file_ = file;
 
@@ -137,6 +141,17 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
         stamp_label_->SetSharedLabelIndex(-1);
     }
 
+#ifdef ANNO_USE_OPENCV
+    if (file_ && file_->IsVideo()) {
+        current_loader_ = nullptr;
+        for (auto l : file_->labels_) {
+            l->UpdateSharedProperties();
+            l->SetComputeVisualisationData(true);
+        }
+        OpenVideo();
+    }
+    else
+#endif
     if (file_) {
         set_is_loading_image(true);
         set_status(tr("Loading %0...").arg(QFileInfo(file_->get_id()).fileName()));
@@ -160,6 +175,124 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
 
     update();
 
+}
+
+void DesktopWidget::CloseVideo() {
+#ifdef ANNO_USE_OPENCV
+    const bool was_open = video_ != nullptr;
+    video_.reset();
+#else
+    const bool was_open = false;
+#endif
+    video_frame_count_ = 0;
+    video_fps_ = 0;
+    video_frame_ = -1;
+    if (was_open) {
+        emit video_loaded(0, 0);
+    }
+}
+
+void DesktopWidget::OpenVideo() {
+#ifdef ANNO_USE_OPENCV
+    auto file_name = QFileInfo(file_->get_id()).fileName();
+    auto path = model_->get_filesystem()->GetLocalPath(file_->get_id());
+
+    video_ = std::make_unique<cv::VideoCapture>();
+    bool ok = false;
+    try {
+        ok = !path.isEmpty() && video_->open(path.toStdString(), cv::CAP_FFMPEG);
+    }
+    catch (const cv::Exception &) {
+        ok = false;
+    }
+    if (!ok) {
+        video_.reset();
+        set_status(tr("Load error: cannot open video %0").arg(file_name));
+        set_image_properties({});
+        return;
+    }
+
+    video_fps_ = video_->get(cv::CAP_PROP_FPS);
+    if (!(video_fps_ > 0)) {
+        video_fps_ = 25;
+    }
+    video_frame_count_ = std::max(1, int(video_->get(cv::CAP_PROP_FRAME_COUNT)));
+
+    int fourcc = int(video_->get(cv::CAP_PROP_FOURCC));
+    QString codec;
+    for (int i = 0; i < 4; ++i) {
+        codec += QChar((fourcc >> (8 * i)) & 0xFF);
+    }
+
+    ImagePropertiesList properties;
+    properties.push_back({ "Size", QString("%0 bytes").arg(QFileInfo(path).size()) });
+    properties.push_back({ "Width", QString("%0 pix").arg(int(video_->get(cv::CAP_PROP_FRAME_WIDTH))) });
+    properties.push_back({ "Height", QString("%0 pix").arg(int(video_->get(cv::CAP_PROP_FRAME_HEIGHT))) });
+    properties.push_back({ "Frames", QString::number(video_frame_count_) });
+    properties.push_back({ "FPS", QString::number(video_fps_, 'f', 3) });
+    properties.push_back({ "Duration", QString("%0 s").arg(video_frame_count_ / video_fps_, 0, 'f', 3) });
+    properties.push_back({ "Codec", codec.trimmed() });
+    set_image_properties(properties);
+    set_status({});
+
+    emit video_loaded(video_frame_count_, video_fps_);
+
+    // continue at the last position of this file
+    SetVideoFrame(int(std::lround(file_->GetVideoTime() * video_fps_)));
+    if (get_fit_to_view_on_load()) {
+        FitBackgroundToView();
+    }
+#endif
+}
+
+void DesktopWidget::SetVideoFrame(int frame) {
+#ifdef ANNO_USE_OPENCV
+    if (!video_ || !file_) {
+        return;
+    }
+
+    frame = std::max(0, std::min(frame, video_frame_count_ - 1));
+    if (frame == video_frame_) {
+        return;
+    }
+
+    cv::Mat image;
+    try {
+        // reading the next frame does not need seeking
+        if (frame != video_frame_ + 1) {
+            video_->set(cv::CAP_PROP_POS_FRAMES, frame);
+        }
+        video_->read(image);
+    }
+    catch (const cv::Exception &) {
+        image = cv::Mat();
+    }
+
+    if (image.empty()) {
+        // position of the stream is unknown now
+        video_frame_ = -1;
+        set_status(tr("Load error: cannot read frame %0").arg(frame));
+        return;
+    }
+
+    video_frame_ = frame;
+    file_->SetVideoTime(frame / video_fps_);
+    image_.Load(image);
+
+    // labels of other times are hidden and cannot stay selected or hovered
+    hovered_handle_ = nullptr;
+    hovered_label_ = nullptr;
+    if (selected_label_ && !file_->IsLabelActive(*selected_label_)) {
+        AbortCreation();
+        selected_handle_ = nullptr;
+        set_selected_label({});
+    }
+
+    emit video_frame_changed(frame);
+    update();
+#else
+    Q_UNUSED(frame)
+#endif
 }
 
 void DesktopWidget::ImageLoaded() {
@@ -369,6 +502,9 @@ void DesktopWidget::paintEvent(QPaintEvent *) {
         }
 
         for (auto label : file_->labels_) {
+            if (!file_->IsLabelActive(*label)) {
+                continue;
+            }
             xp.Info().is_selected = (selected_label_ == label);
             xp.Info().is_highlighted = !xp.Info().is_selected && (hovered_label_ == label);
             xp.RenderLabel(js_engine_, label.get());
@@ -605,7 +741,7 @@ std::shared_ptr<Label> DesktopWidget::FindLabelUnderCursor() {
 
     auto wi = GetWorldInfo();
     for (auto l : file_->labels_) {
-        if (l->HitTest(wi)) {
+        if (file_->IsLabelActive(*l) && l->HitTest(wi)) {
             auto area = l->Area();
             if (!label || area < smallest_area) {
                 label = l;
@@ -633,7 +769,7 @@ void DesktopWidget::StartExtraActionUnderCursor() {
     
     if (!label) {
         for (auto l : file_->labels_) {
-            if (l->StartExtraAction(wi, data)) {
+            if (file_->IsLabelActive(*l) && l->StartExtraAction(wi, data)) {
                 label = l;
                 break;
             }
@@ -857,6 +993,9 @@ std::shared_ptr<LabelHandle> DesktopWidget::FindClosestHandle(QPointF position) 
 
     // TODO(ap): optimize (sort handles on change, etc)
     for (auto label : file_->labels_) {
+        if (!file_->IsLabelActive(*label)) {
+            continue;
+        }
         for (auto handle : label->GetHandles()) {
             auto length = (handle->GetPosition() - position).manhattanLength();
             if (length < closest_dist) {

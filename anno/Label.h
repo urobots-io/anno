@@ -33,6 +33,17 @@ public:
 	void SetText(const QString& text);
 	const QString& GetText() const { return text_; }
 
+    /// Video labels: time of the video in seconds where the label starts
+    void SetStartTime(double value) { start_time_ = value; }
+    double GetStartTime() const { return start_time_; }
+
+    /// Video labels: duration in seconds, negative value means until the end of the video
+    void SetDuration(double value) { duration_ = value; }
+    double GetDuration() const { return duration_; }
+
+    /// Video labels: true if the label is shown at the given video time in seconds
+    bool IsActiveAt(double time) const;
+
     QVariantMap& GetCustomProperties() { return custom_properties_; }
     QVariant Read(const CustomPropertyDefinition &) const;
     void Write(const CustomPropertyDefinition &, QVariant value);
@@ -163,6 +174,10 @@ protected:
 
     /// custom properties
     QVariantMap custom_properties_;
+
+    /// video labels: start time and duration in seconds (negative duration: until the end)
+    double start_time_ = 0;
+    double duration_ = -1;
 
     /// default dimension of the label
     static const int default_dimension_ = 100;

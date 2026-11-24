@@ -69,6 +69,9 @@ ICONS = {
     # image toolbar: image properties overlay, display settings
     "image_info.ico": ("info", GRAY),
     "image_display.ico": ("brightness_high", GRAY),
+    # video controls: previous / next frame
+    "video_prev.ico": ("previous", GRAY),
+    "video_next.ico": ("next", GRAY),
     # Toolbox header buttons, drawn on a dark background
     "copy_light.ico": ("copy", LIGHT),
     "paste_light.ico": ("clipboard_paste", LIGHT),

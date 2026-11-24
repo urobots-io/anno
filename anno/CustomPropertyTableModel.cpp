@@ -19,11 +19,15 @@ CustomPropertyTableModel::~CustomPropertyTableModel()
 {
 }
 
+int CustomPropertyTableModel::TimeRows() const {
+    return (label_ && file_ && file_->IsVideo()) ? 2 : 0;
+}
+
 int CustomPropertyTableModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
     if (label_) {
         if (auto def = label_->GetDefinition()) {
-            return int(def->custom_properties.size());
+            return TimeRows() + int(def->custom_properties.size());
         }
     }
     return 0;
@@ -38,6 +42,13 @@ int CustomPropertyTableModel::columnCount(const QModelIndex &parent) const {
 
 CustomPropertyDefinition CustomPropertyTableModel::GetProperty(const QModelIndex &index) const {
     int row = index.row();
+    if (row < TimeRows()) {
+        CustomPropertyDefinition time_property;
+        time_property.id = (row == start_row) ? tr("start (s)") : tr("duration (s)");
+        time_property.type = CustomPropertyType::p_double;
+        return time_property;
+    }
+    row -= TimeRows();
     if (label_ && row >= 0) {
         if (auto def = label_->GetDefinition()) {
             auto &props_list = def->custom_properties;
@@ -57,10 +68,30 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
 
     auto &props_list = def->custom_properties;
     int row = index.row();
-    if (row >= int(props_list.size()))
+    int column = index.column();
+
+    if (row < TimeRows()) {
+        if (column == 0 && role == Qt::DisplayRole) {
+            return GetProperty(index).id;
+        }
+        if (column == 0 && role == QT_BACKGROUND_COLOR_ROLE) {
+            return QApplication::palette().alternateBase();
+        }
+        if (column == 1) {
+            double value = (row == start_row) ? label_->GetStartTime() : label_->GetDuration();
+            if (role == Qt::DisplayRole) {
+                return (row == duration_row && value < 0) ? tr("until end (-1)") : QString::number(value, 'f', 3);
+            }
+            if (role == Qt::EditRole) {
+                return value;
+            }
+        }
+        return QVariant();
+    }
+
+    if (row - TimeRows() >= int(props_list.size()))
         return QVariant();
 
-    int column = index.column();
     switch (column) {
     case 0:
         if (role == Qt::DisplayRole) {
@@ -114,6 +145,22 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
 
 bool CustomPropertyTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     int column = index.column();
+
+    if (label_ && file_ && column == 1 && index.row() < TimeRows()) {
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
+            double time = value.toDouble();
+            if (index.row() == start_row) {
+                label_->SetStartTime(std::max(0.0, time));
+            }
+            else {
+                // negative duration: until the end of the video
+                label_->SetDuration(time < 0 ? -1.0 : time);
+            }
+            file_->NotifyUpdate(false);
+            return true;
+        }
+        return false;
+    }
 
     if (label_ && file_ && column == 1) {
         auto p = GetProperty(index);

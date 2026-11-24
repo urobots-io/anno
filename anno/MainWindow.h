@@ -6,6 +6,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QLabel>
 #include <QPlainTextEdit>
+#include <QSlider>
 
 class LabelDefinitionPropertiesWidget;
 class SourcePicturesWidget;
@@ -55,6 +56,8 @@ private:
 	bool CloseActiveProject();
     void InitToolbars();
     void InitTextViewer();
+    void InitVideoControls();
+    void UpdateVideoTimeLabel(int frame);
 
     /// Shows the text file instead of the image view, or the image view if file_id is empty.
     void ShowTextFile(QString file_id);
@@ -71,4 +74,9 @@ private:
     // read-only viewer for text files, shown instead of the image view
     QPlainTextEdit *text_view_ = nullptr;
     QLabel *text_message_ = nullptr;
+
+    // video files: frame slider below the image
+    QWidget *video_controls_ = nullptr;
+    QSlider *video_slider_ = nullptr;
+    QLabel *video_time_label_ = nullptr;
 };

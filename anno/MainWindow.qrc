@@ -38,5 +38,7 @@
     <file>Resources/tree_view_light.ico</file>
     <file>Resources/image_info.ico</file>
     <file>Resources/image_display.ico</file>
+    <file>Resources/video_prev.ico</file>
+    <file>Resources/video_next.ico</file>
   </qresource>
 </RCC>

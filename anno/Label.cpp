@@ -119,8 +119,19 @@ QPen Label::GetOutlinePen(const PaintInfo & pi) const {
 	return pen;	
 }
 
-void Label::CopyFrom(const Label & other) {    
+bool Label::IsActiveAt(double time) const {
+    // tolerance for rounding of frame times
+    const double eps = 1e-6;
+    if (time < start_time_ - eps) {
+        return false;
+    }
+    return duration_ < 0 || time < start_time_ + duration_ - eps;
+}
+
+void Label::CopyFrom(const Label & other) {
     text_ = other.text_;
+    start_time_ = other.start_time_;
+    duration_ = other.duration_;
     SetCategory(other.category_);
     FromStringsList(other.ToStringsList());
 }

@@ -10,6 +10,8 @@
 #include "ModifyLabelGeometryFileModelCommand.h"
 #include "ModifyLabelTextFileModelCommand.h"
 #include "ProxyLabel.h"
+#include <QFileInfo>
+#include <QSet>
 
 using namespace std;
 
@@ -73,7 +75,18 @@ void FileModel::ModifyLabelText(std::shared_ptr<Label> label, QString text) {
     PushCommand(new ModifyLabelTextFileModelCommand(this, label, text));
 }
 
+bool FileModel::IsVideoFile(const QString &file_id) {
+    static const QSet<QString> video_suffixes = {
+        "mp4", "m4v", "mov", "avi", "mkv", "webm", "wmv", "mpg", "mpeg", "mts", "m2ts", "flv", "ogv", "3gp"
+    };
+    return video_suffixes.contains(QFileInfo(file_id).suffix().toLower());
+}
+
 std::shared_ptr<Label> FileModel::CreateLabel(std::shared_ptr<Label> label) {
+    if (IsVideo()) {
+        // video labels start at the current time and last until the end of the video
+        label->SetStartTime(video_time_);
+    }
     PushCommand(new CreateLabelFileModelCommand(this, label));
     return label;
 }

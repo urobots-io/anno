@@ -33,7 +33,8 @@ Cross-platform tool for labeling image data.
 - The user interface is optimized for fast sub-pixel accurate labeling.
 
 The example projects are in [anno/data/examples](anno/data/examples) together with their images.
-Open them with *File > Open Local Project...*.
+Open them with *File > Open Example*, which lists the projects of the `examples` folder next to the anno binary
+(the setup installs them there, the Visual Studio and qmake builds copy them there), or with *File > Open Local Project...*.
 
 <img src="https://user-images.githubusercontent.com/9085494/89164042-d5520180-d576-11ea-8a74-f4a13a6716d7.gif"/>
 

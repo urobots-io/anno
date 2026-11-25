@@ -221,6 +221,17 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 # OpenCV and OpenEXR (optional, see opencv.pri)
 include(opencv.pri)
 
+# example projects next to the binary, for File > Open Example
+win32 {
+    CONFIG(debug, debug|release): EXAMPLES_OUT = $$OUT_PWD/debug/examples
+    else: EXAMPLES_OUT = $$OUT_PWD/release/examples
+    QMAKE_POST_LINK += xcopy /E /D /Y /I /Q $$shell_quote($$shell_path($$PWD/data/examples)) $$shell_quote($$shell_path($$EXAMPLES_OUT)) $$escape_expand(\\n\\t)
+} else {
+    macx: EXAMPLES_OUT = $$OUT_PWD/$${TARGET}.app/Contents/Resources/examples
+    else: EXAMPLES_OUT = $$OUT_PWD/examples
+    QMAKE_POST_LINK += mkdir -p $$shell_quote($$EXAMPLES_OUT) && cp -R $$shell_quote($$PWD/data/examples/.) $$shell_quote($$EXAMPLES_OUT/) $$escape_expand(\\n\\t)
+}
+
 # Windows libs
 win32  {
     LIBS += Ole32.lib

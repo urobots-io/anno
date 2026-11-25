@@ -189,7 +189,8 @@ void Label::ApplyKeyframe(double time) {
         if (*geometry != ToStringsList()) {
             FromStringsList(*geometry);
         }
-        applied_geometry_ = *geometry;
+        // compare later changes with the own serialization, the keyframe may be formatted differently
+        applied_geometry_ = ToStringsList();
         keyframe_applied_ = true;
     }
 }

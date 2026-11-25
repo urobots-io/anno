@@ -17,6 +17,8 @@
 #include "SourcePicturesWidget.h"
 #include "VideoSlider.h"
 #include <QCloseEvent>
+#include <QCoreApplication>
+#include <QDir>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QInputDialog>
@@ -130,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent)
     UpdateProjectControls();
 
     recent_projects_.Init("recentProjectsList", ui.menuRecent_Projects);
+    InitExamplesMenu();
     connect(&recent_projects_, &RecentActionsList::ActionSelected, this, &MainWindow::OpenRecentProject);	
 
     setFocus();
@@ -552,6 +555,50 @@ bool MainWindow::OnSave(bool select_new_filename) {
     }
 
     return result;
+}
+
+QString MainWindow::GetExamplesFolder() {
+    const QDir app_dir(QCoreApplication::applicationDirPath());
+    // "examples" next to the application binary
+    QStringList candidates = { app_dir.filePath("examples") };
+#ifdef Q_OS_MACOS
+    // application bundle: Contents/MacOS/anno, Contents/Resources/examples
+    candidates << app_dir.filePath("../Resources/examples");
+#endif
+    for (const auto &candidate : candidates) {
+        if (QFileInfo(candidate).isDir()) {
+            return QDir(candidate).absolutePath();
+        }
+    }
+    return {};
+}
+
+void MainWindow::InitExamplesMenu() {
+    // the examples are collected every time the menu is opened
+    connect(ui.menuExamples, &QMenu::aboutToShow, this, &MainWindow::UpdateExamplesMenu);
+    UpdateExamplesMenu();
+}
+
+void MainWindow::UpdateExamplesMenu() {
+    ui.menuExamples->clear();
+
+    QFileInfoList files;
+    auto folder = GetExamplesFolder();
+    if (!folder.isEmpty()) {
+        files = QDir(folder).entryInfoList({ "*.anno" }, QDir::Files, QDir::Name | QDir::IgnoreCase);
+    }
+
+    for (const auto &file : files) {
+        auto action = ui.menuExamples->addAction(file.fileName());
+        action->setToolTip(QDir::toNativeSeparators(file.absoluteFilePath()));
+        const auto path = file.absoluteFilePath();
+        // asks to save the modified project first, like a recent project
+        connect(action, &QAction::triggered, this, [this, path]() { OpenRecentProject(path); });
+    }
+
+    if (files.isEmpty()) {
+        ui.menuExamples->addAction(tr("No examples found"))->setEnabled(false);
+    }
 }
 
 void MainWindow::OpenRecentProject(const QString & full_file_name) {

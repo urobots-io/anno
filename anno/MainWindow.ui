@@ -380,10 +380,16 @@
       <string>Recent Projects</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuExamples">
+     <property name="title">
+      <string>Open Example</string>
+     </property>
+    </widget>
     <addaction name="new_project_action"/>
     <addaction name="separator"/>
     <addaction name="open_action"/>
     <addaction name="open_dataset_action"/>
+    <addaction name="menuExamples"/>
     <addaction name="separator"/>
     <addaction name="save_action"/>
     <addaction name="save_as_action"/>

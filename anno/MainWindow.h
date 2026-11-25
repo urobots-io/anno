@@ -24,6 +24,9 @@ public:
 
     void OpenProject(const QString & full_file_name);
 
+    /// Folder with the example projects installed with the application, empty if there is none
+    static QString GetExamplesFolder();
+
 protected:	
 	void closeEvent(QCloseEvent *event) override;    
 
@@ -57,6 +60,8 @@ private:
     void InitToolbars();
     void InitTextViewer();
     void InitVideoControls();
+    void InitExamplesMenu();
+    void UpdateExamplesMenu();
     void UpdateVideoTimeLabel(int frame);
     void UpdateVideoMarkerCounts();
 

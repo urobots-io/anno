@@ -77,6 +77,8 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio_ffmpeg$(OPENCV_VER)_64.dll "$
 echo Copy OpenEXR binaries to target
 for %%f in (OpenEXR OpenEXRCore Iex IlmThread) do xcopy /D /Y "$(OPENEXR_BIN_DIR)\%%f-$(OPENEXR_SUFFIX)_d.dll" "$(OutDir)"
 xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX)_d.dll" "$(OutDir)"
+echo Copy examples to target
+xcopy /E /D /Y /I /Q "data\examples" "$(OutDir)examples"
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -115,7 +117,9 @@ xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio$(OPENCV_VER).dll "$(OutDir)"
 xcopy /E /D /Y /I $(OPENCV_BIN_DIR)\opencv_videoio_ffmpeg$(OPENCV_VER)_64.dll "$(OutDir)"
 echo Copy OpenEXR binaries to target
 for %%f in (OpenEXR OpenEXRCore Iex IlmThread) do xcopy /D /Y "$(OPENEXR_BIN_DIR)\%%f-$(OPENEXR_SUFFIX).dll" "$(OutDir)"
-xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX).dll" "$(OutDir)"</Command>
+xcopy /D /Y "$(OPENEXR_BIN_DIR)\Imath-$(IMATH_SUFFIX).dll" "$(OutDir)"
+echo Copy examples to target
+xcopy /E /D /Y /I /Q "data\examples" "$(OutDir)examples"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

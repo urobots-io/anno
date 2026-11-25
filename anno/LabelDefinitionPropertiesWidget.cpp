@@ -44,7 +44,10 @@ void LabelDefinitionPropertiesWidget::OnRenderingScriptTextChanged() {
 }
 
 void LabelDefinitionPropertiesWidget::UpdateCategoryData() {
-    ui.category_color_label->setPixmap(LabelCategory::CreateColorIcon(category_->get_color()).pixmap(QSize(16, 16)));
+    // swatch as in the tree views and the color as text
+    const auto color = category_->get_color();
+    ui.category_color_label->setPixmap(LabelCategory::CreateColorIcon(color).pixmap(QSize(16, 16)));
+    ui.category_color_name_label->setText(color.name(color.alpha() < 255 ? QColor::HexArgb : QColor::HexRgb));
     ui.category_value_lineEdit->setText(QString("%0").arg(category_->get_value()));
 }
 

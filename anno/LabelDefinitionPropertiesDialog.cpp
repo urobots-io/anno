@@ -175,6 +175,28 @@ void LabelDefinitionPropertiesDialog::ApplyAndClose() {
         return;
     }
 
+    // Shared properties need an id.
+    auto shared_model = ui.shared_properties_tableView->model();
+    for (int row = 0; row < shared_model->rowCount(); ++row) {
+        bool shared = shared_model->data(shared_model->index(row, 1), Qt::CheckStateRole).toInt() == Qt::Checked;
+        auto id = shared_model->data(shared_model->index(row, 2), Qt::DisplayRole).toString();
+        if (shared && id.trimmed().isEmpty()) {
+            auto property = shared_model->data(shared_model->index(row, 0), Qt::DisplayRole).toString();
+            messagebox::Critical(tr("The shared property \"%0\" has no id.\n"
+                                    "Please enter an id or clear the \"Shared\" checkbox.").arg(property));
+            // show the cell to fill in
+            for (QWidget *w = ui.shared_properties_tableView; w; w = w->parentWidget()) {
+                if (ui.tabWidget->indexOf(w) >= 0) {
+                    ui.tabWidget->setCurrentWidget(w);
+                    break;
+                }
+            }
+            ui.shared_properties_tableView->setCurrentIndex(shared_model->index(row, 2));
+            ui.shared_properties_tableView->setFocus();
+            return;
+        }
+    }
+
     auto notification = GetSharedLabelsCountUpdateNotification();
     if (!notification.isEmpty()) {
         if (!messagebox::Question(notification +

@@ -37,6 +37,9 @@
 #define K_MARKER_CUSTOM_PROPERTIES "custom_properties"
 #define K_MARKER_START "start"
 #define K_MARKER_DURATION "duration"
+#define K_MARKER_DYNAMIC "dynamic"
+#define K_MARKER_KEYFRAMES "keyframes"
+#define K_KEYFRAME_TIME "time"
 
 using namespace std;
 
@@ -269,6 +272,31 @@ void ApplicationModel::ApplyBasicDefinitions(QJsonObject & definitions) {
     set_project_script(project_script);
 }
 
+namespace {
+// marker geometry from "value" and "children"
+QStringList ReadMarkerGeometry(const QJsonObject &json) {
+    QStringList value = { json[K_MARKER_VALUE].toString() };
+    for (auto child : json[K_MARKER_CHILDREN].toArray()) {
+        value.push_back(child.toObject()[K_MARKER_VALUE].toString());
+    }
+    return value;
+}
+
+// marker geometry to "value" and "children"
+void WriteMarkerGeometry(QJsonObject &json, const QStringList &value) {
+    json.insert(K_MARKER_VALUE, value.value(0));
+    if (value.size() > 1) {
+        QJsonArray children;
+        for (int i = 1; i < value.size(); ++i) {
+            QJsonObject child;
+            child.insert(K_MARKER_VALUE, QJsonValue::fromVariant(value[i]));
+            children.push_back(child);
+        }
+        json.insert(K_MARKER_CHILDREN, children);
+    }
+}
+}
+
 bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filename, QStringList & errors) {
     auto definitions = json[K_DEFINITIONS].toObject();
     ApplyBasicDefinitions(definitions);
@@ -366,6 +394,20 @@ bool ApplicationModel::OpenProject(const QJsonObject& json, QString anno_filenam
             }
         
             label->FromStringsList(value);
+
+            // dynamic video labels: geometry of every keyframe
+            if (marker[K_MARKER_DYNAMIC].toBool() && label->CanBeDynamic()) {
+                std::map<double, QStringList> keyframes;
+                for (auto jkeyframe : marker[K_MARKER_KEYFRAMES].toArray()) {
+                    auto keyframe = jkeyframe.toObject();
+                    keyframes[keyframe[K_KEYFRAME_TIME].toDouble()] = ReadMarkerGeometry(keyframe);
+                }
+                label->SetDynamic(true);
+                if (!keyframes.empty()) {
+                    label->SetKeyframes(keyframes);
+                }
+            }
+
             file_model->labels_.push_back(label);
         }
     }
@@ -434,6 +476,9 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
     // save all markers
     QJsonArray markers;
     for (const auto & i : file_models_) {
+        // dynamic labels: changes of the current frame become keyframes
+        i.second->CommitDynamicLabels();
+
         if (!i.second->labels_.size())
             continue;
 
@@ -461,17 +506,21 @@ bool ApplicationModel::SaveProject(QStringList & errors, QString filename) {
             if (shared_index)
                 marker.insert(K_MARKER_SHARED_INDEX, QJsonValue::fromVariant(shared_index));
 
-            auto value = label->ToStringsList();
-            marker.insert(K_MARKER_VALUE, value[0]);
+            // dynamic labels: "value" is the geometry of the first keyframe (start of the label)
+            const auto &keyframes = label->GetKeyframes();
+            const bool dynamic = label->IsDynamic() && !keyframes.empty();
+            WriteMarkerGeometry(marker, dynamic ? keyframes.begin()->second : label->ToStringsList());
 
-            if (value.size() > 1) {
-                QJsonArray children;
-                for (int i = 1; i < value.size(); ++i) {
-                    QJsonObject child;
-                    child.insert(K_MARKER_VALUE, QJsonValue::fromVariant(value[i]));
-                    children.push_back(child);
+            if (dynamic) {
+                marker.insert(K_MARKER_DYNAMIC, true);
+                QJsonArray jkeyframes;
+                for (const auto &keyframe : keyframes) {
+                    QJsonObject jkeyframe;
+                    jkeyframe.insert(K_KEYFRAME_TIME, keyframe.first);
+                    WriteMarkerGeometry(jkeyframe, keyframe.second);
+                    jkeyframes.push_back(jkeyframe);
                 }
-                marker.insert(K_MARKER_CHILDREN, children);
+                marker.insert(K_MARKER_KEYFRAMES, jkeyframes);
             }
             
             auto &custom_properties = label->GetCustomProperties();

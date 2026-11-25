@@ -6,14 +6,14 @@
 ModifyLabelGeometryFileModelCommand::ModifyLabelGeometryFileModelCommand(FileModel* file, std::shared_ptr<Label> label, QStringList data)
     : file_(file)
     , label_(label)
-    , data_(data)
 {
-    if (!data_.length())
-        data_ = label_->ToStringsList();
+    before_ = label_->CaptureState(file_->GetVideoTime(), data);
 }
 
 void ModifyLabelGeometryFileModelCommand::undo() {
-    ExchangeData();
+    // dynamic labels: the state is restored for the current frame of the video
+    after_ = label_->CaptureState(file_->GetVideoTime());
+    label_->RestoreState(before_, file_->GetVideoTime());
     file_->NotifyUpdate(label_);
 }
 
@@ -22,13 +22,7 @@ void ModifyLabelGeometryFileModelCommand::redo() {
         just_created_ = false;
     }
     else {
-        ExchangeData();
+        label_->RestoreState(after_, file_->GetVideoTime());
     }
     file_->NotifyUpdate(label_);
-}
-
-void ModifyLabelGeometryFileModelCommand::ExchangeData() {
-    auto current_data = label_->ToStringsList();
-    label_->FromStringsList(data_);
-    data_ = current_data;
 }

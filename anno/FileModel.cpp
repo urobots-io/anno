@@ -82,6 +82,28 @@ bool FileModel::IsVideoFile(const QString &file_id) {
     return video_suffixes.contains(QFileInfo(file_id).suffix().toLower());
 }
 
+void FileModel::SetLabelDynamic(std::shared_ptr<Label> label, bool dynamic) {
+    if (!label || label->IsDynamic() == dynamic || (dynamic && !label->CanBeDynamic())) {
+        return;
+    }
+    // the command stores the state before the change
+    PushCommand(new ModifyLabelGeometryFileModelCommand(this, label));
+    label->SetDynamic(dynamic);
+    NotifyUpdate(label);
+}
+
+void FileModel::CommitDynamicLabels() {
+    for (auto &label : labels_) {
+        label->CommitKeyframe(video_time_);
+    }
+}
+
+void FileModel::ApplyDynamicLabels() {
+    for (auto &label : labels_) {
+        label->ApplyKeyframe(video_time_);
+    }
+}
+
 bool FileModel::IsAnimationFile(const QString &file_id) {
     auto suffix = QFileInfo(file_id).suffix().toLower();
     return suffix == "gif" || suffix == "webp";

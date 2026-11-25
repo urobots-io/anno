@@ -54,6 +54,15 @@ public:
     /// true if the label is shown: always for images, for videos only at its time range
     bool IsLabelActive(const Label &label) const { return !IsVideo() || label.IsActiveAt(video_time_); }
 
+    /// Undoable switch of the dynamic flag of a video label
+    void SetLabelDynamic(std::shared_ptr<Label> label, bool dynamic);
+
+    /// Dynamic labels: stores changed geometry as keyframes of the current video time
+    void CommitDynamicLabels();
+
+    /// Dynamic labels: shows the geometry of the current video time
+    void ApplyDynamicLabels();
+
     /// Return Proxy of the <label> or label itself, if it has no proxy
     std::shared_ptr<Label> GetOwner(std::shared_ptr<Label> label);
 

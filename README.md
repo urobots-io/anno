@@ -153,7 +153,7 @@ Project file format:
                     "value": "642.9 580.2 936.8 674.4"
 
                     /** Optional fields: text, shared_index, children, custom_properties,
-                        start, duration (video files)
+                        start, duration, dynamic, keyframes (video files)
                         (see the JSON Schema below) */
                 }
             ]
@@ -186,6 +186,24 @@ Start and duration can be changed in the *Label* tab (rows `start (s)` and `dura
 a negative duration means until the end). The time slider below the video shows the current time and frame number.
 ```jsonc
 { "type": "my_marker_type", "category": 0, "value": "20 20 300 90", "start": 2.5, "duration": 1.2 }
+```
+
+A marker can be made *dynamic* in the *Label* tab (row `dynamic`), then its geometry can be different on every frame:
+a change on a frame is stored as a keyframe with the time of the frame, and a frame shows the geometry
+of the last keyframe at or before its time. Switching `dynamic` off keeps the geometry of the current frame and removes the keyframes.
+Both are undoable. Dynamic markers are not available for shared marker types and for marker types with shared properties.
+
+In the file a dynamic marker has `"dynamic": true` and a `keyframes` array; `value` (and `children`) hold the geometry
+of the first keyframe, so applications which ignore `keyframes` see the marker at its start.
+```jsonc
+{
+    "type": "my_marker_type", "category": 0, "value": "20 20 300 90", "start": 2.5,
+    "dynamic": true,
+    "keyframes": [
+        { "time": 2.5, "value": "20 20 300 90" },
+        { "time": 3.0, "value": "40 25 320 95" }
+    ]
+}
 ```
 
 ### Marker rendering
@@ -615,6 +633,40 @@ Use it in VS Code, `settings.json`:
           "description": "Video files: duration in seconds the marker is shown. If absent, the marker is shown until the end of the video.",
           "type": "number",
           "minimum": 0
+        },
+        "dynamic": {
+          "description": "Video files: the geometry of the marker changes over time, see keyframes. Not available for shared marker types and marker types with shared properties.",
+          "type": "boolean",
+          "default": false
+        },
+        "keyframes": {
+          "description": "Video files, dynamic markers: geometry of the marker from the given time on, sorted by time. The first keyframe is at the start of the marker, its geometry is also stored in value and children.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["time", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "time": {
+                "description": "Time of the video in seconds.",
+                "type": "number",
+                "minimum": 0
+              },
+              "value": { "$ref": "#/definitions/markerValue" },
+              "children": {
+                "description": "Additional values of the marker at this time, see children of the marker.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["value"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": { "$ref": "#/definitions/markerValue" }
+                  }
+                }
+              }
+            }
+          }
         },
         "shared_index": {
           "description": "Index of the shared marker instance (only for shared marker types).",

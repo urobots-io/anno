@@ -20,7 +20,11 @@ CustomPropertyTableModel::~CustomPropertyTableModel()
 }
 
 int CustomPropertyTableModel::TimeRows() const {
-    return (label_ && file_ && file_->IsVideo()) ? 2 : 0;
+    if (!label_ || !file_ || !file_->IsVideo()) {
+        return 0;
+    }
+    // the dynamic flag only for labels which can be dynamic
+    return label_->CanBeDynamic() ? 3 : 2;
 }
 
 int CustomPropertyTableModel::rowCount(const QModelIndex &parent) const {
@@ -44,8 +48,14 @@ CustomPropertyDefinition CustomPropertyTableModel::GetProperty(const QModelIndex
     int row = index.row();
     if (row < TimeRows()) {
         CustomPropertyDefinition time_property;
-        time_property.id = (row == start_row) ? tr("start (s)") : tr("duration (s)");
-        time_property.type = CustomPropertyType::p_double;
+        if (row == dynamic_row) {
+            time_property.id = tr("dynamic");
+            time_property.type = CustomPropertyType::p_boolean;
+        }
+        else {
+            time_property.id = (row == start_row) ? tr("start (s)") : tr("duration (s)");
+            time_property.type = CustomPropertyType::p_double;
+        }
         return time_property;
     }
     row -= TimeRows();
@@ -76,6 +86,12 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
         }
         if (column == 0 && role == QT_BACKGROUND_COLOR_ROLE) {
             return QApplication::palette().alternateBase();
+        }
+        if (column == 1 && row == dynamic_row) {
+            if (role == Qt::CheckStateRole) {
+                return label_->IsDynamic() ? Qt::Checked : Qt::Unchecked;
+            }
+            return QVariant();
         }
         if (column == 1) {
             double value = (row == start_row) ? label_->GetStartTime() : label_->GetDuration();
@@ -145,6 +161,15 @@ QVariant CustomPropertyTableModel::data(const QModelIndex &index, int role) cons
 
 bool CustomPropertyTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     int column = index.column();
+
+    if (label_ && file_ && column == 1 && index.row() == dynamic_row && index.row() < TimeRows()) {
+        if (role == Qt::CheckStateRole) {
+            // undoable, keeps the geometry of the current frame when switched off
+            file_->SetLabelDynamic(label_, value == Qt::Checked);
+            return true;
+        }
+        return false;
+    }
 
     if (label_ && file_ && column == 1 && index.row() < TimeRows()) {
         if (role == Qt::DisplayRole || role == Qt::EditRole) {

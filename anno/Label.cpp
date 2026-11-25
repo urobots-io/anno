@@ -128,10 +128,114 @@ bool Label::IsActiveAt(double time) const {
     return duration_ < 0 || time < start_time_ + duration_ - eps;
 }
 
+bool Label::CanBeDynamic() const {
+    if (IsProxyLabel()) {
+        return false;
+    }
+    auto def = GetDefinition();
+    return def && !def->is_shared() && def->shared_properties.empty();
+}
+
+namespace {
+// keyframe at <time> (with tolerance for rounding of frame times)
+std::map<double, QStringList>::iterator FindKeyframe(std::map<double, QStringList> &keyframes, double time) {
+    const double eps = 1e-6;
+    auto it = keyframes.lower_bound(time - eps);
+    return (it != keyframes.end() && it->first <= time + eps) ? it : keyframes.end();
+}
+
+// geometry of <time>: keyframe at this time or the last one before, the first one for earlier times
+const QStringList *KeyframeGeometry(const std::map<double, QStringList> &keyframes, double time) {
+    if (keyframes.empty()) {
+        return nullptr;
+    }
+    auto it = keyframes.upper_bound(time + 1e-6);
+    if (it == keyframes.begin()) {
+        return &it->second;
+    }
+    return &std::prev(it)->second;
+}
+
+void SetKeyframe(std::map<double, QStringList> &keyframes, double time, const QStringList &geometry) {
+    auto it = FindKeyframe(keyframes, time);
+    if (it != keyframes.end()) {
+        it->second = geometry;
+    }
+    else {
+        keyframes[time] = geometry;
+    }
+}
+}
+
+void Label::SetDynamic(bool value) {
+    if (value == dynamic_) {
+        return;
+    }
+    dynamic_ = value;
+    keyframes_.clear();
+    keyframe_applied_ = false;
+    if (dynamic_) {
+        applied_geometry_ = ToStringsList();
+        keyframes_[start_time_] = applied_geometry_;
+        keyframe_applied_ = true;
+    }
+}
+
+void Label::ApplyKeyframe(double time) {
+    if (!dynamic_) {
+        return;
+    }
+    if (auto geometry = KeyframeGeometry(keyframes_, time)) {
+        if (*geometry != ToStringsList()) {
+            FromStringsList(*geometry);
+        }
+        applied_geometry_ = *geometry;
+        keyframe_applied_ = true;
+    }
+}
+
+void Label::CommitKeyframe(double time) {
+    if (!dynamic_ || !keyframe_applied_) {
+        return;
+    }
+    auto geometry = ToStringsList();
+    if (geometry != applied_geometry_) {
+        SetKeyframe(keyframes_, time, geometry);
+        applied_geometry_ = geometry;
+    }
+}
+
+Label::GeometryState Label::CaptureState(double time, const QStringList &geometry) const {
+    GeometryState state;
+    state.geometry = geometry.isEmpty() ? ToStringsList() : geometry;
+    state.dynamic = dynamic_;
+    state.keyframes = keyframes_;
+    if (dynamic_ && keyframe_applied_ && state.geometry != applied_geometry_) {
+        // not yet committed change of the current frame
+        SetKeyframe(state.keyframes, time, state.geometry);
+    }
+    return state;
+}
+
+void Label::RestoreState(const GeometryState &state, double time) {
+    dynamic_ = state.dynamic;
+    keyframes_ = state.keyframes;
+    keyframe_applied_ = false;
+    if (dynamic_ && !keyframes_.empty()) {
+        ApplyKeyframe(time);
+    }
+    else if (state.geometry != ToStringsList()) {
+        FromStringsList(state.geometry);
+    }
+}
+
 void Label::CopyFrom(const Label & other) {
     text_ = other.text_;
     start_time_ = other.start_time_;
     duration_ = other.duration_;
+    dynamic_ = other.dynamic_;
+    keyframes_ = other.keyframes_;
+    keyframe_applied_ = false;
     SetCategory(other.category_);
     FromStringsList(other.ToStringsList());
 }

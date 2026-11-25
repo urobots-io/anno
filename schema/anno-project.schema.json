@@ -294,6 +294,40 @@
           "type": "number",
           "minimum": 0
         },
+        "dynamic": {
+          "description": "Video files: the geometry of the marker changes over time, see keyframes. Not available for shared marker types and marker types with shared properties.",
+          "type": "boolean",
+          "default": false
+        },
+        "keyframes": {
+          "description": "Video files, dynamic markers: geometry of the marker from the given time on, sorted by time. The first keyframe is at the start of the marker, its geometry is also stored in value and children.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["time", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "time": {
+                "description": "Time of the video in seconds.",
+                "type": "number",
+                "minimum": 0
+              },
+              "value": { "$ref": "#/definitions/markerValue" },
+              "children": {
+                "description": "Additional values of the marker at this time, see children of the marker.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["value"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": { "$ref": "#/definitions/markerValue" }
+                  }
+                }
+              }
+            }
+          }
+        },
         "shared_index": {
           "description": "Index of the shared marker instance (only for shared marker types).",
           "type": "integer",

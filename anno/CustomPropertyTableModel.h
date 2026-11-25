@@ -24,9 +24,9 @@ public:
     void set_read_only(bool value) { read_only_ = value; }
 
 private:
-    /// video files: rows for start time and duration before the custom properties
+    /// video files: rows for start time, duration and dynamic flag before the custom properties
     int TimeRows() const;
-    enum { start_row = 0, duration_row = 1 };
+    enum { start_row = 0, duration_row = 1, dynamic_row = 2 };
 
     std::shared_ptr<Label> label_;
     std::shared_ptr<FileModel> file_;

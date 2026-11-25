@@ -3,6 +3,7 @@
 #include "LabelHandle.h"
 #include "LabelType.h"
 #include "WorldInfo.h"
+#include <map>
 
 /// base class for different label types
 class Label
@@ -43,6 +44,41 @@ public:
 
     /// Video labels: true if the label is shown at the given video time in seconds
     bool IsActiveAt(double time) const;
+
+    /// Video labels: a dynamic label has its own geometry on different frames (keyframes).
+    /// The geometry of a time is the keyframe at this time or the last one before it.
+    bool IsDynamic() const { return dynamic_; }
+
+    /// true if the label can be dynamic (not for shared marker types or shared properties)
+    bool CanBeDynamic() const;
+
+    /// Switch on: one keyframe at the start time with the current geometry.
+    /// Switch off: the current geometry is kept, keyframes are removed.
+    void SetDynamic(bool value);
+
+    /// keyframes: time in seconds -> serialized geometry (see ToStringsList)
+    const std::map<double, QStringList> &GetKeyframes() const { return keyframes_; }
+    void SetKeyframes(const std::map<double, QStringList> &keyframes) { keyframes_ = keyframes; }
+
+    /// Dynamic labels: shows the geometry of the given time
+    void ApplyKeyframe(double time);
+
+    /// Dynamic labels: stores the current geometry as keyframe of the given time,
+    /// if it was changed since the last ApplyKeyframe
+    void CommitKeyframe(double time);
+
+    /// Complete state of the label geometry, used by undo / redo
+    struct GeometryState {
+        QStringList geometry;
+        bool dynamic = false;
+        std::map<double, QStringList> keyframes;
+    };
+
+    /// Returns the state at the given time; <geometry> replaces the current geometry if not empty
+    GeometryState CaptureState(double time, const QStringList &geometry = {}) const;
+
+    /// Restores the state, dynamic labels show the geometry of the given time
+    void RestoreState(const GeometryState &state, double time);
 
     QVariantMap& GetCustomProperties() { return custom_properties_; }
     QVariant Read(const CustomPropertyDefinition &) const;
@@ -178,6 +214,12 @@ protected:
     /// video labels: start time and duration in seconds (negative duration: until the end)
     double start_time_ = 0;
     double duration_ = -1;
+
+    /// dynamic video labels: keyframes and the geometry shown by the last ApplyKeyframe
+    bool dynamic_ = false;
+    std::map<double, QStringList> keyframes_;
+    QStringList applied_geometry_;
+    bool keyframe_applied_ = false;
 
     /// default dimension of the label
     static const int default_dimension_ = 100;

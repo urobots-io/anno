@@ -125,6 +125,10 @@ void DesktopWidget::SetFile(std::shared_ptr<FileModel> file) {
 
     if (file_) {
         file_->disconnect(this);
+        if (video_frame_ >= 0) {
+            // dynamic labels: store changes of the current frame
+            file_->CommitDynamicLabels();
+        }
     }
 
     image_.Clear();
@@ -361,8 +365,13 @@ void DesktopWidget::SetVideoFrame(int frame) {
         return;
     }
 
+    // dynamic labels: store changes of the previous frame, show the geometry of the new frame
+    if (video_frame_ >= 0) {
+        file_->CommitDynamicLabels();
+    }
     video_frame_ = frame;
     file_->SetVideoTime(video_frame_times_[frame]);
+    file_->ApplyDynamicLabels();
     image_.Load(image);
 
     // labels of other times are hidden and cannot stay selected or hovered

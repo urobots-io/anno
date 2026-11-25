@@ -26,7 +26,8 @@ Cross-platform tool for labeling image data.
   (example: [custom_properties.anno](anno/data/examples/custom_properties.anno)).
 - Supports a wide variety of image formats. The pre-built Windows version supports the EXR format.
 - Labeling of videos (mp4, mov, avi, mkv, ...) and animated GIF / WebP images: a slider below the image selects the frame,
-  markers have a start time and a duration, see [Video markers](#video-markers). Requires the OpenCV build.
+  markers have a start time and a duration, and their geometry can change from frame to frame,
+  see [Video markers](#video-markers) (example: [video.anno](anno/data/examples/video.anno)). Requires the OpenCV build.
 - Text files (txt, json, log, md, source code, ...) of the image folder are shown in a read-only text viewer.
 - The project file is a JSON file which contains project-specific marker definitions and labeling information.
 - The user interface is optimized for fast sub-pixel accurate labeling.
@@ -180,6 +181,9 @@ Additional contours of a polygon (holes) are stored in `children`, every child h
 Markers of video files are shown only during a time range of the video:
 - `start`: time of the video in seconds where the marker starts (default `0`),
 - `duration`: duration in seconds; if absent, the marker is shown until the end of the video.
+
+Example: [video.anno](anno/data/examples/video.anno), a cat walking in front of a fence (a dynamic polygon)
+and three dogs looking over the fence (rectangles with start and duration). 
 
 A new marker starts at the current time of the video and lasts until the end.
 Start and duration can be changed in the *Label* tab (rows `start (s)` and `duration (s)`;

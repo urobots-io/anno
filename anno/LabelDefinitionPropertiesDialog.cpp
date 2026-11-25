@@ -6,9 +6,11 @@
 #include "CustomPropertiesEditorTableItemDelegate.h"
 #include "CustomPropertiesEditorTableModel.h"
 #include "messagebox.h"
+#include "PropertyDatabase.h"
 #include "PropertyTableItemDelegate.h"
 #include "SharedPropertiesEditorTableModel.h"
 #include "StampPropertiesEditorTableModel.h"
+#include <set>
 
 using namespace std;
 
@@ -59,6 +61,9 @@ LabelDefinitionPropertiesDialog::LabelDefinitionPropertiesDialog(shared_ptr<Labe
     PropertyTableItemDelegate::SetupTableView(ui.properties_tableView, properties_);
 
     auto shared = new SharedPropertiesEditorTableModel(definition_->shared_properties, definition_->value_type, this);
+    shared->SetIdGenerator([this, shared](const QString &property, int row) {
+        return GenerateSharedPropertyId(shared, property, row);
+    });
     ui.shared_properties_tableView->setModel(shared);
     ui.shared_properties_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -159,6 +164,39 @@ QString LabelDefinitionPropertiesDialog::GetSharedLabelsCountUpdateNotification(
     }
 
     return QString();
+}
+
+QString LabelDefinitionPropertiesDialog::GenerateSharedPropertyId(SharedPropertiesEditorTableModel *table, const QString &property, int row) const {
+    // ids of this marker type before editing, they may still be in the database
+    std::set<QString> own_ids;
+    for (const auto &p : definition_->shared_properties) {
+        own_ids.insert(p.second->name);
+    }
+
+    auto is_used = [&](const QString &id) {
+        if (table->IsIdUsed(id, row)) {
+            return true;
+        }
+        for (const auto &def : definitions_->GetDefinitions()) {
+            if (def == definition_) {
+                continue;
+            }
+            for (const auto &p : def->shared_properties) {
+                if (p.second->name == id) {
+                    return true;
+                }
+            }
+        }
+        return PropertyDatabase::Instance().Contains(id) && !own_ids.count(id);
+    };
+
+    // type_name/property_name, a number is added if this id is already used
+    const QString base = properties_->get_type_name() + "/" + property;
+    QString id = base;
+    for (int number = 2; is_used(id); ++number) {
+        id = QString("%1/%2").arg(base).arg(number);
+    }
+    return id;
 }
 
 void LabelDefinitionPropertiesDialog::ApplyAndClose() {

@@ -2,6 +2,7 @@
 #include "LabelDefinition.h"
 #include <QAbstractTableModel>
 #include <QObject>
+#include <functional>
 
 class SharedPropertiesEditorTableModel : public QAbstractTableModel
 {
@@ -20,8 +21,16 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
     std::map<QString, SharedPropertyDefinition> GetProperties() const;
-    
+
+    /// Generates an id when a property is marked as shared and has no id yet.
+    /// Arguments: property name, row of the property.
+    void SetIdGenerator(std::function<QString(const QString &, int)> generator) { id_generator_ = generator; }
+
+    /// true if a row other than <except_row> uses the id
+    bool IsIdUsed(const QString &id, int except_row) const;
+
 private:
+    std::function<QString(const QString &, int)> id_generator_;
     std::map<QString, bool> shared_;
     std::vector<QString> property_names_;
     std::vector<SharedPropertyDefinition> properties_;

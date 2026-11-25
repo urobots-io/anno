@@ -17,6 +17,9 @@ public:
 
     double GetCurrentValue(const QString & name, double default_value);
 
+    /// true if a shared value with this name exists
+    bool Contains(const QString & name) const { return properties_.count(name) > 0; }
+
 protected:
     friend class LabelProperty;
 

@@ -7,6 +7,8 @@
 #include <QDialog>
 #include <memory>
 
+class SharedPropertiesEditorTableModel;
+
 class LDProperties : public QObject {
     Q_OBJECT
 
@@ -100,6 +102,10 @@ private slots:
 
 private:
     QString GetSharedLabelsCountUpdateNotification();
+
+    /// Id for a newly shared property: type_name/property_name, with a number added
+    /// if the id is already used (other marker types, shared values database, other rows).
+    QString GenerateSharedPropertyId(SharedPropertiesEditorTableModel *table, const QString &property, int row) const;
 
 private:
     Ui::LabelDefinitionPropertiesDialog ui;

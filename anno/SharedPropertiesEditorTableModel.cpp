@@ -99,6 +99,15 @@ QVariant SharedPropertiesEditorTableModel::data(const QModelIndex &index, int ro
     return QVariant();
 }
 
+bool SharedPropertiesEditorTableModel::IsIdUsed(const QString &id, int except_row) const {
+    for (int row = 0; row < int(properties_.size()); ++row) {
+        if (row != except_row && properties_[row].name == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool SharedPropertiesEditorTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     int column = index.column();
     int row = index.row();
@@ -107,7 +116,17 @@ bool SharedPropertiesEditorTableModel::setData(const QModelIndex &index, const Q
 
     if (column == 1) {
         if (role == Qt::CheckStateRole) {
-            shared_[property_names_[row]] = (value == Qt::Checked);
+            bool shared = (value == Qt::Checked);
+            shared_[property_names_[row]] = shared;
+            if (shared && properties_[row].name.trimmed().isEmpty() && id_generator_) {
+                properties_[row].name = id_generator_(property_names_[row], row);
+                emit dataChanged(createIndex(row, 2), createIndex(row, 2));
+            }
+            else if (!shared && !properties_[row].name.isEmpty()) {
+                // not shared anymore: the id is cleared
+                properties_[row].name.clear();
+                emit dataChanged(createIndex(row, 2), createIndex(row, 2));
+            }
             return true;
         }
     }

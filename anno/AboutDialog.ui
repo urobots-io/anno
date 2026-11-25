@@ -141,7 +141,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="website_label">
         <property name="text">
          <string>https://www.urobots.io</string>
         </property>
